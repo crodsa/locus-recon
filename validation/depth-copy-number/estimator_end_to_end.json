@@ -1,0 +1,16 @@
+{
+  "copies_estimate": 2.258,
+  "aggregate_ratio": 1.21,
+  "region_ratios": [
+    1.048,
+    1.113,
+    1.565,
+    0.952,
+    1.081,
+    0.0,
+    0.0,
+    1.339,
+    1.484
+  ],
+  "copies_estimate_without_gene_coordinates": null
+}

@@ -1,0 +1,7 @@
+{
+  "schema_version": "1.0",
+  "runs": 7,
+  "class_concordance": true,
+  "quantitative_qpcr_intervals_contain_estimate": true,
+  "all_prespecified_criteria_passed": true
+}

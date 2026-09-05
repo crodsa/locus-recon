@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0",
+  "workflow": "constructed-1-2-3-copy-series",
+  "created_utc": "2026-08-27T17:15:46.638284+00:00",
+  "git_commit": "029cd55f121d86985db4fec0c7ca5a5c8b616071",
+  "parameters": {
+    "copies": [1, 2, 3],
+    "depths": [20, 50, 100],
+    "gc_levels": [0.3, 0.5, 0.7],
+    "base_seed": 20260817,
+    "read_length": 150,
+    "insert": 350,
+    "backbone_length": 100000,
+    "locus_length": 4000,
+    "threads": 2,
+    "n_boot": 1000,
+    "max_backbone_bootstrap_blocks": 512
+  },
+  "tools": {
+    "python": "3.12.10",
+    "bwa-mem2": "2.2.1",
+    "samtools": "1.22.1"
+  },
+  "criteria_passed": true,
+  "complete": true,
+  "note": "The executable workflow writes full input checksums to workflow_provenance.json in the selected work directory. This committed summary is compact; all inputs are regenerated deterministically by the workflow."
+}

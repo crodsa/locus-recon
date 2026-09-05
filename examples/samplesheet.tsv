@@ -1,0 +1,4 @@
+sample_id	assembly_path	r1_path	r2_path
+isolate_001	data/isolate_001.fasta	reads/isolate_001_R1.fastq.gz	reads/isolate_001_R2.fastq.gz
+isolate_002	data/isolate_002.fasta	reads/isolate_002_R1.fastq.gz	reads/isolate_002_R2.fastq.gz
+

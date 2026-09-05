@@ -1,0 +1,15 @@
+{
+  "all_primary_criteria_passed": true,
+  "criterion_all_single_copy_control_consensus_calls_correct": true,
+  "criterion_all_two_copy_consensus_calls_correct": true,
+  "criterion_legacy_depth_fields_unchanged": true,
+  "criterion_two_copy_sensitivity_ge_0_80": true,
+  "criterion_zero_control_false_positives": true,
+  "exact_single_copy_control_consensus_calls": 5,
+  "exact_two_copy_consensus_calls": 5,
+  "samples": 5,
+  "schema_version": "1.0",
+  "single_copy_control_false_positives": 0,
+  "two_copy_rejections": 5,
+  "two_copy_sensitivity": 1.0
+}

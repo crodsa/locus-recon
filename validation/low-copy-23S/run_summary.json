@@ -1,0 +1,38 @@
+{
+  "schema_version": "1.0",
+  "workflow": "external-two-copy-23S",
+  "completed_utc": "2026-08-28T17:51:24.506711+00:00",
+  "panel": {
+    "samples": 5,
+    "two_copy_23S_calls": 5,
+    "two_copy_sensitivity": 1.0,
+    "single_copy_gyrB_false_positive_calls": 0,
+    "exact_two_copy_23S_consensus_calls": 5,
+    "exact_single_copy_gyrB_consensus_calls": 5,
+    "legacy_depth_fields_unchanged": true,
+    "primary_criteria_passed": true
+  },
+  "interpretation": "The unchanged aggregate-depth rule separated all five two-copy 23S loci from their matched single-copy gyrB controls. The additive graph/depth consensus recovered two graph-supported contexts for all five 23S loci and one for all five gyrB controls while preserving all 23 archived depth fields. Observed 23S depth ratios remained 2.546-3.221; the panel is a development and biological demonstration, not an independent performance estimate or proof of universal exact rRNA copy-number recovery.",
+  "execution_note": "Hpfe0006 was assembled in a clean SPAdes 4.2.0 directory after an interrupted checkpoint was quarantined; only the completed clean assembly contributed to the archived result.",
+  "parameters": {
+    "call_threshold": 1.5,
+    "draft_assembler": "SPAdes 4.2.0 --isolate",
+    "fixed_bait_reference": "NC_000915.1",
+    "min_bq": 20,
+    "min_mq": 20,
+    "n_boot": 1000,
+    "max_backbone_bootstrap_blocks": 512,
+    "seed": 20260817,
+    "threads": 4,
+    "memory_gb": 8,
+    "graph_min_identity": 80.0,
+    "graph_min_query_coverage": 0.9,
+    "graph_min_context_bp": "max(100, 2 * largest GFA overlap)",
+    "graph_max_context_nodes": 8,
+    "graph_max_context_paths": 64,
+    "graph_max_context_bp": 5000
+  },
+  "result_sha256": "0e28c8f99ddabc9bdf7bfc0ee65ed761031a5c3045ba68ce38fa7c510fb76c29",
+  "evaluation_sha256": "1a1ce02434f88325b2e65208db6008da459e18fdb894b41c13e230989304867a",
+  "truth_audit_sha256": "33f588e487ac9a1971188eff3e7e2f3d128e08bdc7afd1e3b1b9e5a168da5f2a"
+}

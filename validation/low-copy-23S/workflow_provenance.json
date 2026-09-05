@@ -1,0 +1,200 @@
+{
+  "complete": true,
+  "created_utc": "2026-08-28T17:51:24.506711+00:00",
+  "git_commit": "a62d93109d5555efdc91194b398b7e536c389640",
+  "inputs": [
+    {
+      "path": "/private/tmp/locus-recon-v1.0-hardening/validation/manifests/low_copy_23S_prjna816422.tsv",
+      "sha256": "2437f8e5bdc214e693dc6e9182dfca41b5f5b6b32f2625d0a327019a1addafbb",
+      "size_bytes": 1024
+    },
+    {
+      "path": "/private/tmp/locus-v1-hardening-data/low-copy-23S/fixed_baits/NC_000915.1_23S_gyrB.fasta",
+      "sha256": "bcfbb236408544fe74078e4f7399131fc1bc5bf40d0c352b286df555092ba7e4",
+      "size_bytes": 5325
+    },
+    {
+      "path": "/private/tmp/locus-v1-hardening-data/low-copy-23S/closed_truth/GCF_022925945.1_ASM2292594v1_genomic.gbff.gz",
+      "sha256": "4b477ee6c45a702d67d9d3654f69be1c04c27e8d7fbe152932d52b2e9656ab1f",
+      "size_bytes": 1205832
+    },
+    {
+      "path": "/private/tmp/locus-v1-hardening-data/low-copy-23S/reads/SRR18335541_1.fastq.gz",
+      "sha256": "b02778e3299009d0940602bf27ed72c4ff03386abb1c64db133fea2c141856bc",
+      "size_bytes": 221449904
+    },
+    {
+      "path": "/private/tmp/locus-v1-hardening-data/low-copy-23S/reads/SRR18335541_2.fastq.gz",
+      "sha256": "b35445299cdb10ba5898ce7ec6a803320fd2ff4b1ecd100df732c32854aeac0d",
+      "size_bytes": 223984990
+    },
+    {
+      "path": "/private/tmp/locus-v1-hardening-data/low-copy-23S/samples/Hpfe0001/spades/assembly_graph_after_simplification.gfa",
+      "sha256": "7ecd937ce478728d812a092ad2f09c6ea8a2c93e0527d101a284dc04b7897299",
+      "size_bytes": 1792309
+    },
+    {
+      "path": "/private/tmp/locus-v1-hardening-data/low-copy-23S/closed_truth/GCF_022925925.1_ASM2292592v1_genomic.gbff.gz",
+      "sha256": "34a25f72137380a9afa828a19a62097af43e44531761e6a693a91088b512fe5a",
+      "size_bytes": 1180287
+    },
+    {
+      "path": "/private/tmp/locus-v1-hardening-data/low-copy-23S/reads/SRR18335539_1.fastq.gz",
+      "sha256": "8190bd9856e2331c4c187cbfa8b62e1a35f24cda022fa9ae0933d21d49027bcc",
+      "size_bytes": 230619171
+    },
+    {
+      "path": "/private/tmp/locus-v1-hardening-data/low-copy-23S/reads/SRR18335539_2.fastq.gz",
+      "sha256": "c9e95f1d2d2c1d552f5a0d0af5e58d1ebbd73dcf3231be50ad53e5cba2a58668",
+      "size_bytes": 235048313
+    },
+    {
+      "path": "/private/tmp/locus-v1-hardening-data/low-copy-23S/samples/Hpfe0002/spades/assembly_graph_after_simplification.gfa",
+      "sha256": "90295e3be126c5de0dcceb7c22c5b4c349cb93de7192c148a09927d7536b5563",
+      "size_bytes": 1678276
+    },
+    {
+      "path": "/private/tmp/locus-v1-hardening-data/low-copy-23S/closed_truth/GCF_022925905.1_ASM2292590v1_genomic.gbff.gz",
+      "sha256": "8f5aabaa2ee3ad8c284024d845b5a2e27d102561be3af1c84f93d82e0c44e6ee",
+      "size_bytes": 1150827
+    },
+    {
+      "path": "/private/tmp/locus-v1-hardening-data/low-copy-23S/reads/SRR18335523_1.fastq.gz",
+      "sha256": "5c10bc32333427a51495566e063dfea97d17eb58d6dd64de00b848c1c9e8eb94",
+      "size_bytes": 358139896
+    },
+    {
+      "path": "/private/tmp/locus-v1-hardening-data/low-copy-23S/reads/SRR18335523_2.fastq.gz",
+      "sha256": "c60394cb328113c2f5fe251a2d528e8e434e6ad6a2ce5e92962d06ae5e610d54",
+      "size_bytes": 364937796
+    },
+    {
+      "path": "/private/tmp/locus-v1-hardening-data/low-copy-23S/samples/Hpfe0003/spades/assembly_graph_after_simplification.gfa",
+      "sha256": "fb50e08af83db24aef0192f9549b902f08e014b742bb0974e67f06cd00673e25",
+      "size_bytes": 1826276
+    },
+    {
+      "path": "/private/tmp/locus-v1-hardening-data/low-copy-23S/closed_truth/GCF_022925875.1_ASM2292587v1_genomic.gbff.gz",
+      "sha256": "06bcd6dcfe5267d7015a54a7a67d11f9561c1bec5a0fb5f42e16a3c4125bcf82",
+      "size_bytes": 1146404
+    },
+    {
+      "path": "/private/tmp/locus-v1-hardening-data/low-copy-23S/reads/SRR18335501_1.fastq.gz",
+      "sha256": "594b71656a9f52c31d07bdb571c2bc65b23e113dbb424160534d96c7f3557c8a",
+      "size_bytes": 357096969
+    },
+    {
+      "path": "/private/tmp/locus-v1-hardening-data/low-copy-23S/reads/SRR18335501_2.fastq.gz",
+      "sha256": "02cfcc4b1e7040a0758e48223fcaf622c8c9c657de4e7a56a83a36facb1efe86",
+      "size_bytes": 362009113
+    },
+    {
+      "path": "/private/tmp/locus-v1-hardening-data/low-copy-23S/samples/Hpfe0004/spades/assembly_graph_after_simplification.gfa",
+      "sha256": "cec6fd5289dd1186749fad9225694cf3c52756b432f1b1e5d1638f7ceca5c643",
+      "size_bytes": 2158094
+    },
+    {
+      "path": "/private/tmp/locus-v1-hardening-data/low-copy-23S/closed_truth/GCF_022925855.1_ASM2292585v1_genomic.gbff.gz",
+      "sha256": "bb6fe91dbeebfbe22d01701d54096dd76329872d0d745d834cbd82a420aea70c",
+      "size_bytes": 1145839
+    },
+    {
+      "path": "/private/tmp/locus-v1-hardening-data/low-copy-23S/reads/SRR18335507_1.fastq.gz",
+      "sha256": "1c46a23cd54a2dca317a59945efdcf308acc0457519397bc773f775653f8e39f",
+      "size_bytes": 299735241
+    },
+    {
+      "path": "/private/tmp/locus-v1-hardening-data/low-copy-23S/reads/SRR18335507_2.fastq.gz",
+      "sha256": "986c30a9663a09a6e880635f7571332456d43555b09fa18110ad884cbccfbc75",
+      "size_bytes": 305002260
+    },
+    {
+      "path": "/private/tmp/locus-v1-hardening-data/low-copy-23S/samples/Hpfe0006/spades/assembly_graph_after_simplification.gfa",
+      "sha256": "f2d2687e462b997e8f90170d619ef438329b88b0b6cd3edadfe2b1cef826a173",
+      "size_bytes": 1891585
+    },
+    {
+      "path": "/private/tmp/locus-v1-hardening-data/low-copy-23S/results/low_copy_results.tsv",
+      "sha256": "0e28c8f99ddabc9bdf7bfc0ee65ed761031a5c3045ba68ce38fa7c510fb76c29",
+      "size_bytes": 4532
+    },
+    {
+      "path": "/private/tmp/locus-v1-hardening-data/low-copy-23S/results/closed_truth_audit.json",
+      "sha256": "33f588e487ac9a1971188eff3e7e2f3d128e08bdc7afd1e3b1b9e5a168da5f2a",
+      "size_bytes": 2716
+    }
+  ],
+  "parameters": {
+    "call_threshold": 1.5,
+    "draft_assembler": "SPAdes --isolate",
+    "fixed_bait_reference": "NC_000915.1",
+    "graph_max_context_bp": 5000,
+    "graph_max_context_nodes": 8,
+    "graph_max_context_paths": 64,
+    "graph_min_context_bp": "max(100, 2 * largest GFA overlap)",
+    "graph_min_identity": 80.0,
+    "graph_min_query_coverage": 0.9,
+    "max_backbone_bootstrap_blocks": 512,
+    "memory_gb": 8,
+    "min_bq": 20,
+    "min_mq": 20,
+    "n_boot": 1000,
+    "seed": 20260817,
+    "selection": "first five eligible BioSamples by numeric strain suffix",
+    "threads": 4
+  },
+  "primary_criteria_passed": true,
+  "schema_version": "1.0",
+  "tools": {
+    "aligner": {
+      "command": [
+        "bwa-mem2",
+        "version"
+      ],
+      "exit_code": 0,
+      "version": "2.2.1"
+    },
+    "biopython": {
+      "command": [
+        "/Users/crodsa/miniforge3/bin/python",
+        "-c",
+        "import Bio; print(Bio.__version__)"
+      ],
+      "exit_code": 0,
+      "version": "1.87"
+    },
+    "blastn": {
+      "command": [
+        "blastn",
+        "-version"
+      ],
+      "exit_code": 0,
+      "version": "blastn: 2.17.0+"
+    },
+    "python": {
+      "command": [
+        "/Users/crodsa/miniforge3/bin/python",
+        "--version"
+      ],
+      "exit_code": 0,
+      "version": "Python 3.12.10"
+    },
+    "samtools": {
+      "command": [
+        "samtools",
+        "--version"
+      ],
+      "exit_code": 0,
+      "version": "samtools 1.22.1"
+    },
+    "spades": {
+      "command": [
+        "spades.py",
+        "--version"
+      ],
+      "exit_code": 0,
+      "version": "SPAdes genome assembler v4.2.0"
+    }
+  },
+  "workflow": "external-two-copy-23S"
+}

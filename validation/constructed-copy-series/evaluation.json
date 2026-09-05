@@ -1,0 +1,11 @@
+{
+  "schema_version": "1.0",
+  "cases": 27,
+  "one_copy_false_multicopy": 0,
+  "two_or_three_copy_missed": 0,
+  "median_absolute_error": 0.04,
+  "criterion_zero_one_copy_false_multicopy": true,
+  "criterion_all_two_three_copy_detected": true,
+  "criterion_median_absolute_error_le_0_25": true,
+  "all_prespecified_criteria_passed": true
+}

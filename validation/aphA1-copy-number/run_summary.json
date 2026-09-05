@@ -1,0 +1,37 @@
+{
+  "schema_version": "1.0",
+  "workflow": "aphA1-seven-run-copy-number",
+  "code_commit": "f75acdb13c7517e6d8dec2e6ae1913e7a037c2fc",
+  "reference": "GCA_019458485.1",
+  "locus_region": "CP080452.1:250422-251237",
+  "profile_region": "CP080452.1:248831-252830",
+  "runs": [
+    "SRR14998418",
+    "SRR15115349",
+    "SRR15734211",
+    "SRR15734212",
+    "SRR15734215",
+    "SRR17023755",
+    "SRR17023784"
+  ],
+  "parameters": {
+    "min_bq": 20,
+    "min_mq": 20,
+    "call_threshold": 1.5,
+    "profile_p90_threshold": 1.65,
+    "bootstrap_block_size": 500,
+    "bootstrap_resamples": 1000,
+    "max_backbone_bootstrap_blocks": 512,
+    "seed": 20260817,
+    "threads": 4
+  },
+  "tools": {
+    "python": "3.12.10",
+    "bwa-mem2": "2.2.1",
+    "samtools": "1.22.1"
+  },
+  "results_sha256": "8b21197a36869e333dadc079dd97d1181515357b3b173d6024a76629607a237c",
+  "full_output_sha256": "b4f3170c163321467648a1989635189e3a06b356a76d24efe44656189bab9c",
+  "evaluation_sha256": "a08eba9c26ccbeb87741b4f625425e25234473540d0448c35d61bffa781bd8af",
+  "all_prespecified_criteria_passed": true
+}

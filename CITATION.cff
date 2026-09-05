@@ -1,0 +1,13 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite the archived version and the allele database release."
+title: "Locus-Recon: reconstruction of fragmented bacterial loci and depth-based locus copy number from short reads"
+type: software
+version: "1.0.0"
+date-released: 2026-09-05
+authors:
+  - family-names: "Rodríguez"
+    given-names: "César"
+    orcid: "https://orcid.org/0000-0001-5599-0652"
+    affiliation: "Facultad de Microbiología and Research Center for Tropical Diseases, Universidad de Costa Rica"
+repository-code: "https://github.com/crodsa/locus-recon"
+license: MIT

@@ -1,0 +1,22 @@
+{
+ "n_windows_tried": 3000,
+ "n_multi_region": 87,
+ "overlap_fraction_range": [
+  0.0487,
+  0.4526
+ ],
+ "fit_intercept": 0.9299,
+ "fit_slope": 1.5386,
+ "fit_r2": 0.6364,
+ "residual_sd": 0.1346,
+ "tcdB_overlap_fraction": 0.8326,
+ "tcdB_dosage": 2.287,
+ "null_prediction_at_tcdB_overlap": 2.211,
+ "null_prediction_interval_95": [
+  1.894,
+  2.528
+ ],
+ "z_of_observed": 0.477,
+ "overlap_at_which_null_reaches_1.5": 0.371,
+ "note": "Single-copy pseudo-queries drawn from the same draft assembly and run through the same discovery and dosage steps. Dosage rises with the fraction of the query resolved by more than one interval. The tcdB overlap fraction lies beyond the observed control range, so the null at that geometry is extrapolated."
+}

@@ -1,0 +1,64 @@
+[build-system]
+requires = ["setuptools>=77", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "locus-recon"
+version = "1.0.0"
+description = "Reconstruct fragmented bacterial loci and estimate depth-based locus copy number from Illumina reads"
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+requires-python = ">=3.9"
+authors = [
+    { name = "César Rodríguez", email = "cesar.rodriguezsanchez@ucr.ac.cr" }
+]
+keywords = ["bioinformatics", "locus reconstruction", "copy number", "MLST", "bacterial genomics", "assembly"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Topic :: Scientific/Engineering :: Bio-Informatics",
+    "Intended Audience :: Science/Research",
+]
+# Runtime Python deps only — external tools (BLAST, BWA, SPAdes, samtools)
+# must be installed via the provided conda environment.
+dependencies = [
+    "tqdm>=4.64",
+]
+
+[project.urls]
+Homepage = "https://github.com/crodsa/locus-recon"
+Repository = "https://github.com/crodsa/locus-recon"
+Documentation = "https://github.com/crodsa/locus-recon#readme"
+Issues = "https://github.com/crodsa/locus-recon/issues"
+
+[project.optional-dependencies]
+test = [
+    "pytest>=7",
+    "biopython==1.85; python_version < '3.10'",
+    "biopython==1.87; python_version >= '3.10'",
+    "numpy==1.26.4",
+]
+validation = [
+    "biopython==1.85; python_version < '3.10'",
+    "biopython==1.87; python_version >= '3.10'",
+    "numpy==1.26.4",
+]
+
+[project.scripts]
+locus-recon = "locus_recon.cli:main"
+locus-recon-graph-paths = "locus_recon.graph_cli:main"
+locus-recon-depth-ratio = "locus_recon.depth_ratio:main"
+locus-recon-copy-number = "locus_recon.copy_number_cli:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["locus_recon*"]
+
+[tool.pytest.ini_options]
+addopts = "-ra"
+testpaths = ["tests"]
+pythonpath = ["."]
+
+[tool.ruff]
+line-length = 100
+target-version = "py39"

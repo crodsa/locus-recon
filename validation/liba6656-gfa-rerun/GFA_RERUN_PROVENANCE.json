@@ -1,0 +1,70 @@
+{
+  "schema_version": "1.0",
+  "analysis_type": "contemporary_gfa_rerun",
+  "historical_gfa": false,
+  "started_at": "2026-08-24 14:57:34 -0600",
+  "sample": {
+    "sample_id": "LIBA6656_ST154",
+    "read_accession": "ERR467623",
+    "read_pairs": 1383413,
+    "read_length_bp": 100,
+    "assembly_contigs": 77,
+    "assembly_bp": 4268222
+  },
+  "software": {
+    "locus_recon": {
+      "version": "1.0",
+      "commit": "9c02bd1eb95de79d6abab35e5b666c3f11b43f64"
+    },
+    "python": "3.14.0",
+    "blast_plus": "2.16.0+",
+    "bwa_mem2": "2.2.1",
+    "samtools": "1.22.1",
+    "spades": "4.2.0"
+  },
+  "parameters": {
+    "locus": "tcdB",
+    "bait_records": 111,
+    "bait_length_min_bp": 7101,
+    "bait_length_max_bp": 7104,
+    "min_discovery_identity_percent": 80.0,
+    "min_hsp_length_bp": 50,
+    "region_padding_bp": 300,
+    "threads": 8,
+    "parallel_samples": 1,
+    "memory_per_sample_gb": 16,
+    "cleanup": false,
+    "graph_path_min_length_bp": 8000,
+    "graph_path_max_length_bp": 9000
+  },
+  "graph": {
+    "file": "assembly_graph_after_simplification.gfa",
+    "segments": 26,
+    "links": 32,
+    "terminal_paths_exported": 512,
+    "terminal_path_length_min_bp": 8456,
+    "terminal_path_length_max_bp": 8538
+  },
+  "candidate_path_alignment": [
+    {
+      "candidate": "LIBA6656_tcdB_extrachromosomal",
+      "best_path": "LIBA6656_tcdB_terminal_path_210",
+      "query_length_bp": 7104,
+      "aligned_bp": 7104,
+      "identity_percent": 100.0,
+      "mismatches": 0,
+      "orientation": "reverse"
+    },
+    {
+      "candidate": "LIBA6656_tcdB_chromosomal",
+      "best_path": "LIBA6656_tcdB_terminal_path_315",
+      "query_length_bp": 7104,
+      "aligned_bp": 7104,
+      "identity_percent": 99.226,
+      "mismatches": 55,
+      "orientation": "forward",
+      "note": "Differences correspond to the separately deposited polishing stage."
+    }
+  ],
+  "interpretation": "The contemporary GFA restores an auditable graph/path enumeration but is not represented as the exact historical GFA. Exported paths are unresolved combinatorial proposals and require the deposited remapping, per-base, polishing, and context evidence."
+}

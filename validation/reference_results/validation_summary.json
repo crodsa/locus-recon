@@ -1,0 +1,52 @@
+{
+  "all_core_criteria_passed": true,
+  "criteria": {
+    "baseline_exact": true,
+    "fragmented_exact": true,
+    "mixtures_10pct_and_above_detected": true,
+    "negative_not_reconstructed": true,
+    "no_false_mixture_in_successful_pure_controls": true,
+    "paralog_ambiguity_flagged": true
+  },
+  "depth_series": [
+    {
+      "breadth_pct": 0.0,
+      "exact_truth_match": false,
+      "nominal_depth": 3.0,
+      "observed_remap_depth": 0.0,
+      "status": "SKIP"
+    },
+    {
+      "breadth_pct": 0.0,
+      "exact_truth_match": false,
+      "nominal_depth": 5.0,
+      "observed_remap_depth": 0.0,
+      "status": "SKIP"
+    },
+    {
+      "breadth_pct": 98.8,
+      "exact_truth_match": true,
+      "nominal_depth": 10.0,
+      "observed_remap_depth": 7.8,
+      "status": "SUCCESS"
+    },
+    {
+      "breadth_pct": 99.0,
+      "exact_truth_match": true,
+      "nominal_depth": 20.0,
+      "observed_remap_depth": 14.4,
+      "status": "SUCCESS"
+    }
+  ],
+  "mixture_detection": {
+    "by_fraction": {
+      "0.05": true,
+      "0.10": true,
+      "0.20": true,
+      "0.50": true
+    },
+    "detected": 4,
+    "total": 4
+  },
+  "schema_version": "1.0"
+}

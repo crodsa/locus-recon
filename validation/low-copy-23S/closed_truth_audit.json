@@ -1,0 +1,104 @@
+[
+  {
+    "23S_lengths": [
+      2889,
+      2889
+    ],
+    "assembly_accession": "GCF_022925945.1",
+    "biosample": "SAMN26675507",
+    "chromosome_accession": "NZ_CP094173.1",
+    "chromosome_length": 1649959,
+    "chromosome_topology": "circular",
+    "full_length_23S_copies": 2,
+    "full_length_gyrB_copies": 1,
+    "gbff_sha256": "4b477ee6c45a702d67d9d3654f69be1c04c27e8d7fbe152932d52b2e9656ab1f",
+    "gyrB_lengths": [
+      2322
+    ],
+    "other_deposited_replicons": [],
+    "strain": "Hpfe0001"
+  },
+  {
+    "23S_lengths": [
+      2887,
+      2887
+    ],
+    "assembly_accession": "GCF_022925925.1",
+    "biosample": "SAMN26675508",
+    "chromosome_accession": "NZ_CP094172.1",
+    "chromosome_length": 1615483,
+    "chromosome_topology": "circular",
+    "full_length_23S_copies": 2,
+    "full_length_gyrB_copies": 1,
+    "gbff_sha256": "34a25f72137380a9afa828a19a62097af43e44531761e6a693a91088b512fe5a",
+    "gyrB_lengths": [
+      2322
+    ],
+    "other_deposited_replicons": [],
+    "strain": "Hpfe0002"
+  },
+  {
+    "23S_lengths": [
+      2889,
+      2889
+    ],
+    "assembly_accession": "GCF_022925905.1",
+    "biosample": "SAMN26675509",
+    "chromosome_accession": "NZ_CP094171.1",
+    "chromosome_length": 1564612,
+    "chromosome_topology": "circular",
+    "full_length_23S_copies": 2,
+    "full_length_gyrB_copies": 1,
+    "gbff_sha256": "8f5aabaa2ee3ad8c284024d845b5a2e27d102561be3af1c84f93d82e0c44e6ee",
+    "gyrB_lengths": [
+      2322
+    ],
+    "other_deposited_replicons": [],
+    "strain": "Hpfe0003"
+  },
+  {
+    "23S_lengths": [
+      2889,
+      2889
+    ],
+    "assembly_accession": "GCF_022925875.1",
+    "biosample": "SAMN26675510",
+    "chromosome_accession": "NZ_CP094170.1",
+    "chromosome_length": 1560176,
+    "chromosome_topology": "circular",
+    "full_length_23S_copies": 2,
+    "full_length_gyrB_copies": 1,
+    "gbff_sha256": "06bcd6dcfe5267d7015a54a7a67d11f9561c1bec5a0fb5f42e16a3c4125bcf82",
+    "gyrB_lengths": [
+      2322
+    ],
+    "other_deposited_replicons": [],
+    "strain": "Hpfe0004"
+  },
+  {
+    "23S_lengths": [
+      2887,
+      2887
+    ],
+    "assembly_accession": "GCF_022925855.1",
+    "biosample": "SAMN26675511",
+    "chromosome_accession": "NZ_CP094168.1",
+    "chromosome_length": 1559683,
+    "chromosome_topology": "circular",
+    "full_length_23S_copies": 2,
+    "full_length_gyrB_copies": 1,
+    "gbff_sha256": "bb6fe91dbeebfbe22d01701d54096dd76329872d0d745d834cbd82a420aea70c",
+    "gyrB_lengths": [
+      2322
+    ],
+    "other_deposited_replicons": [
+      {
+        "accession": "NZ_CP094169.1",
+        "classified_as_plasmid": true,
+        "length": 3465,
+        "topology": "circular"
+      }
+    ],
+    "strain": "Hpfe0006"
+  }
+]
