@@ -1,0 +1,11 @@
+stage	case	case_class	workflow_status	disposition	sequence_confidence	matches_truth	evidence
+closed-genome audit	Hpfe0001 gyrB	supported	SUCCESS	PASS	HIGH	yes	truth 2322 bp x 1 copy/ies; candidate 2322 bp at 100.00% over 2322 bp; catalogue identity 96.4%
+closed-genome audit	Hpfe0001 23S	multi-copy	SUCCESS	HOLD	SUSPECT	yes	truth 2889 bp x 2 copy/ies; candidate 2889 bp at 100.00% over 2889 bp; catalogue identity 99.2%
+closed-genome audit	Hpfe0002 gyrB	supported	SUCCESS	PASS	HIGH	yes	truth 2322 bp x 1 copy/ies; candidate 2322 bp at 100.00% over 2322 bp; catalogue identity 96.2%
+closed-genome audit	Hpfe0002 23S	multi-copy	SUCCESS	HOLD	SUSPECT	yes	truth 2887 bp x 2 copy/ies; candidate 2887 bp at 100.00% over 2887 bp; catalogue identity 99.3%
+closed-genome audit	Hpfe0003 gyrB	supported	SUCCESS	PASS	HIGH	yes	truth 2322 bp x 1 copy/ies; candidate 2322 bp at 100.00% over 2322 bp; catalogue identity 96.6%
+closed-genome audit	Hpfe0003 23S	multi-copy	SUCCESS	HOLD	SUSPECT	yes	truth 2889 bp x 2 copy/ies; candidate 2889 bp at 100.00% over 2889 bp; catalogue identity 99.3%
+closed-genome audit	Hpfe0004 gyrB	supported	SUCCESS	PASS	HIGH	yes	truth 2322 bp x 1 copy/ies; candidate 2322 bp at 100.00% over 2322 bp; catalogue identity 96.3%
+closed-genome audit	Hpfe0004 23S	multi-copy	SUCCESS	HOLD	SUSPECT	yes	truth 2889 bp x 2 copy/ies; candidate 2889 bp at 100.00% over 2889 bp; catalogue identity 99.3%
+closed-genome audit	Hpfe0006 gyrB	supported	SUCCESS	PASS	HIGH	yes	truth 2322 bp x 1 copy/ies; candidate 2322 bp at 100.00% over 2322 bp; catalogue identity 96.7%
+closed-genome audit	Hpfe0006 23S	multi-copy	SUCCESS	HOLD	SUSPECT	no	truth 2887 bp x 2 copy/ies; candidate 2570 bp at 100.00% over 2570 bp; catalogue identity 99.3%

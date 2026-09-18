@@ -1,0 +1,128 @@
+{
+  "combined": {
+    "by_case_class": {
+      "degraded": {
+        "acceptance_rate": 0.0,
+        "cases": 10,
+        "false_accepts": 0,
+        "reached_top_tier": 0,
+        "top_tier_exact": 0,
+        "top_tier_precision": null,
+        "withheld_but_exact": 6
+      },
+      "multi-copy": {
+        "acceptance_rate": 0.0,
+        "cases": 5,
+        "false_accepts": 0,
+        "reached_top_tier": 0,
+        "top_tier_exact": 0,
+        "top_tier_precision": null,
+        "withheld_but_exact": 4
+      },
+      "supported": {
+        "acceptance_rate": 1.0,
+        "cases": 11,
+        "false_accepts": 0,
+        "reached_top_tier": 11,
+        "top_tier_exact": 11,
+        "top_tier_precision": 1.0,
+        "withheld_but_exact": 0
+      },
+      "truncated": {
+        "acceptance_rate": 0.0,
+        "cases": 11,
+        "false_accepts": 0,
+        "reached_top_tier": 0,
+        "top_tier_exact": 0,
+        "top_tier_precision": null,
+        "withheld_but_exact": 11
+      }
+    },
+    "overall": {
+      "acceptance_rate": 0.297,
+      "cases": 37,
+      "false_accepts": 0,
+      "reached_top_tier": 11,
+      "top_tier_exact": 11,
+      "top_tier_precision": 1.0,
+      "withheld_but_exact": 21
+    },
+    "stage": "all cases with known truth",
+    "top_tier": "HIGH"
+  },
+  "stage_a_benchmarks": {
+    "by_case_class": {
+      "degraded": {
+        "acceptance_rate": 0.0,
+        "cases": 10,
+        "false_accepts": 0,
+        "reached_top_tier": 0,
+        "top_tier_exact": 0,
+        "top_tier_precision": null,
+        "withheld_but_exact": 6
+      },
+      "supported": {
+        "acceptance_rate": 1.0,
+        "cases": 6,
+        "false_accepts": 0,
+        "reached_top_tier": 6,
+        "top_tier_exact": 6,
+        "top_tier_precision": 1.0,
+        "withheld_but_exact": 0
+      },
+      "truncated": {
+        "acceptance_rate": 0.0,
+        "cases": 11,
+        "false_accepts": 0,
+        "reached_top_tier": 0,
+        "top_tier_exact": 0,
+        "top_tier_precision": null,
+        "withheld_but_exact": 11
+      }
+    },
+    "overall": {
+      "acceptance_rate": 0.222,
+      "cases": 27,
+      "false_accepts": 0,
+      "reached_top_tier": 6,
+      "top_tier_exact": 6,
+      "top_tier_precision": 1.0,
+      "withheld_but_exact": 17
+    },
+    "stage": "benchmarks",
+    "top_tier": "HIGH"
+  },
+  "stage_b_closed_genomes": {
+    "by_case_class": {
+      "multi-copy": {
+        "acceptance_rate": 0.0,
+        "cases": 5,
+        "false_accepts": 0,
+        "reached_top_tier": 0,
+        "top_tier_exact": 0,
+        "top_tier_precision": null,
+        "withheld_but_exact": 4
+      },
+      "supported": {
+        "acceptance_rate": 1.0,
+        "cases": 5,
+        "false_accepts": 0,
+        "reached_top_tier": 5,
+        "top_tier_exact": 5,
+        "top_tier_precision": 1.0,
+        "withheld_but_exact": 0
+      }
+    },
+    "overall": {
+      "acceptance_rate": 0.5,
+      "cases": 10,
+      "false_accepts": 0,
+      "reached_top_tier": 5,
+      "top_tier_exact": 5,
+      "top_tier_precision": 1.0,
+      "withheld_but_exact": 4
+    },
+    "stage": "closed genomes",
+    "top_tier": "HIGH"
+  }
+}
