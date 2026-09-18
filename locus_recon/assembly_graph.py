@@ -10,6 +10,7 @@ validation remain separate steps.
 from __future__ import annotations
 
 from dataclasses import dataclass
+import os
 import re
 from typing import Dict, Iterable, List, Tuple
 
@@ -268,3 +269,192 @@ def write_paths_fasta(
             )
             handle.write(wrap_fasta_sequence(path.sequence) + "\n")
     return count
+
+
+# ==============================================================================
+# Scaffold-placeholder junctions
+# ==============================================================================
+
+
+def find_interior_n_runs(sequence: str, min_run_bp: int = 1) -> List[Tuple[int, int]]:
+    """Locate runs of N that lie strictly inside a sequence.
+
+    A local assembler that scaffolds across a gap it cannot spell writes a run
+    of N.  Terminal runs are trimmed elsewhere and carry no junction, so only
+    interior runs are returned.
+
+    Args:
+        sequence:   Candidate sequence (uppercase).
+        min_run_bp: Ignore runs shorter than this.
+
+    Returns:
+        List of (start, end) 1-based inclusive coordinates, left to right.
+    """
+    runs: List[Tuple[int, int]] = []
+    for match in re.finditer(r"N+", sequence.upper()):
+        start, end = match.start() + 1, match.end()
+        if start == 1 or end == len(sequence):
+            continue
+        if end - start + 1 >= min_run_bp:
+            runs.append((start, end))
+    return runs
+
+
+def junction_support(
+    path_sequences: Iterable[str],
+    left_flank: str,
+    right_flank: str,
+) -> dict:
+    """Test whether two flanks of a placeholder are contiguous in the graph.
+
+    The two anchors are searched in every supplied path spelling and in its
+    reverse complement.  A path that carries both anchors with nothing between
+    them spells the join that the scaffolder could not spell, which is graph
+    evidence for the junction even though no read spans the placeholder.  A
+    path that carries both anchors with sequence between them offers a
+    different spelling, and the junction is then ambiguous rather than
+    supported.
+
+    Args:
+        path_sequences: Spelled graph paths (see enumerate_terminal_paths).
+        left_flank:     Sequence immediately 5' of the placeholder.
+        right_flank:    Sequence immediately 3' of the placeholder.
+
+    Returns:
+        Dict with keys: assessed, supported, paths_with_both_flanks, gaps_bp
+        (sorted distinct distances between the anchors), min_gap_bp.
+    """
+    if not left_flank or not right_flank:
+        return {
+            "assessed": False, "supported": False,
+            "paths_with_both_flanks": 0, "gaps_bp": [], "min_gap_bp": None,
+        }
+
+    gaps: List[int] = []
+    for sequence in path_sequences:
+        for spelling in (sequence, reverse_complement(sequence)):
+            left_at = spelling.find(left_flank)
+            if left_at < 0:
+                continue
+            right_at = spelling.find(right_flank, left_at + len(left_flank) - 1)
+            if right_at < 0:
+                continue
+            gaps.append(right_at - (left_at + len(left_flank)))
+    distinct = sorted(set(gaps))
+    return {
+        "assessed": True,
+        "supported": bool(gaps) and all(gap == 0 for gap in gaps),
+        "paths_with_both_flanks": len(gaps),
+        "gaps_bp": distinct,
+        "min_gap_bp": distinct[0] if distinct else None,
+    }
+
+
+def assess_placeholder_junctions(
+    sequence: str,
+    gfa_path: str,
+    flank_bp: int = 40,
+    min_run_bp: int = 10,
+    max_paths: int = 10000,
+    max_nodes: int = 1000,
+) -> dict:
+    """Describe every interior placeholder in a candidate against the graph.
+
+    This uses the local assembly graph the pipeline already produced, so it
+    adds no alignment work.  The verdict is reported, never scored: the
+    confidence tier stays a statement about read support for reported bases,
+    and a graph-supported junction is still a junction no read spans.
+
+    Args:
+        sequence:   Reconstructed candidate sequence.
+        gfa_path:   Local assembly graph (GFA) from the same sample.
+        flank_bp:   Anchor length taken either side of each placeholder.
+        min_run_bp: Ignore placeholder runs shorter than this.
+        max_paths:  Safety limit passed to enumerate_terminal_paths.
+        max_nodes:  Safety limit passed to enumerate_terminal_paths.
+
+    Returns:
+        Dict with keys: runs, total_bp, verdict
+        (GRAPH_SUPPORTED / AMBIGUOUS / NOT_SUPPORTED / NOT_ASSESSED),
+        details (per-run dicts) and flags (report strings).
+    """
+    runs = find_interior_n_runs(sequence, min_run_bp=min_run_bp)
+    total_bp = sum(end - start + 1 for start, end in runs)
+    summary = {
+        "runs": len(runs), "total_bp": total_bp,
+        "verdict": "NOT_ASSESSED", "details": [], "flags": [],
+    }
+    if not runs:
+        summary["verdict"] = "NO_PLACEHOLDER"
+        return summary
+    if not gfa_path or not os.path.isfile(gfa_path):
+        summary["flags"].append(
+            f"PLACEHOLDER_JUNCTION_NOT_ASSESSED ({len(runs)} interior "
+            f"placeholder run(s), {total_bp} bp; no local assembly graph found)"
+        )
+        return summary
+
+    try:
+        graph = parse_gfa(gfa_path)
+        paths = [
+            path.sequence
+            for path in enumerate_terminal_paths(
+                graph, max_paths=max_paths, max_nodes=max_nodes
+            )
+        ]
+    except (OSError, ValueError) as exc:
+        summary["flags"].append(
+            f"PLACEHOLDER_JUNCTION_NOT_ASSESSED ({len(runs)} interior "
+            f"placeholder run(s), {total_bp} bp; graph unreadable: {exc})"
+        )
+        return summary
+
+    verdicts = []
+    for start, end in runs:
+        left = sequence[max(0, start - 1 - flank_bp) : start - 1]
+        right = sequence[end : end + flank_bp]
+        support = junction_support(paths, left, right)
+        support.update({"start": start, "end": end, "length_bp": end - start + 1})
+        if not support["assessed"] or support["paths_with_both_flanks"] == 0:
+            support["verdict"] = "NOT_SUPPORTED"
+        elif support["supported"]:
+            support["verdict"] = "GRAPH_SUPPORTED"
+        else:
+            support["verdict"] = "AMBIGUOUS"
+        verdicts.append(support["verdict"])
+        summary["details"].append(support)
+
+    if all(v == "GRAPH_SUPPORTED" for v in verdicts):
+        summary["verdict"] = "GRAPH_SUPPORTED"
+    elif any(v == "AMBIGUOUS" for v in verdicts):
+        summary["verdict"] = "AMBIGUOUS"
+    else:
+        summary["verdict"] = "NOT_SUPPORTED"
+
+    spans = "; ".join(
+        f"{item['start']}-{item['end']} ({item['length_bp']} bp, "
+        f"{item['paths_with_both_flanks']} graph path(s) carry both flanks"
+        + (
+            f", gap {item['min_gap_bp']} bp"
+            if item["min_gap_bp"] not in (None, 0) else ""
+        )
+        + ")"
+        for item in summary["details"]
+    )
+    if summary["verdict"] == "GRAPH_SUPPORTED":
+        summary["flags"].append(
+            f"PLACEHOLDER_JUNCTION_GRAPH_SUPPORTED ({spans}; the flanks are "
+            "contiguous in the local assembly graph, so the placeholder is a "
+            "scaffolding gap rather than missing sequence -- no read spans it)"
+        )
+    elif summary["verdict"] == "AMBIGUOUS":
+        summary["flags"].append(
+            f"PLACEHOLDER_JUNCTION_AMBIGUOUS ({spans}; the graph offers more "
+            "than one spelling across the placeholder)"
+        )
+    else:
+        summary["flags"].append(
+            f"PLACEHOLDER_JUNCTION_NOT_SUPPORTED ({spans}; no graph path "
+            "carries both flanks)"
+        )
+    return summary

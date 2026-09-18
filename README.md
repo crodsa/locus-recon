@@ -350,11 +350,32 @@ The dots above abbreviate the example. Real FASTA records must contain the full,
 uninterrupted DNA sequence; do not include `...` in the file.
 
 Locus-Recon treats the first whitespace-delimited token after `>` as the record
-ID. That token must be unique. The tool also checks that records are non-empty
-and contain valid IUPAC DNA symbols. It cannot determine whether the file
-contains the correct biological locus, shared biological boundaries,
-consistent orientation, or paralog-free sequences; those remain
-scheme-curation responsibilities.
+ID. That token must be unique, non-empty, contain valid IUPAC DNA symbols, and
+be at most 50 characters long, which is the limit `makeblastdb -parse_seqids`
+imposes on a local identifier. Each of those four conditions is checked before
+any external program runs, and each failure names the offending record and what
+to change:
+
+| Input problem | What you are told |
+| --- | --- |
+| Alignment gaps (`-`, `.`) in a record | The symbols found, plus that the file looks like a gapped alignment rather than an allele set and the gaps must be removed |
+| An identifier longer than 50 characters | Its length, the `-parse_seqids` limit, and that the text before the first space must be shortened |
+| A duplicated or empty record | The record ID |
+| Records that share no 25-mer with the full-length records of the set | A warning naming them as probable paralogues or unrelated fragments; the run continues |
+
+The last check is a warning rather than an error because a short, genuinely
+divergent allele is possible, but in practice a record with no k-mer in common
+with the rest of the set is a fragment of a different gene family member. It is
+compared against the records at least half the length of the longest one, so
+two paralogous fragments cannot vouch for each other.
+
+Consistent orientation remains good practice, but it is no longer a silent
+trap: reading-frame metrics are computed over all six frames (see
+[reading frame](#reading-frame-metrics-are-computed-over-six-frames)), and a
+bait set that reads as coding only on the reverse strand is reported as such.
+Whether the file contains the correct biological locus and shared biological
+boundaries cannot be determined by the tool; those remain scheme-curation
+responsibilities.
 
 Do not mix different loci or known paralogs in one bait file.
 
@@ -363,6 +384,42 @@ for instance, add `--noncoding-locus` to the run. Locus-Recon then stops
 checking the candidate for internal stop codons and for a length consistent
 with the bait reading frame, checks that would otherwise flag a perfectly good
 non-coding reconstruction as suspect.
+
+### Reading frame metrics are computed over six frames
+
+A reconstruction inherits the orientation of the bait that recruited it. When a
+bait catalogue is supplied antisense to the coding strand, which is common for
+records cut from a genome in the orientation the assembly happened to use, a
+forward-only stop-codon count describes the wrong strand and reports stop
+codons the reconstruction does not have.
+
+`internal_stops` is therefore the minimum over all six reading frames, and
+`qc_coding_frame_used` names the frame that achieved it (`+1`..`+3`, `-1`..`-3`).
+The start and stop codon checks read the sequence in that same frame. A bait set
+whose plausible frames are all on the reverse strand is reported at the start of
+the run as a warning, not an error, because the six-frame scan has already made
+it harmless.
+
+An interior run of N is a second source of stop codons that say nothing about
+the reported bases. The local assembler writes that run when it scaffolds
+across a gap it cannot spell, and when its length is not a multiple of three
+every codon downstream of it is shifted. `internal_stops` is therefore also
+recomputed with the interior placeholders excised and reported as
+`qc_internal_stops_placeholder_closed`. When the count falls, the descriptive
+flag `PLACEHOLDER_FRAMESHIFT_EXPLAINS_STOPS` gives both numbers.
+`INTERNAL_STOPS` is still raised, because the sequence as delivered does
+contain them, but the report now distinguishes a frameshifted scaffold from a
+damaged reconstruction. Read it with `placeholder_junction_support`: a
+graph-supported junction whose excision removes every stop describes a
+scaffolding artefact, not a pseudogene.
+
+`FRAME_LENGTH_SHIFT` compares the candidate length modulo three with the bait's
+modal value. A reconstruction that a contig boundary has truncated has no reason
+to be a multiple of three, and that truncation is already reported by
+`ALLELE_SPAN_CLIPPED_AT_CONTIG_END` and measured by `span_clipped_bp`. When the
+projected span is clipped, the flag is therefore issued as
+`FRAME_LENGTH_SHIFT_TRUNCATED` and treated as descriptive, so the same fact is
+not scored twice as evidence about sequence integrity.
 
 ### Samplesheet
 
@@ -763,12 +820,39 @@ locus-recon-graph-paths --gfa work/SAMPLE/spades/assembly_graph_after_simplifica
 ```
 
 The GFA file is the one the local assembly already produced; the length bounds
-keep enumeration to paths the size of the locus you are after. Every exported
-path is a hypothesis, not a call. The command attaches no confidence tier and no
-truth label, and a path only becomes evidence once reads have been mapped
-competitively against all candidates and the disagreeing positions inspected
-one by one. Used that way, the graph supplies what depth alone cannot, namely the
-sequence differences between the copies.
+keep enumeration to paths the size of the locus you are after.
+
+Passing the reads makes the command do the competitive mapping itself:
+
+```bash
+locus-recon-graph-paths --gfa work/SAMPLE/spades/assembly_graph_after_simplification.gfa --output SAMPLE.graph_paths.fasta --summary SAMPLE.graph_paths_ranked.tsv --min-length 6000 --max-length 8000 --reads-r1 SAMPLE.target_R1.fq.gz --reads-r2 SAMPLE.target_R2.fq.gz --threads 12
+```
+
+All retained paths are indexed together, so every read is placed once, across
+the whole candidate set, and a read that fits several paths equally well is
+given a mapping quality of zero by the aligner. Depth is then counted only at
+or above `--min-mapping-quality` (20 by default), which means the score
+describes the sequence that *distinguishes* one path from the others rather
+than the sequence they share. The summary gains `mapped_reads`,
+`unique_mean_depth`, `unique_breadth_pct`, `unsupported_bp` and a `rank`,
+ordered by uniquely anchored breadth. The locus-recruited reads written by a
+reconstruction run (`target_R1.fq.gz`, `target_R2.fq.gz` in the sample
+directory) are the natural input.
+
+A rank is still not a call. Paths that share most of their sequence receive
+near-identical scores by construction, only the enumerated alternatives are
+compared, and `unsupported_bp` above zero means the path contains sequence that
+no uniquely placed read covers. The limiting case is reported explicitly: when
+no path has any uniquely anchored coverage, every read fits several paths
+equally well, the paths cannot be told apart at that read length, and the
+command says so instead of presenting an arbitrary order as a preference. That
+is the expected outcome for a tandem array whose repeat unit is shorter than
+the library insert, and it is the measurement that justifies moving to long
+reads. What the ranking buys is an ordering and a
+quantity where there was previously a list: it separates a path the reads cover
+end to end from one that is carried by a pile-up over a few positions. If the
+aligner or samtools is unavailable the command keeps the unranked summary and
+says so, rather than failing.
 
 A real-data example is deposited under
 [`validation/liba6656-gfa-rerun/`](validation/liba6656-gfa-rerun/README.md).

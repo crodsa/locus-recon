@@ -8,6 +8,12 @@ import re
 
 from . import VERSION
 from .assembly_graph import enumerate_terminal_paths, parse_gfa, write_paths_fasta
+from .graph_score import (
+    competitive_read_scores,
+    ranking_is_informative,
+    write_scored_summary,
+)
+from .utils import DependencyError, PipelineStepError, check_dependencies
 
 
 def _positive_int(value: str) -> int:
@@ -94,7 +100,42 @@ def main() -> None:
         "--prefix", type=_safe_prefix, default="graph_path", metavar="TEXT",
         help="FASTA and TSV candidate identifier prefix.",
     )
+    parser.add_argument(
+        "--reads-r1", metavar="FASTQ",
+        help=(
+            "Forward reads for competitive scoring. When given, all retained "
+            "paths are indexed together and the reads compete for placement, "
+            "so each path is scored by the sequence that uniquely anchored "
+            "reads cover, and the summary is ranked."
+        ),
+    )
+    parser.add_argument(
+        "--reads-r2", metavar="FASTQ",
+        help="Reverse reads for competitive scoring (optional).",
+    )
+    parser.add_argument(
+        "--threads", type=_positive_int, default=4, metavar="N",
+        help="Threads for competitive scoring.",
+    )
+    parser.add_argument(
+        "--min-mapping-quality", type=_nonnegative_int, default=20, metavar="Q",
+        help=(
+            "Depth for scoring is counted only from alignments at or above "
+            "this mapping quality, which excludes reads placed equally well "
+            "on several paths."
+        ),
+    )
+    parser.add_argument(
+        "--score-dir", metavar="DIR",
+        help="Destination for scoring BAM and text outputs (default: beside OUTPUT).",
+    )
     args = parser.parse_args()
+
+    if args.reads_r2 and not args.reads_r1:
+        parser.error("--reads-r2 requires --reads-r1")
+    for label, value in (("--reads-r1", args.reads_r1), ("--reads-r2", args.reads_r2)):
+        if value and not os.path.isfile(os.path.abspath(os.path.expanduser(value))):
+            parser.error(f"{label} file was not found: {value}")
 
     if args.max_length and args.max_length < args.min_length:
         parser.error("--max-length must be zero or at least --min-length")
@@ -130,12 +171,75 @@ def main() -> None:
 
     write_paths_fasta(paths, output_path, prefix=args.prefix)
     write_path_summary(paths, summary_path, args.prefix)
+
+    scored = False
+    informative = False
+    if args.reads_r1:
+        node_text = {
+            f"{args.prefix}_{index}": ",".join(
+                f"{segment_id}{orientation}"
+                for segment_id, orientation in path.nodes
+            )
+            for index, path in enumerate(paths, 1)
+        }
+        graph_depths = {
+            f"{args.prefix}_{index}": path.mean_depth
+            for index, path in enumerate(paths, 1)
+        }
+        score_dir = os.path.abspath(os.path.expanduser(
+            args.score_dir or os.path.join(os.path.dirname(output_path) or ".",
+                                           "graph_path_scores")
+        ))
+        os.makedirs(score_dir, exist_ok=True)
+        try:
+            tools, aligner_name = check_dependencies(False)
+            with open(os.path.join(score_dir, "scoring.log"), "w") as log_handle:
+                rows = competitive_read_scores(
+                    tools=tools,
+                    aligner_name=aligner_name,
+                    threads=args.threads,
+                    paths_fasta=output_path,
+                    r1=os.path.abspath(os.path.expanduser(args.reads_r1)),
+                    r2=(os.path.abspath(os.path.expanduser(args.reads_r2))
+                        if args.reads_r2 else None),
+                    out_dir=score_dir,
+                    log_handle=log_handle,
+                    min_mapping_quality=args.min_mapping_quality,
+                    graph_depths=graph_depths,
+                )
+            for row in rows:
+                row["nodes"] = node_text.get(row["candidate_id"], "")
+            write_scored_summary(rows, summary_path)
+            scored = True
+            informative = ranking_is_informative(rows)
+        except (DependencyError, PipelineStepError, OSError) as exc:
+            print(
+                f"WARNING: competitive scoring was not completed ({exc}). "
+                "The unranked path summary was kept.",
+            )
+
+    closing = (
+        (
+            "Paths are ranked by the sequence that uniquely anchored reads "
+            "cover. A rank is not an allele call: paths sharing most of their "
+            "sequence score alike, and only the enumerated alternatives were "
+            "compared."
+            if informative else
+            "No path carries uniquely placed reads: every read fits several of "
+            "the enumerated paths equally well, so at this read length the "
+            "paths cannot be told apart and the order in the summary is "
+            "arbitrary. Longer reads are required to choose between them."
+        )
+        if scored else
+        "These are unresolved candidates. Validate copy number, path phase, "
+        "and every reported base with competitive read mapping "
+        "(--reads-r1/--reads-r2 does this here)."
+    )
     print(
         f"Exported {len(paths)} of {len(all_paths)} terminal graph paths.\n"
         f"FASTA: {output_path}\n"
         f"Summary: {summary_path}\n"
-        "These are unresolved candidates. Validate copy number, path phase, "
-        "and every reported base with competitive read mapping."
+        f"{closing}"
     )
 
 

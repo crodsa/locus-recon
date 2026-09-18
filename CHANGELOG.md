@@ -120,6 +120,66 @@ reports the geometry and leaves the join to the analyst.
   anchors, complementary graph branches, competitive read mapping, per-base
   polishing and explicit reporting of unphaseable intervals.
 
+### Reading frame
+
+- Internal stop counts are minimised over all six reading frames, not the
+  forward three, and the frame that achieved the minimum is reported in
+  `qc_coding_frame_used` (`+1`..`+3`, `-1`..`-3`). A reconstruction inherits the
+  orientation of the bait that recruited it, so a bait catalogue supplied
+  antisense to the coding strand would otherwise produce stop codons the
+  candidate does not have. The start and stop codon checks read the candidate
+  in the same frame.
+- A length that is not a multiple of three in a candidate whose projected span
+  is clipped by a contig boundary is reported as the descriptive
+  `FRAME_LENGTH_SHIFT_TRUNCATED`. The truncation itself is scored by
+  `ALLELE_SPAN_CLIPPED_AT_CONTIG_END` and measured by `span_clipped_bp`, so the
+  same fact does not constrain the tier twice.
+- Stop codons produced by the frameshift of a scaffold placeholder are
+  attributed to it: `qc_internal_stops_placeholder_closed` gives the count with
+  interior placeholders excised, and `PLACEHOLDER_FRAMESHIFT_EXPLAINS_STOPS`
+  reports both numbers when it falls. `INTERNAL_STOPS` is still raised, because
+  the delivered sequence does contain them.
+
+### Bait database validation
+
+- Record identifiers longer than the 50-character `makeblastdb -parse_seqids`
+  limit are rejected by name, before any external program runs, instead of
+  surfacing as a raw `makeblastdb` failure.
+- Alignment gap symbols are named as such, with the advice to remove the gaps,
+  rather than only as invalid DNA symbols.
+- Records sharing no 25-mer with the full-length records of the set are
+  reported as probable paralogues or unrelated fragments. This is a warning,
+  not an error, and the comparison is against the records at least half the
+  length of the longest one so that two fragments cannot vouch for each other.
+- Length flags carry the number of bait alleles the median and IQR were
+  computed from (`qc_length_profile_n`), and a profile below five alleles adds
+  the descriptive `CATALOGUE_LENGTH_PROFILE_UNDERPOWERED`.
+
+### Scaffold placeholders and graph evidence
+
+- A run of N inside a candidate comes from the local assembler scaffolding
+  across a gap it could not spell. The flanks of each interior run are searched
+  in the local assembly graph the same run produced, so the check costs no
+  extra alignment: `placeholder_runs`, `placeholder_bp` and
+  `placeholder_junction_support` (`GRAPH_SUPPORTED`, `AMBIGUOUS`,
+  `NOT_SUPPORTED`, `NOT_ASSESSED`, `NO_PLACEHOLDER`) with a descriptive
+  `PLACEHOLDER_JUNCTION_*` flag. The verdict is reported and never scored: the
+  tier remains a statement about read support for reported bases, and a
+  graph-supported junction is still a junction no read spans.
+
+### Graph path scoring
+
+- `locus-recon-graph-paths --reads-r1` (optionally `--reads-r2`) indexes all
+  retained paths together so the reads compete for placement, and scores each
+  path by the sequence uniquely anchored reads cover: `mapped_reads`,
+  `unique_mean_depth`, `unique_breadth_pct`, `unsupported_bp` and `rank`, with
+  `--threads`, `--min-mapping-quality` and `--score-dir`. Without reads the
+  command behaves as before; if no aligner is available the unranked summary is
+  kept and the reason reported.
+- When no path carries uniquely placed reads, the command states that the
+  enumerated paths cannot be told apart at that read length and that their
+  order is arbitrary, rather than presenting a tie as a preference.
+
 ### Reproducibility and validation
 
 - A deterministic 13-sample validation dataset covering exact long-read truth,

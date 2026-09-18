@@ -211,8 +211,12 @@ are empty for `SKIP` and `FAIL` rows.
 | `qc_gc_pct` | Candidate GC percentage. |
 | `qc_gc_deviation` | Absolute percentage-point difference between candidate GC and bait-set mean GC. |
 | `qc_n_count` | Number of `N` bases in the candidate. |
-| `qc_internal_stops` | Minimum internal-stop count across the bait-supported plausible coding frames; zero when coding checks are disabled. |
+| `qc_internal_stops` | Minimum internal-stop count across all six reading frames; zero when coding checks are disabled. Evaluating both strands keeps an antisense bait catalogue from producing stop codons the candidate does not have. |
+| `qc_coding_frame_used` | The frame that achieved that minimum (`+1`..`+3`, `-1`..`-3`), and the frame in which the start and stop codon checks were read. |
 | `qc_length_mod3` | Candidate length modulo three for coding-locus checks. |
+| `qc_length_profile_n` | Number of bait alleles the length median and IQR were computed from. Below five, length flags are accompanied by `CATALOGUE_LENGTH_PROFILE_UNDERPOWERED` and should be read as weakly determined. |
+| `placeholder_runs`, `placeholder_bp` | Interior runs of N in the candidate, and their total length. These come from the local assembler scaffolding across a gap it could not spell. |
+| `placeholder_junction_support` | Whether the flanks of those runs are contiguous on a path through the local assembly graph: `GRAPH_SUPPORTED`, `AMBIGUOUS` (the graph spells extra sequence across the gap), `NOT_SUPPORTED` (no path carries both flanks), `NOT_ASSESSED` (no readable graph), `NO_PLACEHOLDER`. Reported, never scored: a graph-supported junction is still a junction no read spans. |
 | `qc_flags` | Semicolon-separated reasons for confidence downgrading. |
 
 ### Final read support and possible mixture
@@ -391,7 +395,9 @@ implemented flag names by the evidence they represent.
 | Validation coverage | `COVERAGE_BELOW_HIGH`, `REDUCED_COVERAGE`, `LOW_COVERAGE` | Query coverage is below 95%, 90%, or 80%, respectively. A `LOW_COVERAGE` successful row normally cannot occur with default minimum gates but can occur after threshold changes. |
 | Ambiguous bases | `SOME_N_CONTENT`, `ELEVATED_N_CONTENT`, `HIGH_N_CONTENT` | `N` fraction exceeds 0.1%, 0.5%, or 1.0%. |
 | GC composition | `GC_BELOW_HIGH`, `GC_SHIFT`, `GC_ANOMALY` | Absolute GC deviation exceeds 3, 5, or 8 percentage points. |
-| Coding structure | `INTERNAL_STOPS`, `FRAME_LENGTH_SHIFT` | The best bait-supported frame contains internal stops, or candidate length modulo three differs from the bait mode. Disabled by `--noncoding-locus`. |
+| Coding structure | `INTERNAL_STOPS`, `FRAME_LENGTH_SHIFT` | The best of all six reading frames contains internal stops, or candidate length modulo three differs from the bait mode. Disabled by `--noncoding-locus`. |
+| Coding structure, descriptive | `FRAME_LENGTH_SHIFT_TRUNCATED` | The length is not a multiple of three in a candidate already known to be clipped by a contig boundary, where the arithmetic follows from the truncation. Does not constrain the tier; the truncation itself is scored by `ALLELE_SPAN_CLIPPED_AT_CONTIG_END`. |
+| Scaffold placeholder, descriptive | `PLACEHOLDER_JUNCTION_GRAPH_SUPPORTED`, `PLACEHOLDER_JUNCTION_AMBIGUOUS`, `PLACEHOLDER_JUNCTION_NOT_SUPPORTED`, `PLACEHOLDER_JUNCTION_NOT_ASSESSED` | Graph evidence about the join across an interior run of N, with the coordinates of the run and how many graph paths carry both flanks. Does not constrain the tier. |
 | Mean remap depth | `REMAP_DEPTH_BELOW_HIGH`, `REDUCED_REMAP_DEPTH`, `LOW_REMAP_DEPTH` | Mean depth is below 20×, 10×, or 5×. |
 | Remap breadth | `REMAP_BREADTH_BELOW_HIGH`, `REDUCED_REMAP_BREADTH`, `LOW_REMAP_BREADTH` | Breadth is below 99%, 97%, or 90%. |
 | Coverage patchiness (**descriptive**) | `REMAP_PATCHINESS_BELOW_HIGH`, `MODEST_REMAP_PATCHINESS`, `PATCHY_REMAP_SUPPORT` | More than 1%, 5%, or 15% of candidate positions are below 5×. Reported with a `descriptive` annotation and excluded from every tier decision. |

@@ -32,6 +32,7 @@ from .blast import (
     rank_local_blast_hit,
     summarize_hit_ambiguity,
 )
+from .assembly_graph import assess_placeholder_junctions
 from .qc import (
     assess_allele_quality, format_qc_report, write_qc_report_file,
 )
@@ -71,7 +72,13 @@ def _empty_result(sample_id: str) -> dict:
         "qc_gc_deviation":    0.0,
         "qc_n_count":         0,
         "qc_internal_stops":  0,
+        "qc_coding_frame_used": "",
+        "qc_internal_stops_placeholder_closed": 0,
         "qc_length_mod3":     0,
+        "qc_length_profile_n": 0,
+        "placeholder_runs":   0,
+        "placeholder_bp":     0,
+        "placeholder_junction_support": "NOT_ASSESSED",
         "qc_flags":           "",
         "span_clipped_bp":       0,
         "span_clipped_start_bp": 0,
@@ -644,7 +651,22 @@ def process_sample(
                 exact_known_allele=exact_known,
             )
 
+            # Graph evidence for any interior scaffold placeholder.  The local
+            # assembly graph is already on disk from STEP 4, so this costs no
+            # extra alignment and turns an opaque held call into a legible one.
+            placeholder = assess_placeholder_junctions(
+                sequence=allele_seq,
+                gfa_path=os.path.join(
+                    spades_dir, "assembly_graph_after_simplification.gfa"
+                ),
+            )
+            if placeholder["flags"]:
+                qc["flags"] = list(qc["flags"]) + placeholder["flags"]
+
             result.update({
+                "placeholder_runs": placeholder["runs"],
+                "placeholder_bp":   placeholder["total_bp"],
+                "placeholder_junction_support": placeholder["verdict"],
                 "qc_confidence":    qc["confidence"],
                 "sequence_confidence": qc["sequence_confidence"],
                 "catalogue_status": qc["catalogue_status"],
@@ -656,7 +678,12 @@ def process_sample(
                 "qc_gc_deviation":  qc["gc_deviation"],
                 "qc_n_count":       qc["n_count"],
                 "qc_internal_stops": qc["internal_stops"],
+                "qc_coding_frame_used": qc.get("coding_frame_used", ""),
+                "qc_internal_stops_placeholder_closed": qc.get(
+                    "internal_stops_placeholder_closed", 0
+                ),
                 "qc_length_mod3":   qc["length_mod3"],
+                "qc_length_profile_n": qc.get("length_profile_n", 0),
                 "qc_flags":         "; ".join(qc["flags"]) if qc["flags"] else "",
             })
 

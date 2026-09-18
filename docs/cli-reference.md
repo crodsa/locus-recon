@@ -378,6 +378,18 @@ locus-recon-graph-paths --gfa work/SAMPLE/spades/assembly_graph_after_simplifica
 | `--min-length`, `--max-length` | discard paths outside this length range (`--max-length 0` disables) |
 | `--max-paths`, `--max-nodes` | safety bounds on enumeration |
 | `--prefix` | identifier prefix for exported candidates |
+| `--reads-r1`, `--reads-r2` | recruited reads for competitive scoring; all retained paths are indexed together so the reads compete for placement |
+| `--threads` | threads for competitive scoring (default 4) |
+| `--min-mapping-quality` | depth is counted only from alignments at or above this quality, excluding reads that fit several paths equally well (default 20) |
+| `--score-dir` | destination for the scoring BAM and text outputs (default: `graph_path_scores/` beside `--output`) |
+
+Without `--reads-r1` the summary columns are `candidate_id`, `length`,
+`mean_graph_depth`, `nodes`. With reads they become `rank`, `candidate_id`,
+`length`, `mean_graph_depth`, `mapped_reads`, `unique_mean_depth`,
+`unique_breadth_pct`, `unsupported_bp`, `nodes`, ordered by uniquely anchored
+breadth. A rank orders the enumerated alternatives; it is not an allele call,
+and paths sharing most of their sequence score alike by construction. If no
+aligner is available the unranked summary is kept and the reason is printed.
 
 ### `locus-recon-depth-ratio`
 

@@ -81,6 +81,19 @@ UNCERTAINTY_THRESHOLDS = {
 # Flags that describe a run but do not, on their own, constrain the tier.
 DESCRIPTIVE_FLAG_PREFIXES = (
     "PATCHY_REMAP_SUPPORT",
+    # A length that is not a multiple of three in a reconstruction already
+    # known to be clipped by a contig boundary.  The truncation is scored by
+    # its own flag; this one only records that the frame arithmetic follows
+    # from it.
+    "FRAME_LENGTH_SHIFT_TRUNCATED",
+    # Internal stop codons that a scaffold placeholder's frameshift accounts
+    # for.  INTERNAL_STOPS itself is still raised, because the delivered
+    # sequence does contain them; this one records where they come from.
+    "PLACEHOLDER_FRAMESHIFT_EXPLAINS_STOPS",
+    # Graph evidence about a scaffold placeholder the local assembler inserted.
+    # Reported so the reason for a held call is legible; it does not move the
+    # tier, which remains a statement about read support for reported bases.
+    "PLACEHOLDER_JUNCTION_",
     "MODEST_REMAP_PATCHINESS",
     "REMAP_PATCHINESS_BELOW_HIGH",
     # Catalogue relationship: how far the reconstruction sits from the nearest

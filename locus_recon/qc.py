@@ -4,6 +4,7 @@ confidence classification, and QC report formatting.
 """
 
 import math
+import re
 from collections import Counter
 from typing import List, Optional, Tuple
 
@@ -17,9 +18,24 @@ from .utils import (
     UNCERTAINTY_THRESHOLDS,
     log,
 )
-from .io import read_fasta_sequences
+from .io import read_fasta_sequences, reverse_complement
 
 VALID_DNA = set("ACGTRYSWKMBDHVN")
+# Symbols that mean the bait file is an alignment rather than an allele set.
+ALIGNMENT_GAP_SYMBOLS = frozenset("-.")
+# makeblastdb -parse_seqids rejects local identifiers longer than this, and
+# fails with an error that does not name the offending record.
+MAX_BLAST_LOCAL_ID_LEN = 50
+# A length profile built from fewer alleles than this is reported as
+# underpowered: its median and IQR are too weakly determined for a length
+# difference to say much about the reconstruction.
+MIN_LENGTH_PROFILE_N = 5
+# Bait records sharing no k-mer of this size with any other record are usually
+# paralogues or unrelated fragments rather than alleles of the same locus.
+PARALOG_KMER_SIZE = 25
+# Records at least this fraction of the longest record's length are treated as
+# the locus' reference set when screening for paralogous fragments.
+PARALOG_REFERENCE_LENGTH_FRACTION = 0.5
 
 
 # ==============================================================================
@@ -79,9 +95,24 @@ def profile_bait_database(bait_path: str) -> dict:
             raise ValueError(f"Bait FASTA record {header!r} has an empty sequence.")
         invalid = sorted(set(sequence) - VALID_DNA)
         if invalid:
-            raise ValueError(
+            message = (
                 f"Bait FASTA record {header!r} contains invalid DNA symbols: "
                 + ", ".join(invalid)
+            )
+            if ALIGNMENT_GAP_SYMBOLS.intersection(invalid):
+                message += (
+                    ". The file looks like a gapped alignment rather than a set "
+                    "of alleles; remove the alignment gaps before using it as a "
+                    "bait database."
+                )
+            raise ValueError(message)
+        if len(header) > MAX_BLAST_LOCAL_ID_LEN:
+            raise ValueError(
+                f"Bait FASTA record {header!r} has a {len(header)}-character "
+                f"identifier. makeblastdb -parse_seqids rejects local "
+                f"identifiers longer than {MAX_BLAST_LOCAL_ID_LEN} characters, "
+                "so the bait database cannot be built. Shorten the identifier "
+                "(the text before the first space in the header) and rerun."
             )
         seen_headers.add(header)
 
@@ -114,6 +145,41 @@ def profile_bait_database(bait_path: str) -> dict:
     ]
     expected_frame = expected_frames[0]
 
+    # The same profiling over all six frames.  A bait catalogue supplied
+    # antisense to the coding strand has no plausible forward frame at all, so
+    # the forward-only summary above cannot be read as the locus' frame.
+    six_frame_stop_counts = {label: 0 for label in coding_frame_labels()}
+    for _, sequence in sequences:
+        for label, stops in count_internal_stops_six_frames(sequence)[2].items():
+            six_frame_stop_counts[label] += stops
+    minimum_six_frame_stops = min(six_frame_stop_counts.values())
+    expected_frame_labels = [
+        label for label, stops in six_frame_stop_counts.items()
+        if stops == minimum_six_frame_stops
+    ]
+    bait_appears_antisense = all(
+        label.startswith("-") for label in expected_frame_labels
+    )
+
+    # Records that share no k-mer with the long records of the set.  The
+    # comparison is against the long records rather than against every other
+    # record because two paralogous fragments resemble each other and would
+    # otherwise mask one another.
+    unrelated_records: List[str] = []
+    if len(sequences) > 1:
+        longest_len = max(len(sequence) for _, sequence in sequences)
+        reference_kmers = set().union(*(
+            _kmers(sequence, PARALOG_KMER_SIZE)
+            for _, sequence in sequences
+            if len(sequence) >= PARALOG_REFERENCE_LENGTH_FRACTION * longest_len
+        ))
+        for header, sequence in sequences:
+            if len(sequence) >= PARALOG_REFERENCE_LENGTH_FRACTION * longest_len:
+                continue
+            own_kmers = _kmers(sequence, PARALOG_KMER_SIZE)
+            if own_kmers and not own_kmers & reference_kmers:
+                unrelated_records.append(header)
+
     gc_mean  = sum(gc_values) / len(gc_values) if gc_values else 0.0
     gc_var   = (
         sum((g - gc_mean) ** 2 for g in gc_values) / len(gc_values)
@@ -137,6 +203,11 @@ def profile_bait_database(bait_path: str) -> dict:
         "expected_coding_frame": expected_frame,
         "expected_coding_frames": expected_frames,
         "frame_stop_counts": frame_stop_counts,
+        "six_frame_stop_counts": six_frame_stop_counts,
+        "expected_coding_frame_labels": expected_frame_labels,
+        "bait_appears_antisense": bait_appears_antisense,
+        "unrelated_records": unrelated_records,
+        "length_profile_underpowered": n < MIN_LENGTH_PROFILE_N,
         "gc_mean":     gc_mean,
         "gc_stdev":    gc_stdev,
     }
@@ -148,9 +219,31 @@ def profile_bait_database(bait_path: str) -> dict:
     log.info(f"  Length mode  : {mode_len} bp")
     log.info(f"  Modal len %% 3: {mode_mod3}")
     log.info(
-        "  Plausible coding frame(s): "
-        + ", ".join(f"+{frame}" for frame in expected_frames)
+        "  Plausible coding frame(s), six-frame: "
+        + ", ".join(expected_frame_labels)
     )
+    if bait_appears_antisense:
+        log.warning(
+            "  The bait records read as coding only on the reverse strand. "
+            "Reading-frame metrics are evaluated over all six frames, so this "
+            "does not affect the reconstruction, but a sense-strand bait set "
+            "makes the reports easier to read."
+        )
+    if unrelated_records:
+        shown = ", ".join(unrelated_records[:5])
+        more = " ..." if len(unrelated_records) > 5 else ""
+        log.warning(
+            f"  {len(unrelated_records)} bait record(s) share no "
+            f"{PARALOG_KMER_SIZE}-mer with the full-length records of this "
+            f"bait set and may be paralogues or unrelated fragments rather "
+            f"than alleles of this locus: {shown}{more}"
+        )
+    if n < MIN_LENGTH_PROFILE_N:
+        log.warning(
+            f"  The length profile is built from {n} allele(s); fewer than "
+            f"{MIN_LENGTH_PROFILE_N}, so length flags are reported as "
+            "underpowered and carry the profile size."
+        )
     log.info(f"  Length stdev : {stdev_len:.1f} bp")
     log.info(f"  GC content   : {gc_mean:.1f}% +/- {gc_stdev:.1f}%")
     if iqr == 0:
@@ -273,11 +366,32 @@ def assess_allele_quality(
         )
         expected_frame = expected_frames[0]
         expected_mod3 = bait_profile.get("len_mod3_mode", mode % 3)
-        internal_stops = min(
-            _count_internal_stops(allele_seq, frame) for frame in expected_frames
+        internal_stops, coding_frame_used, six_frame_stops = (
+            count_internal_stops_six_frames(allele_seq)
         )
-        has_start_codon = allele_seq[:3] in ("ATG", "GTG", "TTG")
-        has_stop_codon  = allele_seq[-3:] in STOP_CODONS if len(allele_seq) >= 3 else False
+        # A run of N whose length is not a multiple of three shifts every
+        # codon downstream of it, so a local assembler's scaffold placeholder
+        # manufactures stop codons in sequence that is otherwise intact.
+        # Recounting without the placeholders separates the two cases.
+        interior_n_runs = [
+            match for match in re.finditer(r"N+", allele_seq)
+            if match.start() > 0 and match.end() < len(allele_seq)
+        ]
+        if interior_n_runs and internal_stops > 0:
+            excised = re.sub(r"N+", "", allele_seq)
+            stops_without_placeholder = count_internal_stops_six_frames(excised)[0]
+        else:
+            stops_without_placeholder = internal_stops
+        placeholder_bp_excised = sum(
+            match.end() - match.start() for match in interior_n_runs
+        )
+        coding_view = _coding_view(allele_seq, coding_frame_used)
+        complete_len = len(coding_view) - (len(coding_view) % 3)
+        has_start_codon = coding_view[:3] in ("ATG", "GTG", "TTG")
+        has_stop_codon = (
+            complete_len >= 3
+            and coding_view[complete_len - 3 : complete_len] in STOP_CODONS
+        )
         length_mod3     = allele_len % 3
         frame_disrupted = length_mod3 != expected_mod3
     else:
@@ -285,6 +399,10 @@ def assess_allele_quality(
         expected_frames = [0]
         expected_mod3 = 0
         internal_stops  = 0
+        coding_frame_used = ""
+        six_frame_stops = {}
+        stops_without_placeholder = 0
+        placeholder_bp_excised = 0
         has_start_codon = False
         has_stop_codon  = False
         length_mod3     = 0
@@ -303,9 +421,13 @@ def assess_allele_quality(
         n_fraction=n_fraction,
         gc_deviation=gc_deviation,
         internal_stops=internal_stops,
+        coding_frame_used=coding_frame_used,
+        stops_without_placeholder=stops_without_placeholder,
+        placeholder_bp_excised=placeholder_bp_excised,
         length_mod3=length_mod3,
         expected_mod3=expected_mod3,
         frame_disrupted=frame_disrupted,
+        length_profile_n=int(bait_profile.get("n_alleles", 0) or 0),
         remap_metrics=remap_metrics,
         ambiguity_metrics=ambiguity_metrics,
         expect_cds=expect_cds,
@@ -342,6 +464,13 @@ def assess_allele_quality(
         "expected_length_mod3": expected_mod3,
         "expected_coding_frame": expected_frame,
         "evaluated_coding_frames": expected_frames,
+        "coding_frame_used": coding_frame_used,
+        "six_frame_stop_counts": six_frame_stops,
+        "internal_stops_placeholder_closed": stops_without_placeholder,
+        "length_profile_n": int(bait_profile.get("n_alleles", 0) or 0),
+        "length_profile_underpowered": bool(
+            bait_profile.get("length_profile_underpowered", False)
+        ),
         "frame_disrupted": frame_disrupted,
         "expect_cds":        expect_cds,
         "remap_mean_depth":       remap_metrics.get("mean_depth", 0.0),
@@ -409,6 +538,52 @@ def _count_internal_stops(seq: str, frame: int = 0) -> int:
     return sum(1 for codon in codons[:-1] if codon in STOP_CODONS)
 
 
+def _kmers(sequence: str, size: int) -> set:
+    """Return the set of k-mers of one length in a sequence."""
+    if len(sequence) < size:
+        return set()
+    return {sequence[index : index + size] for index in range(len(sequence) - size + 1)}
+
+
+def coding_frame_labels() -> List[str]:
+    """Return the six reading-frame labels, forward strand first."""
+    return [f"{strand}{frame}" for strand in ("+", "-") for frame in (1, 2, 3)]
+
+
+def count_internal_stops_six_frames(sequence: str) -> Tuple[int, str, dict]:
+    """Count internal stop codons in all six reading frames.
+
+    Returns (minimum_stops, best_frame_label, counts_by_frame_label).
+
+    Both strands are evaluated because a bait catalogue is frequently supplied
+    antisense to the coding strand, and a reconstruction inherits the bait's
+    orientation.  Scoring only the forward frames then reports stop codons the
+    reconstruction does not have, which is a false positive rather than
+    evidence about the sequence.
+
+    Args:
+        sequence: DNA sequence (uppercase).
+
+    Returns:
+        Tuple of the minimum internal stop count, the label of the frame that
+        achieves it (``+1``..``+3``, ``-1``..``-3``), and every frame's count.
+    """
+    counts = {}
+    for strand, oriented in (("+", sequence), ("-", reverse_complement(sequence))):
+        for frame in range(3):
+            counts[f"{strand}{frame + 1}"] = _count_internal_stops(oriented, frame)
+    best_label = min(counts, key=lambda label: (counts[label], label))
+    return counts[best_label], best_label, counts
+
+
+def _coding_view(sequence: str, frame_label: str) -> str:
+    """Return the sequence as read in one of the six frame labels."""
+    if not frame_label:
+        return sequence
+    oriented = sequence if frame_label.startswith("+") else reverse_complement(sequence)
+    return oriented[int(frame_label[1:]) - 1 :]
+
+
 def _classify_confidence(
     length_within_1x: bool,
     length_within_2x: bool,
@@ -426,6 +601,10 @@ def _classify_confidence(
     ambiguity_metrics: dict,
     expect_cds: bool,
     span_metrics: Optional[dict] = None,
+    coding_frame_used: str = "",
+    length_profile_n: int = 0,
+    stops_without_placeholder: int = 0,
+    placeholder_bp_excised: int = 0,
 ) -> Tuple[str, List[str]]:
     """Assign a sequence confidence tier and generate explanatory flag strings.
 
@@ -444,13 +623,30 @@ def _classify_confidence(
     th       = QC_THRESHOLDS
     remap_th = REMAP_THRESHOLDS
 
+    profile_note = f", profile n={length_profile_n}" if length_profile_n else ""
     if not length_within_1x:
         if length_within_2x:
-            flags.append(f"LENGTH_MARGINAL (delta={length_delta_abs:.0f} bp, outside 1xIQR)")
+            flags.append(
+                f"LENGTH_MARGINAL (delta={length_delta_abs:.0f} bp, "
+                f"outside 1xIQR{profile_note})"
+            )
         elif length_within_3x:
-            flags.append(f"LENGTH_DEVIANT (delta={length_delta_abs:.0f} bp, outside 2xIQR)")
+            flags.append(
+                f"LENGTH_DEVIANT (delta={length_delta_abs:.0f} bp, "
+                f"outside 2xIQR{profile_note})"
+            )
         else:
-            flags.append(f"LENGTH_ANOMALOUS (delta={length_delta_abs:.0f} bp, outside 3xIQR)")
+            flags.append(
+                f"LENGTH_ANOMALOUS (delta={length_delta_abs:.0f} bp, "
+                f"outside 3xIQR{profile_note})"
+            )
+        if 0 < length_profile_n < MIN_LENGTH_PROFILE_N:
+            flags.append(
+                f"CATALOGUE_LENGTH_PROFILE_UNDERPOWERED (length profile built "
+                f"from {length_profile_n} allele(s), fewer than "
+                f"{MIN_LENGTH_PROFILE_N}; the length flag above is weakly "
+                f"determined and is reported for interpretation)"
+            )
 
     # Catalogue relationship is reported, not scored.  Divergence from the
     # nearest curated allele is a statement about the reference catalogue, not
@@ -492,12 +688,40 @@ def _classify_confidence(
 
     if expect_cds:
         if internal_stops > 0:
-            flags.append(f"INTERNAL_STOPS (min {internal_stops} in best frame)")
-        if frame_disrupted:
+            frame_note = f", frame {coding_frame_used}" if coding_frame_used else ""
             flags.append(
-                f"FRAME_LENGTH_SHIFT (length % 3 = {length_mod3}; "
-                f"bait mode = {expected_mod3})"
+                f"INTERNAL_STOPS (min {internal_stops} over six frames"
+                f"{frame_note})"
             )
+            if placeholder_bp_excised and stops_without_placeholder < internal_stops:
+                flags.append(
+                    f"PLACEHOLDER_FRAMESHIFT_EXPLAINS_STOPS "
+                    f"({internal_stops} internal stops fall to "
+                    f"{stops_without_placeholder} when the "
+                    f"{placeholder_bp_excised} bp of interior placeholder are "
+                    f"excised; the placeholder shifts the frame downstream, so "
+                    f"the stop codons are an artefact of the scaffold gap "
+                    f"rather than of the reported bases)"
+                )
+        if frame_disrupted:
+            clipped_bp = int((span_metrics or {}).get("clipped_bp", 0) or 0)
+            if clipped_bp >= SPAN_CLIP_THRESHOLDS["min_flag_bp"]:
+                # A reconstruction truncated by a contig boundary has no reason
+                # to be a multiple of three.  The truncation is reported on its
+                # own by ALLELE_SPAN_CLIPPED_AT_CONTIG_END; repeating it as a
+                # frame flag would score the same fact twice, as evidence about
+                # sequence integrity that it is not.
+                flags.append(
+                    f"FRAME_LENGTH_SHIFT_TRUNCATED (length % 3 = {length_mod3}; "
+                    f"bait mode = {expected_mod3}; expected because the "
+                    f"projected span is clipped by {clipped_bp} bp at a contig "
+                    f"boundary)"
+                )
+            else:
+                flags.append(
+                    f"FRAME_LENGTH_SHIFT (length % 3 = {length_mod3}; "
+                    f"bait mode = {expected_mod3})"
+                )
 
     mean_depth    = remap_metrics.get("mean_depth", 0.0)
     breadth_pct   = remap_metrics.get("breadth_pct", 0.0)
