@@ -187,6 +187,11 @@ reports the geometry and leaves the join to the analyst.
   mixtures, a closely related paralogue and a negative control, with an
   end-to-end benchmark runner, a machine-readable evaluator, regression tests
   and compact reference results.
+- A deposit reusing the curated `tcdB` alleles and local assembly graph already
+  in the repository to validate orientation-independent frame metrics, the bait
+  database errors, length-profile reporting, the three placeholder junction
+  verdicts, and competitive path scoring both against constructed truth and on
+  the published read pair, where the enumerated paths cannot be separated.
 - A 14-case deterministic completeness benchmark in which the withheld locus
   bases are known by construction, covering intact, flush, one-sided and
   two-sided truncation, reverse orientation and three split-contig layouts.

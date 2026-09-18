@@ -1,0 +1,5 @@
+candidate_record	bait_orientation	candidate_orientation	bait_plausible_frame	bait_reported_antisense	internal_stops	frame_used	forward_only_internal_stops	internal_stops_flag
+B1.1	as deposited	as deposited	+1	False	0	+1	0	no
+B1.1	as deposited	reverse complemented	+1	False	0	-1	103	no
+B1.1	reverse complemented	as deposited	-1	True	0	+1	0	no
+B1.1	reverse complemented	reverse complemented	-1	True	0	-1	103	no

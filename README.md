@@ -870,7 +870,7 @@ documents the safety bounds and the summary columns.
 ## Validation evidence
 
 No single dataset validates every output. The evidence package therefore uses
-seven complementary stages and states the role of each one.
+eight complementary stages and states the role of each one.
 
 | Stage | Biological or technical question | What the result supports | Important boundary |
 |---|---|---|---|
@@ -880,6 +880,7 @@ seven complementary stages and states the role of each one.
 | Seven-run *aphA1* panel | Can the depth module recover a clinically relevant aminoglycoside-resistance amplification from real *A. baumannii* reads? | Concordance for four single-copy and three amplified runs, with both available qPCR values reproduced within their published intervals | Several runs belong to one clinical and selection series |
 | Five-genome 23S and *gyrB* panel | Can graph context help at the low-copy boundary when 23S depth rejects one copy but overshoots the known two-copy state? | Two 23S contexts and one *gyrB* context in every genome, with the depth measurement unchanged by the graph observation | The panel informed the graph extension and is not held-out performance validation |
 | Real-read audit of the same five genomes against their closed sequences | Does the confidence layer separate correct from incorrect reconstructions when truth is known and the catalogue is distant? | Nine of ten reconstructions exact, the tenth reported as truncated with its missing bases located, and five exact *gyrB* alleles retained at `HIGH` despite 96.2-96.7% catalogue identity | Five genomes at two loci in one species; not an estimate of exact-reconstruction sensitivity across taxa |
+| Frame, input-validation and graph-evidence checks on the deposited *tcdB* material | Do the reporting behaviours hold independently of bait orientation, are bad inputs named rather than passed on, does the graph answer for a scaffold placeholder, and can competitive scoring rank graph paths? | Identical internal-stop counts in all four orientation combinations where a forward-only scan reports 103 stops, three input errors named at the record, three of three placeholder verdicts, and a constructed positive control in which the source path is the only candidate with uniquely anchored coverage | Constructed placeholders and simulated control reads isolate the logic; on the published read pair the 512 paths cannot be separated at all, which bounds what the ranking can do with 100 bp reads |
 | LIBA-6656 *tcdB* application | Can the complete evidence system resolve a biologically important toxin locus when the draft assembly suggests one incomplete mixed sequence? | Two read-compatible candidates in chromosome-associated and extrachromosomal contexts, plus a correct refusal to report unsupported dosage | Short reads do not establish replicon closure or long-range phase |
 
 ### Reconstruction benchmark
@@ -952,6 +953,40 @@ two-copy expectation, and the graph observation did not alter them.
 Two-ended graph traversal recovered the deposited two-context state for 23S and
 one context for *gyrB*. This is a transparent development demonstration because
 the panel guided the graph extension.
+
+### Frame, input validation and graph evidence
+
+The deposit under
+[`validation/frame-and-graph-evidence/`](validation/frame-and-graph-evidence/README.md)
+reuses the 111 curated `tcdB` alleles and the LIBA-6656 local graph already in
+this repository, so it introduces no new sequence data.
+
+Holding one allele out and building the profile from the remaining 110, the
+internal-stop count is **0 in all four bait and candidate orientation
+combinations**, and the reported frame mirrors the candidate's orientation. A
+forward-only scan reports **103** internal stops for the same candidate on the
+reverse strand, which is the quantity that previously drove a clean open
+reading frame to `SUSPECT`. Three derived bait files are each rejected or
+flagged by name: a 64-character identifier, restored alignment gaps, and a
+400 bp unrelated fragment. A three-allele length profile reports `profile n=3`
+with `CATALOGUE_LENGTH_PROFILE_UNDERPOWERED` where the full profile reports
+`profile n=110` without it.
+
+For the placeholder junction, 512 terminal paths are enumerated from the
+deposited graph and three candidates constructed from the longest: a
+placeholder inserted where the graph is contiguous returns `GRAPH_SUPPORTED`
+(256 paths carry both flanks, 0 bp apart), one replacing 150 bp the graph still
+spells returns `AMBIGUOUS`, and one whose second flank is absent from the graph
+returns `NOT_SUPPORTED`.
+
+Competitive path scoring is validated in both directions. Against constructed
+truth, reads simulated from one deposited path rank that path first and leave
+it the only candidate with uniquely anchored coverage (10.21% breadth at 3.42×,
+against 0.00% for all nine divergent decoys, each of which still attracts
+255-367 reads). Against the published `ERR467623` pair, all 512 paths score
+0.00% uniquely anchored breadth, and the command reports that the paths cannot
+be told apart at that read length rather than presenting the order as a
+preference.
 
 ### Biological application and non-identifiable dosage
 

@@ -1,0 +1,18 @@
+Looking to launch executable "/home/crodsa/conda/envs/locus-recon/bin/bwa-mem2.avx2", simd = .avx2
+Launching executable "/home/crodsa/conda/envs/locus-recon/bin/bwa-mem2.avx2"
+[bwa_index] Pack FASTA... 0.01 sec
+* Entering FMI_search
+init ticks = 101579924
+ref seq len = 8700928
+binary seq ticks = 44907551
+build suffix-array ticks = 342308143
+ref_seq_len = 8700928
+count = 0, 3198976, 4350464, 5501952, 8700928
+BWT[5036480] = 4
+CP_SHIFT = 6, CP_MASK = 63
+sizeof CP_OCC = 64
+pos: 1087617, ref_seq_len__: 1087616
+max_occ_ind = 135952
+build fm-index ticks = 134476255
+Total time taken: 0.3088
+[bam_sort_core] merging from 0 files and 6 in-memory blocks...

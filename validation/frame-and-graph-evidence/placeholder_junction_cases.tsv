@@ -1,0 +1,4 @@
+case	candidate_bp	interior_placeholder_runs	placeholder_bp	expected_verdict	observed_verdict	agrees	graph_paths_with_both_flanks	distance_between_flanks_bp
+placeholder inserted where the graph is contiguous	8638	1	100	GRAPH_SUPPORTED	GRAPH_SUPPORTED	yes	256	0
+placeholder replacing 150 bp the graph still spells	8488	1	100	AMBIGUOUS	AMBIGUOUS	yes	128	150
+second flank absent from the graph	4769	1	100	NOT_SUPPORTED	NOT_SUPPORTED	yes	0	none

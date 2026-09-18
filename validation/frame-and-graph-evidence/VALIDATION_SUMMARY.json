@@ -1,0 +1,57 @@
+{
+  "bait_validation": {
+    "cases": {
+      "alignment gaps restored": "rejected",
+      "identifier past the parse_seqids limit": "rejected",
+      "unrelated fragment among the alleles": "accepted with warning"
+    },
+    "deposited_bait_accepted": true
+  },
+  "frame_orientation": {
+    "candidate_record": "B1.1",
+    "forward_only_internal_stops": [
+      0,
+      103
+    ],
+    "forward_only_invariant": false,
+    "invariant": true,
+    "profile_alleles": 110,
+    "six_frame_internal_stops": [
+      0
+    ]
+  },
+  "length_profile": {
+    "minimum_profile_alleles": 5,
+    "underpowered_flag_on_110": "no",
+    "underpowered_flag_on_three": "yes"
+  },
+  "path_scoring": {
+    "best_candidate": "LIBA6656_tcdB_terminal_path_1",
+    "best_unique_breadth_pct": 0.0,
+    "best_unique_mean_depth": 0.0,
+    "best_unsupported_bp": 8538,
+    "mapped_reads_max": 43,
+    "mapped_reads_min": 10,
+    "paths_scored": 512,
+    "reads_discriminate": false
+  },
+  "placeholder_junctions": {
+    "cases": 3,
+    "cases_agreeing": 3,
+    "graph_paths_enumerated": 512,
+    "longest_path_bp": 8538
+  },
+  "scoring_positive_control": {
+    "candidates": 10,
+    "read_bp": 100,
+    "reads_discriminate": true,
+    "runner_up": "decoy_1",
+    "runner_up_unique_breadth_pct": 0.0,
+    "seed": 7,
+    "simulated_depth": 40,
+    "simulated_pairs": 1707,
+    "source_ranked_first": true,
+    "source_unique_breadth_pct": 10.21,
+    "substitution_rate": 0.002
+  }
+}
