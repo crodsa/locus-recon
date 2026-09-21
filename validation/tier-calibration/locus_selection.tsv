@@ -1,0 +1,10 @@
+gene	rationale	bait_length_bp	bait_copies	copies_per_genome	eligible	mean_identity_to_bait_pct	min_identity_pct	max_identity_pct
+glmM	phosphoglucosamine mutase, housekeeping	1338	1	Hpfe0001=1;Hpfe0002=1;Hpfe0003=1;Hpfe0004=1;Hpfe0006=1	yes	95.99	95.67	96.34
+recA	recombinational repair, housekeeping	1044	1	Hpfe0001=1;Hpfe0002=1;Hpfe0003=1;Hpfe0004=1;Hpfe0006=1	no	96.36	95.88	96.74
+ftsZ	cell division protein, housekeeping	1158	1	Hpfe0001=1;Hpfe0002=1;Hpfe0003=1;Hpfe0004=1;Hpfe0006=1	no	95.52	95.15	95.93
+ureB	urease beta subunit	1710	1	Hpfe0001=1;Hpfe0002=1;Hpfe0003=1;Hpfe0004=1;Hpfe0006=1	yes	97.16	96.9	97.48
+katA	catalase	0	0	Hpfe0001=0;Hpfe0002=0;Hpfe0003=0;Hpfe0004=0;Hpfe0006=0	no			
+flaA	flagellin A	0	0	Hpfe0001=0;Hpfe0002=0;Hpfe0003=0;Hpfe0004=0;Hpfe0006=0	no			
+rocF	arginase	969	1	Hpfe0001=1;Hpfe0002=1;Hpfe0003=1;Hpfe0004=1;Hpfe0006=1	no	94.97	94.29	95.64
+vacA	vacuolating cytotoxin, mosaic and highly divergent	3873	1	Hpfe0001=0;Hpfe0002=0;Hpfe0003=0;Hpfe0004=0;Hpfe0006=0	no			
+cagA	cytotoxin-associated antigen, divergent and variably present	3561	1	Hpfe0001=1;Hpfe0002=1;Hpfe0003=1;Hpfe0004=1;Hpfe0006=1	yes	88.71	87.87	89.5

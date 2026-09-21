@@ -1,38 +1,63 @@
-stage	case	case_class	workflow_status	disposition	sequence_confidence	matches_truth	design	tier
-mock truth set	baseline_intact_A	supported	SUCCESS	PASS	HIGH	yes	exact reconstruction	HIGH
-mock truth set	fragmented_mid_A	supported	SUCCESS	PASS	HIGH	yes	exact reconstruction	HIGH
-mock truth set	fragmented_terminal_A	supported	SUCCESS	PASS	HIGH	yes	exact reconstruction	HIGH
-mock truth set	depth_03x_A	degraded	SKIP	HOLD		no	sensitivity series	no result
-mock truth set	depth_05x_A	degraded	SKIP	HOLD		no	sensitivity series	no result
-mock truth set	depth_10x_A	degraded	SUCCESS	REVIEW	LOW	yes	sensitivity series	LOW
-mock truth set	depth_20x_A	degraded	SUCCESS	REVIEW	MEDIUM	yes	sensitivity series	MEDIUM
-mock truth set	mixture_05pct_B	degraded	SUCCESS	HOLD	SUSPECT	yes	mixture detected	SUSPECT
-mock truth set	mixture_10pct_B	degraded	SUCCESS	HOLD	SUSPECT	yes	mixture detected	SUSPECT
-mock truth set	mixture_20pct_B	degraded	SUCCESS	HOLD	SUSPECT	yes	mixture detected	SUSPECT
-mock truth set	mixture_50pct_B	degraded	SUCCESS	HOLD	SUSPECT	yes	mixture detected	SUSPECT
-mock truth set	paralog_control	degraded	SUCCESS	HOLD	SUSPECT	no	ambiguity flagged	SUSPECT
-mock truth set	negative_control	degraded	SKIP	HOLD		no	no reconstruction	no result
-completeness benchmark	complete_internal	supported	SUCCESS	PASS	HIGH	yes	0 bp withheld by construction	HIGH
-completeness benchmark	flush_start_no_loss	supported	SUCCESS	PASS	HIGH	yes	0 bp withheld by construction	HIGH
-completeness benchmark	flush_end_no_loss	supported	SUCCESS	PASS	HIGH	yes	0 bp withheld by construction	HIGH
-completeness benchmark	truncated_start_9	truncated	SUCCESS	REVIEW	MEDIUM	yes	9 bp withheld by construction	MEDIUM
-completeness benchmark	truncated_start_10	truncated	SUCCESS	REVIEW	MEDIUM	yes	10 bp withheld by construction	MEDIUM
-completeness benchmark	truncated_end_9	truncated	SUCCESS	REVIEW	MEDIUM	yes	9 bp withheld by construction	MEDIUM
-completeness benchmark	truncated_end_50	truncated	SUCCESS	REVIEW	MEDIUM	yes	50 bp withheld by construction	MEDIUM
-completeness benchmark	truncated_start_100	truncated	SUCCESS	REVIEW	MEDIUM	yes	100 bp withheld by construction	MEDIUM
-completeness benchmark	truncated_end_100	truncated	SUCCESS	REVIEW	MEDIUM	yes	100 bp withheld by construction	MEDIUM
-completeness benchmark	truncated_both_30_40	truncated	SUCCESS	REVIEW	MEDIUM	yes	70 bp withheld by construction	MEDIUM
-completeness benchmark	reverse_truncated_suffix_60	truncated	SUCCESS	REVIEW	MEDIUM	yes	60 bp withheld by construction	MEDIUM
-completeness benchmark	split_overlap_100	truncated	SUCCESS	HOLD	SUSPECT	yes	522 bp withheld by construction	SUSPECT
-completeness benchmark	split_no_overlap	truncated	SUCCESS	HOLD	SUSPECT	yes	822 bp withheld by construction	SUSPECT
-completeness benchmark	split_absent_from_assembly	truncated	SUCCESS	HOLD	SUSPECT	yes	822 bp withheld by construction	SUSPECT
-closed-genome audit	Hpfe0001 gyrB	supported	SUCCESS	PASS	HIGH	yes	truth 2322 bp x 1 copy/ies; candidate 2322 bp at 100.00% over 2322 bp; catalogue identity 96.4%	HIGH
-closed-genome audit	Hpfe0001 23S	multi-copy	SUCCESS	HOLD	SUSPECT	yes	truth 2889 bp x 2 copy/ies; candidate 2889 bp at 100.00% over 2889 bp; catalogue identity 99.2%	SUSPECT
-closed-genome audit	Hpfe0002 gyrB	supported	SUCCESS	PASS	HIGH	yes	truth 2322 bp x 1 copy/ies; candidate 2322 bp at 100.00% over 2322 bp; catalogue identity 96.2%	HIGH
-closed-genome audit	Hpfe0002 23S	multi-copy	SUCCESS	HOLD	SUSPECT	yes	truth 2887 bp x 2 copy/ies; candidate 2887 bp at 100.00% over 2887 bp; catalogue identity 99.3%	SUSPECT
-closed-genome audit	Hpfe0003 gyrB	supported	SUCCESS	PASS	HIGH	yes	truth 2322 bp x 1 copy/ies; candidate 2322 bp at 100.00% over 2322 bp; catalogue identity 96.6%	HIGH
-closed-genome audit	Hpfe0003 23S	multi-copy	SUCCESS	HOLD	SUSPECT	yes	truth 2889 bp x 2 copy/ies; candidate 2889 bp at 100.00% over 2889 bp; catalogue identity 99.3%	SUSPECT
-closed-genome audit	Hpfe0004 gyrB	supported	SUCCESS	PASS	HIGH	yes	truth 2322 bp x 1 copy/ies; candidate 2322 bp at 100.00% over 2322 bp; catalogue identity 96.3%	HIGH
-closed-genome audit	Hpfe0004 23S	multi-copy	SUCCESS	HOLD	SUSPECT	yes	truth 2889 bp x 2 copy/ies; candidate 2889 bp at 100.00% over 2889 bp; catalogue identity 99.3%	SUSPECT
-closed-genome audit	Hpfe0006 gyrB	supported	SUCCESS	PASS	HIGH	yes	truth 2322 bp x 1 copy/ies; candidate 2322 bp at 100.00% over 2322 bp; catalogue identity 96.7%	HIGH
-closed-genome audit	Hpfe0006 23S	multi-copy	SUCCESS	HOLD	SUSPECT	no	truth 2887 bp x 2 copy/ies; candidate 2570 bp at 100.00% over 2570 bp; catalogue identity 99.3%	SUSPECT
+stage	case	case_class	workflow_status	disposition	sequence_confidence	matches_truth	evidence	relation_to_annotation	qc_flags
+mock truth set	baseline_intact_A	supported	SUCCESS	PASS	HIGH	yes	exact reconstruction		
+mock truth set	fragmented_mid_A	supported	SUCCESS	PASS	HIGH	yes	exact reconstruction		
+mock truth set	fragmented_terminal_A	supported	SUCCESS	PASS	HIGH	yes	exact reconstruction		
+mock truth set	depth_03x_A	degraded	SKIP	HOLD		no	sensitivity series		
+mock truth set	depth_05x_A	degraded	SKIP	HOLD		no	sensitivity series		
+mock truth set	depth_10x_A	degraded	SUCCESS	REVIEW	LOW	yes	sensitivity series		
+mock truth set	depth_20x_A	degraded	SUCCESS	REVIEW	MEDIUM	yes	sensitivity series		
+mock truth set	mixture_05pct_B	degraded	SUCCESS	HOLD	SUSPECT	yes	mixture detected		
+mock truth set	mixture_10pct_B	degraded	SUCCESS	HOLD	SUSPECT	yes	mixture detected		
+mock truth set	mixture_20pct_B	degraded	SUCCESS	HOLD	SUSPECT	yes	mixture detected		
+mock truth set	mixture_50pct_B	degraded	SUCCESS	HOLD	SUSPECT	yes	mixture detected		
+mock truth set	paralog_control	degraded	SUCCESS	HOLD	SUSPECT	no	ambiguity flagged		
+mock truth set	negative_control	degraded	SKIP	HOLD		no	no reconstruction		
+completeness benchmark	complete_internal	supported	SUCCESS	PASS	HIGH	yes	0 bp withheld by construction		
+completeness benchmark	flush_start_no_loss	supported	SUCCESS	PASS	HIGH	yes	0 bp withheld by construction		
+completeness benchmark	flush_end_no_loss	supported	SUCCESS	PASS	HIGH	yes	0 bp withheld by construction		
+completeness benchmark	truncated_start_9	truncated	SUCCESS	REVIEW	MEDIUM	yes	9 bp withheld by construction		
+completeness benchmark	truncated_start_10	truncated	SUCCESS	REVIEW	MEDIUM	yes	10 bp withheld by construction		
+completeness benchmark	truncated_end_9	truncated	SUCCESS	REVIEW	MEDIUM	yes	9 bp withheld by construction		
+completeness benchmark	truncated_end_50	truncated	SUCCESS	REVIEW	MEDIUM	yes	50 bp withheld by construction		
+completeness benchmark	truncated_start_100	truncated	SUCCESS	REVIEW	MEDIUM	yes	100 bp withheld by construction		
+completeness benchmark	truncated_end_100	truncated	SUCCESS	REVIEW	MEDIUM	yes	100 bp withheld by construction		
+completeness benchmark	truncated_both_30_40	truncated	SUCCESS	REVIEW	MEDIUM	yes	70 bp withheld by construction		
+completeness benchmark	reverse_truncated_suffix_60	truncated	SUCCESS	REVIEW	MEDIUM	yes	60 bp withheld by construction		
+completeness benchmark	split_overlap_100	truncated	SUCCESS	HOLD	SUSPECT	yes	522 bp withheld by construction		
+completeness benchmark	split_no_overlap	truncated	SUCCESS	HOLD	SUSPECT	yes	822 bp withheld by construction		
+completeness benchmark	split_absent_from_assembly	truncated	SUCCESS	HOLD	SUSPECT	yes	822 bp withheld by construction		
+closed-genome audit	Hpfe0001 gyrB	supported	SUCCESS	PASS	HIGH	yes	truth 2322 bp x 1 copy/ies; candidate 2322 bp at 100.00% over 2322 bp; catalogue identity 96.4%	identical to the annotated allele	CATALOGUE_DIVERGENCE_BELOW_HIGH (96.4% to nearest allele)
+closed-genome audit	Hpfe0001 23S	multi-copy	SUCCESS	HOLD	SUSPECT	yes	truth 2889 bp x 2 copy/ies; candidate 2889 bp at 100.00% over 2889 bp; catalogue identity 99.2%	identical to the annotated allele	INTERNAL_STOPS (min 34 over six frames, frame -3); FRAME_LENGTH_SHIFT (length % 3 = 0; bait mode = 1)
+closed-genome audit	Hpfe0002 gyrB	supported	SUCCESS	PASS	HIGH	yes	truth 2322 bp x 1 copy/ies; candidate 2322 bp at 100.00% over 2322 bp; catalogue identity 96.2%	identical to the annotated allele	CATALOGUE_DIVERGENCE_BELOW_HIGH (96.2% to nearest allele)
+closed-genome audit	Hpfe0002 23S	multi-copy	SUCCESS	HOLD	SUSPECT	yes	truth 2887 bp x 2 copy/ies; candidate 2887 bp at 100.00% over 2887 bp; catalogue identity 99.3%	identical to the annotated allele	INTERNAL_STOPS (min 28 over six frames, frame -2)
+closed-genome audit	Hpfe0003 gyrB	supported	SUCCESS	PASS	HIGH	yes	truth 2322 bp x 1 copy/ies; candidate 2322 bp at 100.00% over 2322 bp; catalogue identity 96.6%	identical to the annotated allele	CATALOGUE_DIVERGENCE_BELOW_HIGH (96.6% to nearest allele)
+closed-genome audit	Hpfe0003 23S	multi-copy	SUCCESS	HOLD	SUSPECT	yes	truth 2889 bp x 2 copy/ies; candidate 2889 bp at 100.00% over 2889 bp; catalogue identity 99.3%	identical to the annotated allele	INTERNAL_STOPS (min 33 over six frames, frame -3); FRAME_LENGTH_SHIFT (length % 3 = 0; bait mode = 1)
+closed-genome audit	Hpfe0004 gyrB	supported	SUCCESS	PASS	HIGH	yes	truth 2322 bp x 1 copy/ies; candidate 2322 bp at 100.00% over 2322 bp; catalogue identity 96.3%	identical to the annotated allele	CATALOGUE_DIVERGENCE_BELOW_HIGH (96.3% to nearest allele)
+closed-genome audit	Hpfe0004 23S	multi-copy	SUCCESS	HOLD	SUSPECT	yes	truth 2889 bp x 2 copy/ies; candidate 2889 bp at 100.00% over 2889 bp; catalogue identity 99.3%	identical to the annotated allele	INTERNAL_STOPS (min 35 over six frames, frame -3); FRAME_LENGTH_SHIFT (length % 3 = 0; bait mode = 1)
+closed-genome audit	Hpfe0006 gyrB	supported	SUCCESS	PASS	HIGH	yes	truth 2322 bp x 1 copy/ies; candidate 2322 bp at 100.00% over 2322 bp; catalogue identity 96.7%	identical to the annotated allele	CATALOGUE_DIVERGENCE_BELOW_HIGH (96.7% to nearest allele)
+closed-genome audit	Hpfe0006 23S	multi-copy	SUCCESS	HOLD	SUSPECT	no	truth 2887 bp x 2 copy/ies; candidate 2570 bp at 100.00% over 2570 bp; catalogue identity 99.3%	identical over the 2570 bp overlap; candidate -317 bp against the annotated boundary	LENGTH_ANOMALOUS (delta=317 bp, outside 3xIQR, profile n=1); CATALOGUE_LENGTH_PROFILE_UNDERPOWERED (length profile built from 1 allele(s), fewer than 5; the length flag above is weakly determined and is reported for interpretation); INTERNAL_STOPS (min 23 over six frames, frame -3); FRAME_LENGTH_SHIFT_TRUNCATED (length % 3 = 2; bait mode = 1; expected because the projected span is clipped by 317 bp at a contig boundary); ALLELE_SPAN_CLIPPED_AT_CONTIG_END (317 bp at contig end; allele is truncated by 317 bp); LOCUS_SPLIT_ACROSS_CONTIGS (317 of the 317 lost bp align to NODE_2_length_784_cov_947.458274, sharing 77 bp with the reported contig)
+divergent single-copy loci	Hpfe0001 cagA	divergent	SUCCESS	HOLD	SUSPECT	no	truth 3516 bp x 1 copy/ies; candidate 3549 bp at 100.00% over 3516 bp; catalogue identity 89.1%	identical over the 3516 bp overlap; candidate +33 bp against the annotated boundary	LENGTH_ANOMALOUS (delta=12 bp, outside 3xIQR, profile n=1); CATALOGUE_LENGTH_PROFILE_UNDERPOWERED (length profile built from 1 allele(s), fewer than 5; the length flag above is weakly determined and is reported for interpretation); CATALOGUE_DIVERGENT (89.1% to nearest allele); INTERNAL_STOPS (min 2 over six frames, frame +1)
+divergent single-copy loci	Hpfe0001 glmM	supported	SUCCESS	PASS	HIGH	yes	truth 1338 bp x 1 copy/ies; candidate 1338 bp at 100.00% over 1338 bp; catalogue identity 95.8%	identical to the annotated allele	CATALOGUE_DIVERGENCE_BELOW_HIGH (95.8% to nearest allele)
+divergent single-copy loci	Hpfe0001 ureB	supported	SUCCESS	PASS	HIGH	yes	truth 1710 bp x 1 copy/ies; candidate 1710 bp at 100.00% over 1710 bp; catalogue identity 97.0%	identical to the annotated allele	
+divergent single-copy loci	Hpfe0002 cagA	divergent	SUCCESS	HOLD	SUSPECT	no	truth 3540 bp x 1 copy/ies; candidate 3561 bp at 100.00% over 3540 bp; catalogue identity 89.5%	identical over the 3540 bp overlap; candidate +21 bp against the annotated boundary	CATALOGUE_DIVERGENT (89.5% to nearest allele); INTERNAL_STOPS (min 2 over six frames, frame +1)
+divergent single-copy loci	Hpfe0002 glmM	supported	SUCCESS	PASS	HIGH	yes	truth 1338 bp x 1 copy/ies; candidate 1338 bp at 100.00% over 1338 bp; catalogue identity 96.3%	identical to the annotated allele	CATALOGUE_DIVERGENCE_BELOW_HIGH (96.3% to nearest allele)
+divergent single-copy loci	Hpfe0002 ureB	supported	SUCCESS	PASS	HIGH	yes	truth 1710 bp x 1 copy/ies; candidate 1710 bp at 100.00% over 1710 bp; catalogue identity 97.0%	identical to the annotated allele	
+divergent single-copy loci	Hpfe0003 cagA	divergent	SUCCESS	REVIEW	MEDIUM	no	truth 3549 bp x 1 copy/ies; candidate 3543 bp at 100.00% over 3543 bp; catalogue identity 88.5%	identical over the 3543 bp overlap; candidate -6 bp against the annotated boundary	LENGTH_ANOMALOUS (delta=18 bp, outside 3xIQR, profile n=1); CATALOGUE_LENGTH_PROFILE_UNDERPOWERED (length profile built from 1 allele(s), fewer than 5; the length flag above is weakly determined and is reported for interpretation); CATALOGUE_DIVERGENT (88.5% to nearest allele)
+divergent single-copy loci	Hpfe0003 glmM	supported	SUCCESS	PASS	HIGH	yes	truth 1338 bp x 1 copy/ies; candidate 1338 bp at 100.00% over 1338 bp; catalogue identity 96.2%	identical to the annotated allele	CATALOGUE_DIVERGENCE_BELOW_HIGH (96.2% to nearest allele)
+divergent single-copy loci	Hpfe0003 ureB	supported	SUCCESS	PASS	HIGH	yes	truth 1710 bp x 1 copy/ies; candidate 1710 bp at 100.00% over 1710 bp; catalogue identity 97.4%	identical to the annotated allele	
+divergent single-copy loci	Hpfe0004 cagA	divergent	SUCCESS	REVIEW	MEDIUM	no	truth 3537 bp x 1 copy/ies; candidate 3531 bp at 100.00% over 3531 bp; catalogue identity 87.9%	identical over the 3531 bp overlap; candidate -6 bp against the annotated boundary	LENGTH_ANOMALOUS (delta=30 bp, outside 3xIQR, profile n=1); CATALOGUE_LENGTH_PROFILE_UNDERPOWERED (length profile built from 1 allele(s), fewer than 5; the length flag above is weakly determined and is reported for interpretation); CATALOGUE_DIVERGENT (87.9% to nearest allele)
+divergent single-copy loci	Hpfe0004 glmM	supported	SUCCESS	PASS	HIGH	yes	truth 1338 bp x 1 copy/ies; candidate 1338 bp at 100.00% over 1338 bp; catalogue identity 95.7%	identical to the annotated allele	CATALOGUE_DIVERGENCE_BELOW_HIGH (95.7% to nearest allele)
+divergent single-copy loci	Hpfe0004 ureB	supported	SUCCESS	PASS	HIGH	yes	truth 1710 bp x 1 copy/ies; candidate 1710 bp at 100.00% over 1710 bp; catalogue identity 96.9%	identical to the annotated allele	CATALOGUE_DIVERGENCE_BELOW_HIGH (96.9% to nearest allele)
+divergent single-copy loci	Hpfe0006 cagA	divergent	SUCCESS	REVIEW	MEDIUM	no	truth 3552 bp x 1 copy/ies; candidate 3540 bp at 100.00% over 3540 bp; catalogue identity 88.5%	identical over the 3540 bp overlap; candidate -12 bp against the annotated boundary	LENGTH_ANOMALOUS (delta=21 bp, outside 3xIQR, profile n=1); CATALOGUE_LENGTH_PROFILE_UNDERPOWERED (length profile built from 1 allele(s), fewer than 5; the length flag above is weakly determined and is reported for interpretation); CATALOGUE_DIVERGENT (88.5% to nearest allele)
+divergent single-copy loci	Hpfe0006 glmM	supported	SUCCESS	PASS	HIGH	yes	truth 1338 bp x 1 copy/ies; candidate 1338 bp at 100.00% over 1338 bp; catalogue identity 96.0%	identical to the annotated allele	CATALOGUE_DIVERGENCE_BELOW_HIGH (96.0% to nearest allele)
+divergent single-copy loci	Hpfe0006 ureB	supported	SUCCESS	PASS	HIGH	yes	truth 1710 bp x 1 copy/ies; candidate 1710 bp at 100.00% over 1710 bp; catalogue identity 97.5%	identical to the annotated allele	
+depth series	Hpfe0001 gyrB 15x	low-depth	SUCCESS	REVIEW	LOW	yes	target 15x, achieved 15.2x; truth 2322 bp x 1 copy/ies; candidate 2322 bp at 100.00% over 2322 bp; catalogue identity 96.4%	identical to the annotated allele	CATALOGUE_DIVERGENCE_BELOW_HIGH (96.4% to nearest allele); REMAP_DEPTH_BELOW_HIGH (mean=13.1x); REMAP_BREADTH_BELOW_HIGH (98.5%); REMAP_PATCHINESS_BELOW_HIGH (4.1% <5x, descriptive)
+depth series	Hpfe0001 gyrB 8x	low-depth	SUCCESS	HOLD	SUSPECT	yes	target 8x, achieved 8.0x; truth 2322 bp x 1 copy/ies; candidate 2322 bp at 100.00% over 2322 bp; catalogue identity 96.4%	identical to the annotated allele	CATALOGUE_DIVERGENCE_BELOW_HIGH (96.4% to nearest allele); REDUCED_REMAP_DEPTH (mean=6.3x); PATCHY_REMAP_SUPPORT (23.9% <5x, descriptive); UNCERTAIN_BASES_BELOW_HIGH (3.95% interior); INTERNAL_ZERO_DEPTH_GAP (1 interior position(s) with no read support)
+depth series	Hpfe0002 gyrB 15x	low-depth	SUCCESS	REVIEW	LOW	yes	target 15x, achieved 15.0x; truth 2322 bp x 1 copy/ies; candidate 2322 bp at 100.00% over 2322 bp; catalogue identity 96.2%	identical to the annotated allele	CATALOGUE_DIVERGENCE_BELOW_HIGH (96.2% to nearest allele); REDUCED_REMAP_DEPTH (mean=9.5x); MODEST_REMAP_PATCHINESS (14.2% <5x, descriptive); UNCERTAIN_BASES_BELOW_HIGH (2.92% interior)
+depth series	Hpfe0002 gyrB 8x	low-depth	SUCCESS	REVIEW	LOW	no	target 8x, achieved 8.0x; truth 2322 bp x 1 copy/ies; candidate 2322 bp at 99.96% over 2322 bp; catalogue identity 96.1%	99.96% identity over 2322 bp	CATALOGUE_DIVERGENCE_BELOW_HIGH (96.1% to nearest allele); REDUCED_REMAP_DEPTH (mean=5.5x); PATCHY_REMAP_SUPPORT (34.3% <5x, descriptive); ELEVATED_UNCERTAIN_BASES (6.66% interior)
+depth series	Hpfe0003 gyrB 15x	low-depth	SUCCESS	REVIEW	MEDIUM	yes	target 15x, achieved 14.9x; truth 2322 bp x 1 copy/ies; candidate 2322 bp at 100.00% over 2322 bp; catalogue identity 96.6%	identical to the annotated allele	CATALOGUE_DIVERGENCE_BELOW_HIGH (96.6% to nearest allele); REMAP_DEPTH_BELOW_HIGH (mean=11.9x); REMAP_PATCHINESS_BELOW_HIGH (3.1% <5x, descriptive)
+depth series	Hpfe0003 gyrB 8x	low-depth	SUCCESS	REVIEW	LOW	yes	target 8x, achieved 8.0x; truth 2322 bp x 1 copy/ies; candidate 2322 bp at 100.00% over 2322 bp; catalogue identity 96.6%	identical to the annotated allele	CATALOGUE_DIVERGENCE_BELOW_HIGH (96.6% to nearest allele); REDUCED_REMAP_DEPTH (mean=6.3x); PATCHY_REMAP_SUPPORT (31.7% <5x, descriptive); UNCERTAIN_BASES_BELOW_HIGH (3.26% interior)
+depth series	Hpfe0004 gyrB 15x	low-depth	SUCCESS	REVIEW	MEDIUM	yes	target 15x, achieved 15.0x; truth 2322 bp x 1 copy/ies; candidate 2322 bp at 100.00% over 2322 bp; catalogue identity 96.3%	identical to the annotated allele	CATALOGUE_DIVERGENCE_BELOW_HIGH (96.3% to nearest allele); REMAP_DEPTH_BELOW_HIGH (mean=13.4x)
+depth series	Hpfe0004 gyrB 8x	low-depth	SUCCESS	REVIEW	LOW	yes	target 8x, achieved 8.0x; truth 2322 bp x 1 copy/ies; candidate 2322 bp at 100.00% over 2322 bp; catalogue identity 96.3%	identical to the annotated allele	CATALOGUE_DIVERGENCE_BELOW_HIGH (96.3% to nearest allele); REDUCED_REMAP_DEPTH (mean=5.7x); PATCHY_REMAP_SUPPORT (31.4% <5x, descriptive); ELEVATED_UNCERTAIN_BASES (5.39% interior)
+depth series	Hpfe0006 gyrB 15x	low-depth	SUCCESS	REVIEW	MEDIUM	yes	target 15x, achieved 15.1x; truth 2322 bp x 1 copy/ies; candidate 2322 bp at 100.00% over 2322 bp; catalogue identity 96.7%	identical to the annotated allele	CATALOGUE_DIVERGENCE_BELOW_HIGH (96.7% to nearest allele); REMAP_DEPTH_BELOW_HIGH (mean=10.5x); REMAP_PATCHINESS_BELOW_HIGH (2.3% <5x, descriptive)
+depth series	Hpfe0006 gyrB 8x	low-depth	SUCCESS	REVIEW	LOW	yes	target 8x, achieved 8.0x; truth 2322 bp x 1 copy/ies; candidate 2322 bp at 100.00% over 2322 bp; catalogue identity 96.7%	identical to the annotated allele	CATALOGUE_DIVERGENCE_BELOW_HIGH (96.7% to nearest allele); REDUCED_REMAP_DEPTH (mean=6.8x); PATCHY_REMAP_SUPPORT (18.6% <5x, descriptive); UNCERTAIN_BASES_BELOW_HIGH (3.31% interior)

@@ -189,10 +189,13 @@ reports the geometry and leaves the join to the analyst.
   and compact reference results.
 - A tier calibration over every case in the repository with known truth, giving
   the acceptance rate per prespecified case class and the precision of the top
-  tier: all 11 single-copy intact cases accepted and exact, no false accepts in
-  37 cases, and 21 of 26 withheld cases exact over the span they reported. The
-  closed-genome stage runs end to end on public reads with a fixed external
-  bait.
+  tier: all 21 single-copy intact cases accepted and exact, no false accepts in
+  62 cases, and 30 of 41 withheld cases exact over the span they reported. Four
+  stages: the deposited benchmark verdicts, a closed-genome audit that runs end
+  to end on public reads with a fixed external bait, a divergence arm whose loci
+  are chosen by measured distance to that bait, and a depth series that
+  subsamples the accepted locus to ~15x and ~8x. Across the whole set exactly
+  one reported sequence disagrees with truth in its bases, at 8x, withheld.
 - A deposit reusing the curated `tcdB` alleles and local assembly graph already
   in the repository to validate orientation-independent frame metrics, the bait
   database errors, length-profile reporting, the three placeholder junction

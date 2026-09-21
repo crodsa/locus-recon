@@ -18,6 +18,16 @@ Case classes:
   supported       the locus is single copy and intact in the draft, depth is
                   adequate, and the sample is a pure culture.  A correct tool
                   accepts these.
+  divergent       a single-copy locus whose allele sits further than
+                  DIVERGENT_IDENTITY_PCT from the one-allele bait.  Selection
+                  ranks candidates by measured distance, so a locus that ranks
+                  high but still lands within a few points of the housekeeping
+                  locus is not treated as a divergence stress: the class
+                  follows the measured identity, not which arm ran it.
+  low-depth       the same single-copy locus reconstructed from reads
+                  subsampled to a fraction of their original depth.  The tier
+                  is expected to fall as depth falls, and a degraded
+                  reconstruction must be withheld rather than accepted.
   multi-copy      the locus is annotated in more than one copy in the closed
                   genome, so near-identical copies collapse in a short-read
                   draft.  A correct tool withholds the top tier even when the
@@ -81,7 +91,26 @@ ENA_FILEREPORT = (
     "&result=read_run&fields=fastq_ftp,fastq_md5&format=tsv"
 )
 BAIT_ASSEMBLY = "GCF_000008525.1"          # H. pylori 26695, the fixed bait source
+
+# Prespecified shortlist for the divergence arm: single-copy H. pylori genes
+# with no known paralogue family, spanning housekeeping conservation to the
+# mosaic virulence genes.  Which of them are used is decided by measurement in
+# select_divergent_loci(), not here.
+CANDIDATE_LOCI = {
+    "glmM": "phosphoglucosamine mutase, housekeeping",
+    "recA": "recombinational repair, housekeeping",
+    "ftsZ": "cell division protein, housekeeping",
+    "ureB": "urease beta subunit",
+    "katA": "catalase",
+    "flaA": "flagellin A",
+    "rocF": "arginase",
+    "vacA": "vacuolating cytotoxin, mosaic and highly divergent",
+    "cagA": "cytotoxin-associated antigen, divergent and variably present",
+}
 TOP_TIER = "HIGH"
+# A single-copy locus within this distance of the bait is as close to it as the
+# housekeeping loci are, so it belongs in `supported` rather than `divergent`.
+DIVERGENT_IDENTITY_PCT = 95.0
 TOP_DISPOSITION = "PASS"
 
 # Prespecified class of every mock sample.  "supported" means a correct tool is
@@ -282,6 +311,103 @@ def _blast_identity(candidate, truth, work):
     return best
 
 
+def _write_bait(records, path, locus, source):
+    """Write the first annotated record of a locus as a one-allele bait file."""
+    if not records:
+        raise RuntimeError(f"no {locus} record in the annotation of {source}")
+    name, sequence = records[0]
+    Path(path).parent.mkdir(parents=True, exist_ok=True)
+    with open(path, "w") as handle:
+        handle.write(f">{name}\n")
+        for start in range(0, len(sequence), 70):
+            handle.write(sequence[start : start + 70] + "\n")
+    return str(path)
+
+
+def _reconstruct(repo_root, sample_dir, strain, locus, bait, draft, r1, r2, threads,
+                 tag=""):
+    """Run one reconstruction; return (report record or None, candidate, exit code)."""
+    name = f"{locus}{tag}"
+    out = Path(sample_dir) / name
+    samplesheet = Path(sample_dir) / f"samples_{name}.tsv"
+    samplesheet.write_text(
+        "sample_id\tassembly_path\tr1_path\tr2_path\n"
+        f"{strain}\t{draft}\t{r1}\t{r2}\n"
+    )
+    completed = subprocess.run(
+        [sys.executable, "-m", "locus_recon.cli",
+         "--samplesheet", str(samplesheet), "--main-output-dir", str(out),
+         "--bait", bait, "--locus", locus,
+         "--threads", str(threads), "--memory-per-sample", "32", "--no-progress"],
+        cwd=repo_root, capture_output=True, text=True, check=False,
+    )
+    reports = list(out.glob(f"locus_recon_report_{locus}.tsv"))
+    if not reports:
+        return None, "", completed.returncode
+    candidates = list(out.glob(f"{strain}/*_reconstructed.fasta"))
+    sequence = read_fasta_sequences(str(candidates[0]))[0][1] if candidates else ""
+    return read_tsv(reports[0])[0], sequence, completed.returncode
+
+
+def _score(sequence, truth_records, work):
+    """Compare a candidate to the annotated truth copies of the same genome.
+
+    Returns the strict verdict used for calibration, the best identity and
+    aligned length, and a relation string that separates the two ways a
+    candidate can fail to be identical: disagreeing bases, or agreeing bases
+    over a span that begins or ends somewhere else than the annotation does.
+    """
+    exact, best_identity, best_length, best_delta = "no", 0.0, 0, 0
+    for _, truth_sequence in truth_records:
+        if sequence and sequence in (
+            truth_sequence, reverse_complement(truth_sequence)
+        ):
+            exact = "yes"
+        identity, length = _blast_identity(sequence, truth_sequence, work)
+        if identity * length > best_identity * best_length:
+            best_identity, best_length = identity, length
+            best_delta = len(sequence) - len(truth_sequence)
+    if exact == "yes":
+        relation = "identical to the annotated allele"
+    elif best_identity >= 99.995 and best_length:
+        relation = (
+            f"identical over the {best_length} bp overlap; candidate "
+            f"{best_delta:+d} bp against the annotated boundary"
+        )
+    elif best_length:
+        relation = f"{best_identity:.2f}% identity over {best_length} bp"
+    else:
+        relation = "no alignment to the annotated allele"
+    return exact, best_identity, best_length, relation
+
+
+def _evidence(sequence, truth_records, identity, length, record):
+    return (
+        f"truth {len(truth_records[0][1])} bp x {len(truth_records)} copy/ies; "
+        f"candidate {len(sequence)} bp at {identity:.2f}% over {length} bp; "
+        f"catalogue identity {record.get('best_identity_pct', '')}%"
+    )
+
+
+def _draft(sample_dir, r1, r2, threads, name="spades", isolate=True):
+    """Assemble one draft with SPAdes, reusing an existing one.
+
+    ``--isolate`` is documented for high-coverage isolate data, so the
+    subsampled arms are assembled in SPAdes' default mode instead.  That is a
+    difference between the arms and it is stated in the deposit: each arm uses
+    the settings one would actually use at that depth.
+    """
+    draft = Path(sample_dir) / name / "contigs.fasta"
+    if not draft.is_file():
+        run_checked(
+            ["spades.py"] + (["--isolate"] if isolate else []) + [
+                "-1", str(r1), "-2", str(r2),
+                "-o", str(Path(sample_dir) / name),
+                "-t", str(threads), "-m", "32",
+            ], stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)
+    return str(draft)
+
+
 def stage_b(repo_root, outdir, manifest_path, workdir, threads):
     """Repeat the closed-genome audit on public data and tabulate the tiers."""
     manifest = read_tsv(manifest_path)
@@ -289,23 +415,15 @@ def stage_b(repo_root, outdir, manifest_path, workdir, threads):
     cache = workdir / "downloads"
     workdir.mkdir(parents=True, exist_ok=True)
 
-    bait_cds = _annotated_records(BAIT_ASSEMBLY, cache, "cds")
-    bait_rna = _annotated_records(BAIT_ASSEMBLY, cache, "rna")
-    baits = {}
-    for locus, records in (
-        ("gyrB", _select(bait_cds, gene="gyrB")),
-        ("23S", _select(bait_rna, product="23S ribosomal RNA")),
-    ):
-        if not records:
-            raise RuntimeError(f"no {locus} record in the bait assembly {BAIT_ASSEMBLY}")
-        path = Path(outdir) / f"bait_{locus}_26695.fasta"
-        path.parent.mkdir(parents=True, exist_ok=True)
-        with open(path, "w") as handle:
-            name, sequence = records[0]
-            handle.write(f">{name}\n")
-            for start in range(0, len(sequence), 70):
-                handle.write(sequence[start : start + 70] + "\n")
-        baits[locus] = str(path)
+    baits = {
+        "gyrB": _write_bait(
+            _select(_annotated_records(BAIT_ASSEMBLY, cache, "cds"), gene="gyrB"),
+            Path(outdir) / "bait_gyrB_26695.fasta", "gyrB", BAIT_ASSEMBLY),
+        "23S": _write_bait(
+            _select(_annotated_records(BAIT_ASSEMBLY, cache, "rna"),
+                    product="23S ribosomal RNA"),
+            Path(outdir) / "bait_23S_26695.fasta", "23S", BAIT_ASSEMBLY),
+    }
 
     rows = []
     for entry in manifest:
@@ -314,86 +432,305 @@ def stage_b(repo_root, outdir, manifest_path, workdir, threads):
         sample_dir.mkdir(exist_ok=True)
         print(f"  [{strain}] reads {run}", flush=True)
         r1, r2 = _reads(run, cache)
-
-        draft = sample_dir / "spades" / "contigs.fasta"
-        if not draft.is_file():
-            print(f"  [{strain}] assembling", flush=True)
-            run_checked([
-                "spades.py", "--isolate", "-1", r1, "-2", r2,
-                "-o", str(sample_dir / "spades"), "-t", str(threads), "-m", "32",
-            ], stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)
+        print(f"  [{strain}] draft", flush=True)
+        draft = _draft(sample_dir, r1, r2, threads)
 
         truth = {
             "gyrB": _select(
                 _annotated_records(entry["assembly_accession"], cache, "cds"),
-                gene="gyrB",
-            ),
+                gene="gyrB"),
             "23S": _select(
                 _annotated_records(entry["assembly_accession"], cache, "rna"),
-                product="23S ribosomal RNA",
-            ),
+                product="23S ribosomal RNA"),
         }
 
         for locus in ("gyrB", "23S"):
-            out = sample_dir / locus
-            samplesheet = sample_dir / f"samples_{locus}.tsv"
-            samplesheet.write_text(
-                "sample_id\tassembly_path\tr1_path\tr2_path\n"
-                f"{strain}\t{draft}\t{r1}\t{r2}\n"
-            )
+            # The class follows the annotation, not the result: a locus the
+            # closed genome carries twice cannot be attributed to a single copy
+            # from short reads, so withholding is correct behaviour.
+            case_class = "supported" if len(truth[locus]) == 1 else "multi-copy"
             print(f"  [{strain}] reconstructing {locus}", flush=True)
-            completed = subprocess.run(
-                [sys.executable, "-m", "locus_recon.cli",
-                 "--samplesheet", str(samplesheet), "--main-output-dir", str(out),
-                 "--bait", baits[locus], "--locus", locus,
-                 "--threads", str(threads), "--memory-per-sample", "32",
-                 "--no-progress"],
-                cwd=repo_root, capture_output=True, text=True, check=False,
+            record, sequence, exit_code = _reconstruct(
+                repo_root, sample_dir, strain, locus, baits[locus], draft,
+                r1, r2, threads,
             )
-            reports = list(out.glob(f"locus_recon_report_{locus}.tsv"))
-            if not reports:
+            if record is None:
                 rows.append([
-                    "closed-genome audit", f"{strain} {locus}",
-                    "supported" if len(truth[locus]) == 1 else "multi-copy",
-                    f"NO_REPORT(exit={completed.returncode})", "", "", "no",
-                    "annotated closed-genome truth",
+                    "closed-genome audit", f"{strain} {locus}", case_class,
+                    f"NO_REPORT(exit={exit_code})", "", "", "no",
+                    "annotated closed-genome truth", "not assessed", "",
                 ])
                 continue
-            record = read_tsv(reports[0])[0]
-            candidates = list(out.glob(f"{strain}/*_reconstructed.fasta"))
-            sequence = (
-                read_fasta_sequences(str(candidates[0]))[0][1] if candidates else ""
-            )
-            exact, best_identity, best_length = "no", 0.0, 0
-            for _, truth_sequence in truth[locus]:
-                if sequence and sequence in (truth_sequence, reverse_complement(truth_sequence)):
-                    exact = "yes"
-                identity, length = _blast_identity(sequence, truth_sequence, sample_dir)
-                if identity * length > best_identity * best_length:
-                    best_identity, best_length = identity, length
+            exact, identity, length, relation = _score(
+                sequence, truth[locus], sample_dir)
             rows.append([
-                "closed-genome audit", f"{strain} {locus}",
-                # The class follows the annotation, not the result: a locus the
-                # closed genome carries twice cannot be attributed to a single
-                # copy from short reads, so withholding is correct behaviour.
-                "supported" if len(truth[locus]) == 1 else "multi-copy",
+                "closed-genome audit", f"{strain} {locus}", case_class,
                 record.get("workflow_status", ""),
                 record.get("result_disposition", ""),
                 record.get("sequence_confidence") or record.get("qc_confidence", ""),
                 exact,
-                (f"truth {len(truth[locus][0][1])} bp x {len(truth[locus])} copy/ies; "
-                 f"candidate {len(sequence)} bp at {best_identity:.2f}% over "
-                 f"{best_length} bp; catalogue identity "
-                 f"{record.get('best_identity_pct', '')}%"),
+                _evidence(sequence, truth[locus], identity, length, record),
+                relation, record.get("qc_flags", ""),
             ])
 
     write_tsv(
         Path(outdir) / "tier_calibration_closed_genomes.tsv",
         ["stage", "case", "case_class", "workflow_status", "disposition",
-         "sequence_confidence", "matches_truth", "evidence"],
+         "sequence_confidence", "matches_truth", "evidence",
+         "relation_to_annotation", "qc_flags"],
         rows,
     )
     return summarise(rows, stage="closed genomes"), rows
+
+
+def select_divergent_loci(manifest, cache, outdir, wanted, min_bp=1200):
+    """Choose single-copy loci that stress the tier through catalogue distance.
+
+    The shortlist is prespecified: single-copy *H. pylori* genes with no known
+    paralogue family, spanning housekeeping conservation to the mosaic
+    virulence genes.  Selection among them is measured, not assumed: a locus is
+    eligible only if the bait assembly and all five closed genomes annotate it
+    exactly once, and the chosen loci are the eligible ones furthest from the
+    bait allele.  Identity to the bait is what the tier has to survive, so it
+    is the ranking key and it is deposited for every candidate.
+    """
+    bait_records = _annotated_records(BAIT_ASSEMBLY, cache, "cds")
+    genomes = {
+        entry["strain"]: _annotated_records(entry["assembly_accession"], cache, "cds")
+        for entry in manifest
+    }
+    rows, eligible = [], []
+    for gene, description in CANDIDATE_LOCI.items():
+        bait = _select(bait_records, gene=gene)
+        copies, identities = {}, []
+        for strain, records in genomes.items():
+            found = _select(records, gene=gene)
+            copies[strain] = len(found)
+            if len(bait) == 1 and len(found) == 1:
+                identity, length = _blast_identity(
+                    bait[0][1], found[0][1], Path(cache)
+                )
+                identities.append(identity)
+        single_everywhere = (
+            len(bait) == 1
+            and all(count == 1 for count in copies.values())
+            and len(bait[0][1]) >= min_bp
+        )
+        mean_identity = (
+            round(sum(identities) / len(identities), 2) if identities else None
+        )
+        rows.append([
+            gene, description, len(bait[0][1]) if bait else 0,
+            len(bait), ";".join(f"{s}={c}" for s, c in sorted(copies.items())),
+            "yes" if single_everywhere else "no",
+            mean_identity if mean_identity is not None else "",
+            round(min(identities), 2) if identities else "",
+            round(max(identities), 2) if identities else "",
+        ])
+        if single_everywhere and mean_identity is not None:
+            eligible.append((mean_identity, gene))
+    write_tsv(
+        Path(outdir) / "locus_selection.tsv",
+        ["gene", "rationale", "bait_length_bp", "bait_copies", "copies_per_genome",
+         "eligible", "mean_identity_to_bait_pct", "min_identity_pct",
+         "max_identity_pct"],
+        rows,
+    )
+    eligible.sort()
+    return [gene for _, gene in eligible[:wanted]]
+
+
+def stage_c_divergence(repo_root, outdir, manifest_path, workdir, threads, wanted):
+    """Single-copy loci at greater catalogue distance, on the same drafts."""
+    manifest = read_tsv(manifest_path)
+    workdir = Path(workdir)
+    cache = workdir / "downloads"
+    loci = select_divergent_loci(manifest, cache, outdir, wanted)
+    selected = {
+        row["gene"]: float(row["mean_identity_to_bait_pct"])
+        for row in read_tsv(Path(outdir) / "locus_selection.tsv")
+        if row["mean_identity_to_bait_pct"]
+    }
+    print(f"  selected by measured distance to the bait: {', '.join(loci)}", flush=True)
+    bait_records = _annotated_records(BAIT_ASSEMBLY, cache, "cds")
+    baits = {
+        locus: _write_bait(
+            _select(bait_records, gene=locus),
+            Path(outdir) / f"bait_{locus}_26695.fasta", locus, BAIT_ASSEMBLY)
+        for locus in loci
+    }
+
+    rows = []
+    for entry in manifest:
+        strain = entry["strain"]
+        sample_dir = workdir / strain
+        r1, r2 = _reads(entry["illumina_run"], cache)
+        draft = _draft(sample_dir, r1, r2, threads)
+        annotation = _annotated_records(entry["assembly_accession"], cache, "cds")
+        for locus in loci:
+            truth = _select(annotation, gene=locus)
+            case_class = (
+                "divergent" if selected[locus] < DIVERGENT_IDENTITY_PCT
+                else "supported"
+            )
+            print(f"  [{strain}] reconstructing {locus}", flush=True)
+            record, sequence, exit_code = _reconstruct(
+                repo_root, sample_dir, strain, locus, baits[locus], draft,
+                r1, r2, threads,
+            )
+            if record is None:
+                rows.append([
+                    "divergent single-copy loci", f"{strain} {locus}", case_class,
+                    f"NO_REPORT(exit={exit_code})", "", "", "no",
+                    "annotated closed-genome truth", "not assessed", "",
+                ])
+                continue
+            exact, identity, length, relation = _score(
+                sequence, truth, sample_dir)
+            rows.append([
+                "divergent single-copy loci", f"{strain} {locus}", case_class,
+                record.get("workflow_status", ""),
+                record.get("result_disposition", ""),
+                record.get("sequence_confidence") or record.get("qc_confidence", ""),
+                exact, _evidence(sequence, truth, identity, length, record),
+                relation, record.get("qc_flags", ""),
+            ])
+    write_tsv(
+        Path(outdir) / "tier_calibration_divergent_loci.tsv",
+        ["stage", "case", "case_class", "workflow_status", "disposition",
+         "sequence_confidence", "matches_truth", "evidence",
+         "relation_to_annotation", "qc_flags"],
+        rows,
+    )
+    return summarise(rows, stage="divergent single-copy loci"), rows
+
+
+def _read_stats(path):
+    """Read count and read length of one FASTQ.gz, without loading it."""
+    lines = int(subprocess.run(
+        f"zcat {path} | wc -l", shell=True, capture_output=True, text=True, check=True
+    ).stdout.split()[0])
+    first = subprocess.run(
+        f"zcat {path} | head -2 | tail -1", shell=True, capture_output=True,
+        text=True, check=True,
+    ).stdout.strip()
+    return lines // 4, len(first)
+
+
+def _subsample(source, destination, keep_every):
+    """Keep every k-th read, deterministically and in step across the pair.
+
+    The record test is ``(NR-1) % (4k) < 4``, not ``NR % (4k) < 4``: FASTQ
+    records start at line 1, so the unshifted form straddles record
+    boundaries and emits a file that is four lines per record but not four
+    lines of the same record.  The result is accepted by gzip and rejected by
+    every assembler, so the output is checked here rather than downstream.
+    """
+    destination = Path(destination)
+    if destination.is_file() and destination.stat().st_size:
+        return str(destination)
+    subprocess.run(
+        f"zcat {source} | awk '(NR-1)%({4 * keep_every})<4' | gzip -1 > "
+        f"{destination}",
+        shell=True, check=True,
+    )
+    lines = int(subprocess.run(
+        f"zcat {destination} | wc -l", shell=True, capture_output=True,
+        text=True, check=True).stdout.split()[0])
+    first = subprocess.run(
+        f"zcat {destination} | head -1", shell=True, capture_output=True,
+        text=True, check=True).stdout
+    if lines % 4 or not first.startswith("@"):
+        raise RuntimeError(
+            f"subsampled FASTQ is malformed: {lines} lines, first line "
+            f"{first[:20]!r}"
+        )
+    return str(destination)
+
+
+def stage_d_depth(repo_root, outdir, manifest_path, workdir, threads, depths,
+                  locus="gyrB"):
+    """The same accepted locus at reduced depth, assembled and reconstructed.
+
+    The depth series answers the other half of the acceptance question: the
+    top tier was reached on these genomes at full depth, so at what depth does
+    it stop being reached, and does the tool withhold rather than accept a
+    degraded reconstruction.  Reads are subsampled by keeping every k-th pair,
+    which is deterministic and preserves the pairing, and the draft is
+    reassembled at each depth so the loss of depth is felt by the assembly as
+    well as by the reconstruction.
+    """
+    manifest = read_tsv(manifest_path)
+    workdir = Path(workdir)
+    cache = workdir / "downloads"
+    bait = _write_bait(
+        _select(_annotated_records(BAIT_ASSEMBLY, cache, "cds"), gene=locus),
+        Path(outdir) / f"bait_{locus}_26695.fasta", locus, BAIT_ASSEMBLY)
+
+    rows = []
+    for entry in manifest:
+        strain = entry["strain"]
+        sample_dir = workdir / strain
+        r1, r2 = _reads(entry["illumina_run"], cache)
+        full_draft = _draft(sample_dir, r1, r2, threads)
+        genome_bp = sum(
+            len(sequence) for _, sequence in read_fasta_sequences(full_draft)
+        )
+        pairs, read_bp = _read_stats(r1)
+        observed = pairs * 2 * read_bp / genome_bp
+        truth = _select(
+            _annotated_records(entry["assembly_accession"], cache, "cds"), gene=locus)
+        print(f"  [{strain}] {observed:.0f}x observed over {genome_bp/1e6:.2f} Mb",
+              flush=True)
+        for target in depths:
+            keep_every = max(2, round(observed / target))
+            achieved = observed / keep_every
+            tag = f"_depth{target}x"
+            sub1 = _subsample(r1, sample_dir / f"sub{target}x_R1.fastq.gz", keep_every)
+            sub2 = _subsample(r2, sample_dir / f"sub{target}x_R2.fastq.gz", keep_every)
+            print(f"  [{strain}] {target}x arm: every {keep_every}th pair "
+                  f"({achieved:.1f}x), assembling", flush=True)
+            try:
+                draft = _draft(sample_dir, sub1, sub2, threads,
+                               name=f"spades{tag}", isolate=False)
+            except RuntimeError as error:
+                rows.append([
+                    "depth series", f"{strain} {locus} {target}x", "low-depth",
+                    "ASSEMBLY_FAILED", "", "", "no", str(error)[:160],
+                    "not assessed", "",
+                ])
+                continue
+            record, sequence, exit_code = _reconstruct(
+                repo_root, sample_dir, strain, locus, bait, draft, sub1, sub2,
+                threads, tag=tag)
+            if record is None:
+                rows.append([
+                    "depth series", f"{strain} {locus} {target}x", "low-depth",
+                    f"NO_REPORT(exit={exit_code})", "", "", "no",
+                    f"target {target}x, achieved {achieved:.1f}x",
+                    "not assessed", "",
+                ])
+                continue
+            exact, identity, length, relation = _score(
+                sequence, truth, sample_dir)
+            rows.append([
+                "depth series", f"{strain} {locus} {target}x", "low-depth",
+                record.get("workflow_status", ""),
+                record.get("result_disposition", ""),
+                record.get("sequence_confidence") or record.get("qc_confidence", ""),
+                exact,
+                (f"target {target}x, achieved {achieved:.1f}x; "
+                 + _evidence(sequence, truth, identity, length, record)),
+                relation, record.get("qc_flags", ""),
+            ])
+    write_tsv(
+        Path(outdir) / "tier_calibration_depth_series.tsv",
+        ["stage", "case", "case_class", "workflow_status", "disposition",
+         "sequence_confidence", "matches_truth", "evidence",
+         "relation_to_annotation", "qc_flags"],
+        rows,
+    )
+    return summarise(rows, stage="depth series"), rows
 
 
 def main():
@@ -405,6 +742,14 @@ def main():
     parser.add_argument("--manifest", help="Closed-genome manifest for stage B.")
     parser.add_argument("--workdir", default="tier_calibration_work")
     parser.add_argument("--threads", type=int, default=8)
+    parser.add_argument(
+        "--divergent-loci", type=int, default=0, metavar="N",
+        help="Stage C: add the N eligible single-copy loci furthest from the bait.",
+    )
+    parser.add_argument(
+        "--depth-series", default="", metavar="X,Y",
+        help="Stage D: target depths for the subsampled arm, e.g. 15,8.",
+    )
     args = parser.parse_args()
 
     outdir = Path(args.outdir)
@@ -431,6 +776,26 @@ def main():
               f"{block['overall']['reached_top_tier']} at {TOP_TIER}, "
               f"{block['overall']['false_accepts']} false accepts")
         inputs.append(Path(args.manifest))
+
+    if args.manifest and args.divergent_loci:
+        block, divergent_rows = stage_c_divergence(
+            REPO_ROOT, outdir, args.manifest, args.workdir, args.threads,
+            args.divergent_loci,
+        )
+        summary["stage_c_divergent_loci"] = block
+        print(f"[C] divergent loci: {block['overall']['cases']} cases, "
+              f"{block['overall']['reached_top_tier']} at {TOP_TIER}, "
+              f"{block['overall']['false_accepts']} false accepts")
+
+    if args.manifest and args.depth_series:
+        depths = [int(value) for value in args.depth_series.split(",")]
+        block, depth_rows = stage_d_depth(
+            REPO_ROOT, outdir, args.manifest, args.workdir, args.threads, depths,
+        )
+        summary["stage_d_depth_series"] = block
+        print(f"[D] depth series: {block['overall']['cases']} cases, "
+              f"{block['overall']['reached_top_tier']} at {TOP_TIER}, "
+              f"{block['overall']['false_accepts']} false accepts")
 
     write_json(outdir / "TIER_CALIBRATION.json", summary)
     write_json(

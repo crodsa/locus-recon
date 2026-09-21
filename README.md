@@ -880,7 +880,7 @@ nine complementary stages and states the role of each one.
 | Seven-run *aphA1* panel | Can the depth module recover a clinically relevant aminoglycoside-resistance amplification from real *A. baumannii* reads? | Concordance for four single-copy and three amplified runs, with both available qPCR values reproduced within their published intervals | Several runs belong to one clinical and selection series |
 | Five-genome 23S and *gyrB* panel | Can graph context help at the low-copy boundary when 23S depth rejects one copy but overshoots the known two-copy state? | Two 23S contexts and one *gyrB* context in every genome, with the depth measurement unchanged by the graph observation | The panel informed the graph extension and is not held-out performance validation |
 | Real-read audit of the same five genomes against their closed sequences | Does the confidence layer separate correct from incorrect reconstructions when truth is known and the catalogue is distant? | Nine of ten reconstructions exact, the tenth reported as truncated with its missing bases located, and five exact *gyrB* alleles retained at `HIGH` despite 96.2-96.7% catalogue identity | Five genomes at two loci in one species; not an estimate of exact-reconstruction sensitivity across taxa |
-| Tier calibration over every case with known truth | When the tool reports a tier, what does that tier buy the reader: is the top tier reachable, and is it right when reached? | All 11 single-copy intact cases reached the top tier and every one matched truth exactly, with no false accepts in 37 cases; 21 of the 26 withheld cases also matched truth, so a withheld result is unestablished rather than incorrect | 37 cases at four loci in three species; a calibration of what the tiers mean on these cases, not an estimate of sensitivity across taxa |
+| Tier calibration over every case with known truth | When the tool reports a tier, what does that tier buy the reader: is the top tier reachable, is it right when reached, and does it degrade as evidence degrades? | All 21 single-copy intact cases reached the top tier and every one matched truth exactly, with no false accepts in 62 cases; 30 of the 41 withheld cases also matched truth; and across the whole set exactly one reported sequence has a wrong base, at 8x, withheld at `LOW` | 62 cases at six loci in three species, 35 on real reads; a calibration of what the tiers mean on these cases, not an estimate of sensitivity across taxa |
 | Frame, input-validation and graph-evidence checks on the deposited *tcdB* material | Do the reporting behaviours hold independently of bait orientation, are bad inputs named rather than passed on, does the graph answer for a scaffold placeholder, and can competitive scoring rank graph paths? | Identical internal-stop counts in all four orientation combinations where a forward-only scan reports 103 stops, three input errors named at the record, three of three placeholder verdicts, and a constructed positive control in which the source path is the only candidate with uniquely anchored coverage | Constructed placeholders and simulated control reads isolate the logic; on the published read pair the 512 paths cannot be separated at all, which bounds what the ranking can do with 100 bp reads |
 | LIBA-6656 *tcdB* application | Can the complete evidence system resolve a biologically important toxin locus when the draft assembly suggests one incomplete mixed sequence? | Two read-compatible candidates in chromosome-associated and extrachromosomal contexts, plus a correct refusal to report unsupported dosage | Short reads do not establish replicon closure or long-range phase |
 
@@ -964,25 +964,37 @@ rarely reached, is it reachable, and is it right when reached? Across the 37
 cases in this repository that have known truth, the answer separates into three
 statements.
 
-**The top tier is reachable and precise.** Every one of the 11 cases where the
+**The top tier is reachable and precise.** Every one of the 21 cases where the
 locus was single copy, intact and adequately covered reached `HIGH`, and every
-result in `HIGH` matched truth exactly. There were **no false accepts**. Five of
-those cases are real reads against closed genomes, where *gyrB* was
-reconstructed exactly in all five while the nearest catalogue allele sat at
-96.2-96.7% identity: catalogue distance does not suppress the tier.
+result in `HIGH` matched truth exactly. There were **no false accepts in 62
+cases**. Fifteen of those cases are real reads against closed genomes, where
+*gyrB*, *glmM* and *ureB* were reconstructed exactly in all five genomes while
+the nearest catalogue allele sat at 96.0-97.2% identity: catalogue distance does
+not by itself suppress the tier.
 
-**An overall acceptance rate is not a performance measure.** It is 11 of 37 here
-only because 26 of the 37 cases were built to be refused - truncated by
-construction, mixed, below the depth floor, paralogous, target-negative, or
-multi-copy. On a dataset of fragmented or hypervariable targets the rate is
-expected to approach zero, which is the designed behaviour rather than a
-failure.
+**An overall acceptance rate is not a performance measure.** It is 21 of 62 here
+only because 41 of the cases were built or subsampled to be refused - truncated
+by construction, mixed, below the depth floor, paralogous, target-negative,
+multi-copy, subsampled to 8-15x, or 11 points diverged from the bait. On a
+dataset of fragmented or hypervariable targets the rate is expected to approach
+zero, which is the designed behaviour rather than a failure.
 
-**A withheld result is not a wrong result.** 21 of the 26 withheld cases
+**A withheld result is not a wrong result.** 30 of the 41 withheld cases
 reconstructed truth exactly over the span they reported, including four
 two-copy 23S loci whose consensus was exact but whose copy of origin the reads
 cannot establish. The tier states what the reads establish, not what the
 sequence happens to be.
+
+**The tier degrades with the evidence, and the one wrong base was withheld.**
+Subsampling the accepted locus to ~15x and ~8x moved every one of the ten
+libraries off the top tier, monotonically and without exception, while the
+reported sequence stayed exact in nine of them. The tenth is the only case in
+all 62 whose bases disagree with truth - one substitution at 8x - and it was
+reported at `LOW` with reduced depth, patchy support and elevated uncertain
+bases. Catalogue distance shows the same graded behaviour: at 88.7% identity to
+a one-allele bait, *cagA* fell to `MEDIUM` or `SUSPECT` in all five genomes
+while remaining identical to the annotated allele over the whole overlap, with
+only its boundary in doubt.
 
 ### Frame, input validation and graph evidence
 

@@ -1,19 +1,19 @@
 {
-  "created_utc": "2026-09-18T22:32:40.651170+00:00",
+  "created_utc": "2026-09-21T15:17:25.754302+00:00",
   "git_commit": "UNAVAILABLE (fatal: not a git repository (or any parent up to mount point /))",
   "inputs": [
     {
-      "path": "/data/PROJECTS/locus-recon-validation/repo_tier/validation/reference_results/validation_results.tsv",
+      "path": "/data/PROJECTS/locus-recon-validation/repo_arms/validation/reference_results/validation_results.tsv",
       "sha256": "a0d97fb64915e9f299eb591da380a9544cd35f7a4c164ed009f9ce71d8c63022",
       "size_bytes": 2973
     },
     {
-      "path": "/data/PROJECTS/locus-recon-validation/repo_tier/validation/completeness-benchmark/completeness_benchmark_results.tsv",
+      "path": "/data/PROJECTS/locus-recon-validation/repo_arms/validation/completeness-benchmark/completeness_benchmark_results.tsv",
       "sha256": "d71e8500ba3cf864e58172196ebb1dc0090d1544b379c54607525b4716315a4d",
       "size_bytes": 5152
     },
     {
-      "path": "/data/PROJECTS/locus-recon-validation/repo_tier/validation/tier-calibration/closed_genome_manifest.tsv",
+      "path": "/data/PROJECTS/locus-recon-validation/repo_arms/validation/tier-calibration/closed_genome_manifest.tsv",
       "sha256": "c4b58f88fafdbb283d5d4865675bee52bccc60a4f20bc11dde0e5fa918346f7a",
       "size_bytes": 390
     }
