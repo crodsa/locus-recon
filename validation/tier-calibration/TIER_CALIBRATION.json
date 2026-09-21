@@ -199,5 +199,30 @@
     },
     "stage": "depth series",
     "top_tier": "HIGH"
+  },
+  "stage_d_isolate_control": {
+    "by_case_class": {
+      "low-depth": {
+        "acceptance_rate": 0.0,
+        "cases": 10,
+        "false_accepts": 0,
+        "reached_top_tier": 0,
+        "top_tier_exact": 0,
+        "top_tier_precision": null,
+        "withheld_but_exact": 9
+      }
+    },
+    "overall": {
+      "acceptance_rate": 0.0,
+      "cases": 10,
+      "false_accepts": 0,
+      "reached_top_tier": 0,
+      "top_tier_exact": 0,
+      "top_tier_precision": null,
+      "withheld_but_exact": 9
+    },
+    "stage": "depth series",
+    "tier_agreement_with_primary": "10/10",
+    "top_tier": "HIGH"
   }
 }

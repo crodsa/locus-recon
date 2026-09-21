@@ -168,6 +168,27 @@ python validation/run_tier_calibration.py \
   --divergent-loci 3 --depth-series 15,8
 ```
 
+## Assembler-mode control
+
+The primary depth series assembles the subsampled libraries in SPAdes' default
+mode, while the full-depth drafts use `--isolate`, because that flag is
+documented for high-coverage isolate data. Depth and assembler mode therefore
+co-vary across those arms. To separate them, the same subsampled libraries were
+reassembled with `--isolate` at every depth and `gyrB` reconstructed again
+(`tier_calibration_depth_series_isolate.tsv`).
+
+The reported tier is identical in 10 of 10 cases and the agreement with truth is
+identical in 10 of 10, so the tier response follows depth rather than the
+assembler setting. The control reuses the same libraries and is therefore
+reported separately rather than counted as further calibration cases; the
+calibration remains 62 cases.
+
+```
+python validation/run_tier_calibration.py --outdir validation/tier-calibration \
+  --manifest validation/tier-calibration/closed_genome_manifest.tsv \
+  --workdir <scratch> --threads 24 --divergent-loci 3 --depth-series 15,8 --depth-isolate
+```
+
 ## Boundaries
 
 - 62 cases at six loci in three species, 35 of them on real reads. This is a

@@ -649,7 +649,7 @@ def _subsample(source, destination, keep_every):
 
 
 def stage_d_depth(repo_root, outdir, manifest_path, workdir, threads, depths,
-                  locus="gyrB"):
+                  locus="gyrB", isolate=False, filename=None, stage=None):
     """The same accepted locus at reduced depth, assembled and reconstructed.
 
     The depth series answers the other half of the acceptance question: the
@@ -663,6 +663,7 @@ def stage_d_depth(repo_root, outdir, manifest_path, workdir, threads, depths,
     manifest = read_tsv(manifest_path)
     workdir = Path(workdir)
     cache = workdir / "downloads"
+    stage_label = stage or "depth series"
     bait = _write_bait(
         _select(_annotated_records(BAIT_ASSEMBLY, cache, "cds"), gene=locus),
         Path(outdir) / f"bait_{locus}_26695.fasta", locus, BAIT_ASSEMBLY)
@@ -685,17 +686,18 @@ def stage_d_depth(repo_root, outdir, manifest_path, workdir, threads, depths,
         for target in depths:
             keep_every = max(2, round(observed / target))
             achieved = observed / keep_every
-            tag = f"_depth{target}x"
+            suffix = "_isolate" if isolate else ""
+            tag = f"_depth{target}x{suffix}"
             sub1 = _subsample(r1, sample_dir / f"sub{target}x_R1.fastq.gz", keep_every)
             sub2 = _subsample(r2, sample_dir / f"sub{target}x_R2.fastq.gz", keep_every)
             print(f"  [{strain}] {target}x arm: every {keep_every}th pair "
                   f"({achieved:.1f}x), assembling", flush=True)
             try:
                 draft = _draft(sample_dir, sub1, sub2, threads,
-                               name=f"spades{tag}", isolate=False)
+                               name=f"spades{tag}", isolate=isolate)
             except RuntimeError as error:
                 rows.append([
-                    "depth series", f"{strain} {locus} {target}x", "low-depth",
+                    stage_label, f"{strain} {locus} {target}x{suffix}", "low-depth",
                     "ASSEMBLY_FAILED", "", "", "no", str(error)[:160],
                     "not assessed", "",
                 ])
@@ -705,7 +707,7 @@ def stage_d_depth(repo_root, outdir, manifest_path, workdir, threads, depths,
                 threads, tag=tag)
             if record is None:
                 rows.append([
-                    "depth series", f"{strain} {locus} {target}x", "low-depth",
+                    stage_label, f"{strain} {locus} {target}x{suffix}", "low-depth",
                     f"NO_REPORT(exit={exit_code})", "", "", "no",
                     f"target {target}x, achieved {achieved:.1f}x",
                     "not assessed", "",
@@ -714,7 +716,7 @@ def stage_d_depth(repo_root, outdir, manifest_path, workdir, threads, depths,
             exact, identity, length, relation = _score(
                 sequence, truth, sample_dir)
             rows.append([
-                "depth series", f"{strain} {locus} {target}x", "low-depth",
+                stage_label, f"{strain} {locus} {target}x{suffix}", "low-depth",
                 record.get("workflow_status", ""),
                 record.get("result_disposition", ""),
                 record.get("sequence_confidence") or record.get("qc_confidence", ""),
@@ -724,7 +726,7 @@ def stage_d_depth(repo_root, outdir, manifest_path, workdir, threads, depths,
                 relation, record.get("qc_flags", ""),
             ])
     write_tsv(
-        Path(outdir) / "tier_calibration_depth_series.tsv",
+        Path(outdir) / (filename or "tier_calibration_depth_series.tsv"),
         ["stage", "case", "case_class", "workflow_status", "disposition",
          "sequence_confidence", "matches_truth", "evidence",
          "relation_to_annotation", "qc_flags"],
@@ -745,6 +747,12 @@ def main():
     parser.add_argument(
         "--divergent-loci", type=int, default=0, metavar="N",
         help="Stage C: add the N eligible single-copy loci furthest from the bait.",
+    )
+    parser.add_argument(
+        "--depth-isolate", action="store_true",
+        help=("repeat the depth series with SPAdes --isolate at every depth. "
+              "Reported as a control on the assembler mode, not as additional "
+              "calibration cases: the primary series keeps the default mode."),
     )
     parser.add_argument(
         "--depth-series", default="", metavar="X,Y",
@@ -796,6 +804,31 @@ def main():
         print(f"[D] depth series: {block['overall']['cases']} cases, "
               f"{block['overall']['reached_top_tier']} at {TOP_TIER}, "
               f"{block['overall']['false_accepts']} false accepts")
+
+        if args.depth_isolate:
+            # Same subsampled libraries, assembled with --isolate at every
+            # depth. Kept out of the calibration aggregate: it answers whether
+            # the tier response follows depth or the assembler mode, and
+            # counting it as further cases would double the same libraries.
+            control, control_rows = stage_d_depth(
+                REPO_ROOT, outdir, args.manifest, args.workdir, args.threads,
+                depths, isolate=True,
+                filename="tier_calibration_depth_series_isolate.tsv",
+                stage="depth series, --isolate control",
+            )
+            summary["stage_d_isolate_control"] = control
+            agreement = sum(
+                1 for primary, repeated in zip(depth_rows, control_rows)
+                if primary[5] == repeated[5]
+            )
+            summary["stage_d_isolate_control"]["tier_agreement_with_primary"] = (
+                f"{agreement}/{len(control_rows)}"
+            )
+            print(f"[D-control] --isolate at every depth: "
+                  f"{control['overall']['cases']} cases, "
+                  f"{control['overall']['reached_top_tier']} at {TOP_TIER}, "
+                  f"tier identical to the primary series in "
+                  f"{agreement}/{len(control_rows)}")
 
     write_json(outdir / "TIER_CALIBRATION.json", summary)
     write_json(
