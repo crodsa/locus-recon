@@ -636,11 +636,22 @@ def reconcile_copy_number(
         and depth.dosage_estimate is not None
         and depth.dosage_status != "NOT_ESTIMATED"
     )
+    # Low mapping uniqueness removes depth and never adds it, so a multicopy
+    # verdict it accompanies still stands, but its dosage is only a floor.
+    depth_floor = (
+        not depth.reliable
+        and depth.depth_call == "MULTICOPY_DEPTH"
+        and depth.dosage_estimate is not None
+    )
 
     if graph_exact:
         assert graph is not None and graph.context_count is not None
         count = graph.context_count
-        discordant = not (depth.ratio_ci_low <= count <= depth.ratio_ci_high)
+        # A numeric comparison needs an interval that is not biased downward;
+        # with low mapping uniqueness the depth interval is only a floor.
+        discordant = depth.reliable and not (
+            depth.ratio_ci_low <= count <= depth.ratio_ci_high
+        )
         if discordant:
             flags.append("DEPTH_GRAPH_NUMERIC_DISCORDANCE")
         # The two lines of evidence agree that the locus is multi-copy but not
@@ -682,16 +693,30 @@ def reconcile_copy_number(
             consensus_flags=flags,
         )
 
+    if depth_floor:
+        # Every quantity available is a floor, so the larger one is reported:
+        # the depth floor for a single-context tandem array, an integer graph
+        # floor when more contexts are resolved than the depth floor implies.
+        flags.append("DEPTH_LOWER_BOUND")
+        floors = [("DEPTH_ONLY", depth.dosage_estimate)]
+        if graph_exact:
+            floors.append(("GRAPH_LOWER_BOUND", graph.context_count))
+        elif graph_lower_bound:
+            floors.append(("GRAPH_LOWER_BOUND", graph.context_lower_bound))
+        elif graph is not None:
+            flags.append("GRAPH_EVIDENCE_UNRESOLVED")
+        method, floor = max(floors, key=lambda item: item[1])
+        return CopyNumberConsensusResult(
+            None, "LOWER_BOUND", method, "LOWER_BOUND",
+            copy_number_lower_bound=floor,
+            consensus_flags=flags,
+        )
+
     if dosage_usable:
         if graph is not None:
             flags.append("GRAPH_EVIDENCE_UNRESOLVED")
-        is_lower = depth.dosage_status == "LOWER_BOUND"
         return CopyNumberConsensusResult(
-            depth.dosage_estimate,
-            "LOWER_BOUND" if is_lower else "MEAN_DEPTH_DOSAGE",
-            "DEPTH_ONLY",
-            "LOWER_BOUND" if is_lower else "SUPPORTED",
-            copy_number_lower_bound=depth.dosage_estimate if is_lower else None,
+            depth.dosage_estimate, "MEAN_DEPTH_DOSAGE", "DEPTH_ONLY", "SUPPORTED",
             consensus_flags=flags,
         )
 

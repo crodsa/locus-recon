@@ -12,7 +12,7 @@ The MD5 and SHA-256 values in `INPUT_CHECKSUMS.tsv` bind these inputs to the fil
 
 ## Software and command
 
-The local assembly used Locus-Recon 1.0 (commit `9c02bd1`), BLAST+ 2.16.0+, BWA-MEM2 2.2.1, samtools 1.22.1, and SPAdes 4.2.0. Discovery used 80% minimum identity, a 50 bp minimum HSP, and 300 bp interval padding. Eight threads and 16 GB SPAdes memory were requested. Cleanup was disabled.
+The local assembly used Locus-Recon 1.0.0, BLAST+ 2.16.0+, BWA-MEM2 2.2.1, samtools 1.22.1, and SPAdes 4.2.0. Discovery used 80% minimum identity, a 50 bp minimum HSP, and 300 bp interval padding. Eight threads and 16 GB SPAdes memory were requested. Cleanup was disabled.
 
 ```bash
 python -m locus_recon.cli \

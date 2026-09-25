@@ -592,3 +592,60 @@ def test_unreliable_depth_without_graph_is_indeterminate():
     assert result.copy_number_kind == "NOT_ESTIMATED"
     assert result.copy_number_method == "NONE"
     assert result.copy_number_status == "INDETERMINATE"
+
+
+def _low_uniqueness_multicopy(dosage: float = 4.2):
+    depth = _depth(
+        "MULTICOPY_DEPTH", dosage=dosage, ratio=dosage, ci_low=dosage - 0.4,
+        ci_high=dosage + 0.4, reliable=False,
+    )
+    depth.dosage_status = "LOWER_BOUND"
+    return depth
+
+
+def test_low_mapping_uniqueness_multicopy_depth_is_a_floor_not_indeterminate():
+    """The MAPQ filter only removes depth, so the multicopy verdict stands."""
+    result = reconcile_copy_number(_low_uniqueness_multicopy(), None)
+
+    assert result.copy_number_call is None
+    assert result.copy_number_kind == "LOWER_BOUND"
+    assert result.copy_number_method == "DEPTH_ONLY"
+    assert result.copy_number_status == "LOWER_BOUND"
+    assert result.copy_number_lower_bound == 4.2
+    assert "DEPTH_LOWER_BOUND" in result.consensus_flags
+
+
+def test_low_uniqueness_tandem_keeps_the_depth_floor_over_one_context():
+    graph = _graph_result(
+        "MATCHED_CONTEXT_COUNT", left=1, right=1, count=1, lower_bound=1,
+    )
+    result = reconcile_copy_number(_low_uniqueness_multicopy(4.2), graph)
+
+    assert result.copy_number_kind == "LOWER_BOUND"
+    assert result.copy_number_method == "DEPTH_ONLY"
+    assert result.copy_number_lower_bound == 4.2
+    assert "DEPTH_GRAPH_NUMERIC_DISCORDANCE" not in result.consensus_flags
+
+
+def test_low_uniqueness_uses_a_larger_integer_graph_floor():
+    graph = _graph_result(
+        "MATCHED_CONTEXT_COUNT", left=3, right=3, count=3, lower_bound=3,
+    )
+    result = reconcile_copy_number(_low_uniqueness_multicopy(2.1), graph)
+
+    assert result.copy_number_kind == "LOWER_BOUND"
+    assert result.copy_number_method == "GRAPH_LOWER_BOUND"
+    assert result.copy_number_lower_bound == 3
+    assert "GRAPH_EVIDENCE_UNRESOLVED" not in result.consensus_flags
+
+
+def test_low_uniqueness_single_copy_compatible_depth_stays_indeterminate():
+    depth = _depth(
+        "SINGLE_COPY_COMPATIBLE", dosage=0.6, ratio=0.6, ci_low=0.5, ci_high=0.7,
+        reliable=False,
+    )
+    depth.dosage_status = "LOWER_BOUND"
+    result = reconcile_copy_number(depth, None)
+
+    assert result.copy_number_status == "INDETERMINATE"
+    assert "DEPTH_EVIDENCE_UNRELIABLE" in result.consensus_flags

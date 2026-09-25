@@ -58,7 +58,7 @@ Usage:
 
 import argparse
 import csv
-import os
+import json
 import random
 import re
 import sys
@@ -84,7 +84,6 @@ from locus_recon.qc import (  # noqa: E402
 )
 from validation.common import (  # noqa: E402
     build_provenance,
-    sha256_file,
     write_json,
 )
 
@@ -110,6 +109,17 @@ def write_fasta(path, records):
             for start in range(0, len(sequence), 70):
                 handle.write(sequence[start : start + 70] + "\n")
     return str(path)
+
+
+def portable_log(path):
+    """Replace absolute executable paths in a tool log with ``<env>``.
+
+    bwa-mem2 names the binary it launches; the location of the environment on
+    the machine that ran it is not evidence.
+    """
+    path = Path(path)
+    if path.is_file():
+        path.write_text(re.sub(r'"/[^"]*/bin/', '"<env>/bin/', path.read_text()))
 
 
 def write_tsv(path, header, rows):
@@ -336,7 +346,7 @@ def check_placeholder_junctions(gfa_path, outdir):
 
 def check_path_scoring(gfa_path, outdir, reads_r1, reads_r2, threads,
                        min_length, max_length, prefix):
-    """Check 5: competitive scoring of the enumerated paths against reads."""
+    """Check 6: competitive scoring of the enumerated paths against reads."""
     from locus_recon.graph_score import (
         competitive_read_scores,
         ranking_is_informative,
@@ -382,6 +392,7 @@ def check_path_scoring(gfa_path, outdir, reads_r1, reads_r2, threads,
             log_handle=log_handle,
             graph_depths=graph_depths,
         )
+    portable_log(outdir / "graph_path_scores.log")
     for row in rows:
         row["nodes"] = nodes.get(row["candidate_id"], "")
     write_scored_summary(rows, str(outdir / "graph_path_scores.tsv"))
@@ -410,7 +421,6 @@ def _simulate_pairs(sequence, depth, read_bp, fragment_bp, error_rate, seed):
     """Simulate paired reads from one sequence, deterministically."""
     rng = random.Random(seed)
     pairs = max(1, int(depth * len(sequence) / (2 * read_bp)))
-    complement = {"A": "T", "C": "G", "G": "C", "T": "A", "N": "N"}
     forward, reverse = [], []
     for index in range(pairs):
         start = rng.randrange(0, max(1, len(sequence) - fragment_bp))
@@ -498,6 +508,7 @@ def check_scoring_positive_control(gfa_path, outdir, threads, min_length,
                 paths_fasta=candidates_fasta, r1=r1, r2=r2,
                 out_dir=scratch, log_handle=log_handle,
             )
+        portable_log(outdir / "scoring_positive_control.log")
     write_scored_summary(rows, str(outdir / "scoring_positive_control.tsv"))
     for index in Path(candidates_fasta).parent.glob(
         Path(candidates_fasta).name + ".*"
@@ -588,6 +599,33 @@ def main():
         print(f"      skipped: {exc}")
 
     inputs = [bait_path, gfa_path]
+    summary_path = outdir / "VALIDATION_SUMMARY.json"
+    provenance_path = outdir / "PROVENANCE.json"
+    previous_summary = (
+        json.loads(summary_path.read_text()) if summary_path.is_file() else {}
+    )
+    previous_runs = (
+        json.loads(provenance_path.read_text()).get("runs", {})
+        if provenance_path.is_file() else {}
+    )
+    parameters = {
+        "deposit": Path(args.deposit).as_posix(),
+        "placeholder_bp": PLACEHOLDER_BP,
+        "ambiguous_window_bp": AMBIGUOUS_WINDOW_BP,
+        "flank_bp": FLANK_BP,
+        "graph_path_min_length_bp": args.min_length,
+        "graph_path_max_length_bp": args.max_length,
+        "threads": args.threads,
+    }
+    tools = {
+        "python": [sys.executable, "--version"],
+        "blastn": ["blastn", "-version"],
+        "samtools": ["samtools", "--version"],
+    }
+    runs = {"checks_1_to_5": build_provenance(
+        workflow="frame_and_graph_evidence/checks_1_to_5", repo_root=REPO_ROOT,
+        inputs=inputs, parameters=parameters, tools=tools,
+    )}
     if args.reads_r1:
         print("[6/6] competitive graph-path scoring on the published case")
         summary["path_scoring"] = check_path_scoring(
@@ -596,36 +634,33 @@ def main():
         )
         print(f"      {summary['path_scoring']['paths_scored']} paths scored; "
               f"reads discriminate: {summary['path_scoring']['reads_discriminate']}")
-        inputs += [Path(args.reads_r1)] + ([Path(args.reads_r2)] if args.reads_r2 else [])
+        reads = [Path(args.reads_r1)] + ([Path(args.reads_r2)] if args.reads_r2 else [])
+        runs["check_6_path_scoring"] = build_provenance(
+            workflow="frame_and_graph_evidence/check_6", repo_root=REPO_ROOT,
+            inputs=inputs + reads, parameters=parameters, tools=tools,
+        )
+    elif "path_scoring" in previous_summary:
+        # Check 6 needs the published reads.  Without them the deposited
+        # result and its provenance are kept rather than dropped.
+        print("[6/6] no reads given: the deposited path-scoring result is kept")
+        summary["path_scoring"] = previous_summary["path_scoring"]
+        if "check_6_path_scoring" in previous_runs:
+            runs["check_6_path_scoring"] = previous_runs["check_6_path_scoring"]
 
-    write_json(outdir / "VALIDATION_SUMMARY.json", summary)
-    provenance = build_provenance(
-        workflow="frame_and_graph_evidence",
-        repo_root=REPO_ROOT,
-        inputs=inputs,
-        parameters={
-            "deposit": str(deposit),
-            "placeholder_bp": PLACEHOLDER_BP,
-            "ambiguous_window_bp": AMBIGUOUS_WINDOW_BP,
-            "flank_bp": FLANK_BP,
-            "graph_path_min_length_bp": args.min_length,
-            "graph_path_max_length_bp": args.max_length,
-            "threads": args.threads,
-            "path_scoring_reads": bool(args.reads_r1),
-        },
-        tools={
-            "python": [sys.executable, "--version"],
-            "blastn": ["blastn", "-version"],
-            "samtools": ["samtools", "--version"],
-        },
-    )
-    write_json(outdir / "PROVENANCE.json", provenance)
+    write_json(summary_path, summary)
+    write_json(provenance_path, {
+        "schema_version": "1.0", "workflow": "frame_and_graph_evidence", "runs": runs,
+    })
+    checksums = {}
+    for record in runs.values():
+        for entry in record.get("inputs", []):
+            checksums[entry["path"]] = (entry["size_bytes"], entry["sha256"])
     write_tsv(
-        outdir / "INPUT_CHECKSUMS.tsv",
-        ["path", "size_bytes", "sha256"],
-        [[str(path), Path(path).stat().st_size, sha256_file(path)] for path in inputs],
+        outdir / "INPUT_CHECKSUMS.tsv", ["path", "size_bytes", "sha256"],
+        [[path, size, digest] for path, (size, digest) in sorted(checksums.items())],
     )
-    print(f"\nWrote {outdir}/results/, VALIDATION_SUMMARY.json and PROVENANCE.json")
+    print(f"\nWrote the result tables, VALIDATION_SUMMARY.json and PROVENANCE.json "
+          f"to {outdir}")
 
 
 if __name__ == "__main__":

@@ -11,3 +11,4 @@ dist/
 # Typical local run outputs
 results/
 validation/mock_results/
+validation/mock_dry_run/

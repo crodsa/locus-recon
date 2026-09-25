@@ -42,8 +42,9 @@ The validation datasets have different purposes.
   estimator across sequencing depth and GC conditions.
 - A constructed 14-case series tests the completeness measurement against known
   truncation and split geometries. Measured shortfall equalled constructed truth
-  in all fourteen cases, and the reconstruction itself was byte-identical to
-  what the workflow reports with the check disabled.
+  in all fourteen cases, and every reported sequence was identical to the truth
+  over the span its contig carries: the measurement reports a loss and never
+  alters the sequence.
 - Seven *Acinetobacter baumannii* runs test whether depth recovers real
   amplification of the aminoglycoside resistance gene *aphA1*. All four
   single-copy and three amplified classifications agreed with published
@@ -52,15 +53,18 @@ The validation datasets have different purposes.
 - Five hybrid-closed *Helicobacter pylori* genomes test the low-copy boundary
   on real reads. Each has two 23S rRNA copies and one *gyrB* copy, and graph
   evidence recovered two and one contexts respectively while the 23S depth
-  ratios remained above the two-copy expectation. This panel informed
-  graph-method development and is not claimed as held-out validation.
+  ratios remained above the two-copy expectation. This panel informed the
+  design of the graph method and is not claimed as held-out validation.
 - The same five genomes, whose closed sequences are known, audit the
-  reconstruction and its confidence layer against truth. Nine of ten
-  reconstructions matched the closed sequence base for base; the tenth was
-  reported as truncated with the missing 317 bp located on a named scaffold. All
-  five *gyrB* reconstructions were exact while sitting 96.2-96.7% from the
-  single catalogue reference, which is the case the separated catalogue axis
-  exists for.
+  reconstruction and its confidence tiers against truth on real reads, with a
+  catalogue allele from a different strain as the only bait.
+  [[CALIB-01 exact reconstructions among the ten 23S and gyrB loci]] of ten
+  reconstructions matched the closed sequence base for base, and
+  [[CALIB-02 gyrB reconstructions exact at HIGH]] of five *gyrB*
+  reconstructions were exact at `HIGH` while sitting
+  [[CALIB-03 identity range of the gyrB reconstructions to the catalogue allele]]
+  from the single catalogue reference, which is the case the separate catalogue
+  axis exists for.
 - The *Clostridioides difficile* LIBA-6656 analysis applies reconstruction,
   graph, competitive mapping and genomic-context evidence to divergent *tcdB*
   candidates. It also shows why the additive dosage is not a copy count when
@@ -213,8 +217,8 @@ curation. It is not an automatic allele-submission system.
 
 The commands below are entered in a **terminal**. Linux, macOS, or a Linux
 environment such as WSL is recommended because the workflow depends on standard
-command-line bioinformatics software. The project tests Python behavior on
-Linux, and the bundled reference workflow was generated on macOS.
+command-line bioinformatics software. The project's tests run on Linux, and the
+bundled reference benchmark was generated on Linux x86_64.
 
 ### 1. Install Conda if needed
 
@@ -276,7 +280,7 @@ samtools --version
 spades.py --version
 ```
 
-The first command should report `locus-recon 1.0`; the remaining commands
+The first command should report `locus-recon 1.0.0`; the remaining commands
 confirm that all external programs are available inside the active environment.
 The package supports Python 3.9 or newer, although the supplied environment pins
 Python 3.11.13. See the
@@ -369,8 +373,8 @@ with the rest of the set is a fragment of a different gene family member. It is
 compared against the records at least half the length of the longest one, so
 two paralogous fragments cannot vouch for each other.
 
-Consistent orientation remains good practice, but it is no longer a silent
-trap: reading-frame metrics are computed over all six frames (see
+Consistent orientation remains good practice, but a reversed catalogue is not
+a silent trap: reading-frame metrics are computed over all six frames (see
 [reading frame](#reading-frame-metrics-are-computed-over-six-frames)), and a
 bait set that reads as coding only on the reverse strand is reported as such.
 Whether the file contains the correct biological locus and shared biological
@@ -408,7 +412,7 @@ recomputed with the interior placeholders excised and reported as
 `qc_internal_stops_placeholder_closed`. When the count falls, the descriptive
 flag `PLACEHOLDER_FRAMESHIFT_EXPLAINS_STOPS` gives both numbers.
 `INTERNAL_STOPS` is still raised, because the sequence as delivered does
-contain them, but the report now distinguishes a frameshifted scaffold from a
+contain them, and the report distinguishes a frameshifted scaffold from a
 damaged reconstruction. Read it with `placeholder_junction_support`: a
 graph-supported junction whose excision removes every stop describes a
 scaffolding artefact, not a pseudogene.
@@ -498,8 +502,13 @@ locus-recon \
 After you have validated the workflow for your study, `--cleanup` can remove
 bulky per-sample BAM, FASTQ, index, and SPAdes files after each successful
 sample while preserving the final sequence and principal evidence summaries.
-The [CLI reference](docs/cli-reference.md#cleanup-and-reruns) lists the exact
-behavior.
+Those files include the inputs of the three companion commands:
+`full_map.sorted.bam` for `locus-recon-depth-ratio` and
+`locus-recon-copy-number`, and the local graph in `spades_local/` with the
+recruited reads `target_R1.fq.gz` and `target_R2.fq.gz` for
+`locus-recon-graph-paths`. Leave `--cleanup` off for any sample you may analyse
+with them. The [CLI reference](docs/cli-reference.md#cleanup-and-reruns) lists
+the exact behavior.
 
 ### Run samples in parallel
 
@@ -545,10 +554,11 @@ For each sample, the implemented workflow performs seven stages.
    all paired reads to the draft. Reads overlapping target regions seed a set of
    names, and all alignments sharing those names are recovered to rescue their
    partners. Paired reads and surviving singletons are retained.
-4. **Assemble locally.** SPAdes assembles only the selected reads. If standard
-   SPAdes reports the specific low/non-uniform k-mer histogram failure handled
-   by the workflow, Locus-Recon retries that sample in single-cell mode and
-   records the strategy in `spades_mode`.
+4. **Assemble locally.** SPAdes assembles only the selected reads, in its
+   default mode (without `--careful`). If standard SPAdes reports the specific
+   low/non-uniform k-mer histogram failure handled by the workflow, Locus-Recon
+   retries that sample in single-cell mode and records the strategy in
+   `spades_mode`.
 5. **Select and extract a candidate.** Known alleles are aligned to the local
    scaffolds. Redundant hits from different bait alleles that overlap the same
    local region are collapsed before distinct regions compete. The best region
@@ -561,19 +571,23 @@ For each sample, the implemented workflow performs seven stages.
    passes the configured final identity, query-coverage, mean-depth, and
    breadth gates.
 7. **Explain the evidence.** A quality-filtered pileup records every candidate
-   position, including zero-depth positions. Locus-Recon evaluates depth,
-   patchiness, base and mapping quality, forward/reverse balance, alternative
-   alleles, strand bias, possible mixtures, length, composition, coding-frame
-   behavior, and competition from another distinct local region. These checks
+   position, including zero-depth positions. It is built with `samtools mpileup`
+   with base alignment quality (BAQ) recalibration and with `-A`, so read pairs
+   the aligner could not mark as properly paired on a short candidate still
+   count on both strands. Locus-Recon evaluates depth, patchiness, base and
+   mapping quality, forward/reverse balance, alternative alleles, strand bias,
+   possible mixtures, length, composition, coding-frame behavior, and
+   competition from another distinct local region. These checks
    assign `HIGH`, `MEDIUM`, `LOW`, or `SUSPECT` sequence confidence and provide
    explicit flags. A shortfall measured in stage 2 is carried here as its own
    evidence class. It blocks `HIGH` on its own, and where the missing interval
    is found on another local contig the result is treated as severe, because
-   sequence the data demonstrably contains was left out.
-   The reconstruction's distance from the nearest curated allele
-   is reported separately as `catalogue_status`: once a candidate has cleared the
-   discovery similarity requirement, divergence from the catalogue annotates the
-   result for curation instead of reducing its confidence.
+   sequence the data demonstrably contains was left out. The length checks are
+   applied with the missing bases restored, so one loss is not scored twice.
+   The reconstruction's distance from the nearest curated allele is reported
+   separately as `catalogue_status`: once a candidate has cleared the discovery
+   similarity requirement, divergence from the catalogue annotates the result
+   for curation instead of reducing its confidence.
 
 The [methods and validation guide](docs/validation.md) gives a methods-style
 description, limitations, manual review checklist, and recommended benchmark
@@ -597,8 +611,8 @@ Start with these files in this order:
 
 | Field | Question it answers | Correct interpretation |
 |---|---|---|
-| `workflow_status` | Did the sample complete the minimum reconstruction workflow? | `SUCCESS` passed the final identity, coverage, mean-depth, and breadth gates. `SKIP` is an expected no-result condition. `FAIL` is an input, dependency, command, or unexpected execution failure. The legacy `status` column is an identical compatibility alias. |
-| `sequence_confidence` | Are the reported bases supported by the read evidence, internally coherent, and spanning the complete locus? | `HIGH`, `MEDIUM`, `LOW`, or `SUSPECT`; populated only after `SUCCESS`. It is stricter than `status`. `qc_confidence` is an identical compatibility alias. Distance from the nearest catalogue allele does not enter this tier. |
+| `workflow_status` | Did the sample complete the minimum reconstruction workflow? | `SUCCESS` passed the final identity, coverage, mean-depth, and breadth gates. `SKIP` is an expected no-result condition. `FAIL` is an input, dependency, command, or unexpected execution failure. The `status` column carries the same value. |
+| `sequence_confidence` | Are the reported bases supported by the read evidence, internally coherent, and spanning the complete locus? | `HIGH`, `MEDIUM`, `LOW`, or `SUSPECT`; populated only after `SUCCESS`. It is stricter than `status`. `qc_confidence` carries the same value. Distance from the nearest catalogue allele does not enter this tier. |
 | `catalogue_status` | How does the sequence relate to the supplied catalogue? | `EXACT_MATCH`, `NONEXACT_MATCH` (≥97% but not exact), `DIVERGENT_FROM_REFERENCE` (85 to 97%), or `HIGHLY_DIVERGENT_FROM_REFERENCE` (<85%). Reported alongside `nearest_allele_identity_pct` and `catalogue_review_recommended`; independent of `sequence_confidence`. |
 | `result_disposition` | Is the candidate ready for routine downstream use? | `PASS` only for `SUCCESS` + `HIGH`; `REVIEW` for `MEDIUM`/`LOW`; `HOLD` for `SUSPECT`, `SKIP`, or `FAIL`. |
 | `exact_known_allele` | Is this exactly a sequence already present in the bait database? | `true` requires 100% identity, 100% query coverage, and equal aligned, query, and subject lengths. |
@@ -610,17 +624,16 @@ Start with these files in this order:
 | Result | Meaning | Recommended action |
 |---|---|---|
 | `SUCCESS` + `HIGH` | Minimum gates and all strict QC checks passed. | Confirm provenance, upstream sample QC, locus boundaries, and scheme rules. Visually review any novel or submission-bound sequence. |
-| `SUCCESS` + `MEDIUM` | A modest deviation in the read or sequence evidence, or a length difference from the bait profile, was detected. | Review the named flags and per-base evidence before using the sequence. |
-| `SUCCESS` + `LOW` | Multiple moderate deviations were detected. | Treat as unresolved until the local assembly and read evidence have been inspected. |
-| `SUCCESS` + `SUSPECT` | Severe weakness, ambiguity, mixture, frame disruption, or anomalous evidence was detected. | Do not use as a definitive allele call without further investigation or independent confirmation. |
+| `SUCCESS` + `MEDIUM` | One moderate deviation in the read or sequence evidence, or a length difference from the bait profile as the only deviation, was detected. | Review the named flags and per-base evidence before using the sequence. |
+| `SUCCESS` + `LOW` | Two moderate deviations were detected, with the length within three times the bait-profile tolerance. | Treat as unresolved until the local assembly and read evidence have been inspected. |
+| `SUCCESS` + `SUSPECT` | Severe weakness, ambiguity, mixture, frame disruption, or anomalous evidence was detected, or more moderate deviations than `LOW` allows, including a length beyond three times the tolerance alongside another deviation. | Do not use as a definitive allele call without further investigation or independent confirmation. |
 | `SKIP` | The sample reached an expected no-result condition, such as no bait-supported contig, insufficient recruited reads, no local scaffold, or failure of a final evidence gate. | Read `message`, the per-sample log, and the evidence produced before the skip. Do not interpret it automatically as biological absence. |
 | `FAIL` | An input, external command, dependency, or unexpected software step failed. | Correct the execution problem before interpreting the sample biologically. |
 
 Only `PASS` reconstructions are written to `<locus>_accepted_alleles.fasta`.
 `REVIEW` and `HOLD` candidates remain recoverable in explicitly named FASTAs,
 and `<locus>_reconstructed_candidates.fasta` retains every successful
-reconstruction for audit. The legacy `<locus>_reconstructed_alleles.fasta`
-path is a compatibility alias of the PASS-only accepted collection.
+reconstruction for audit.
 
 The [output and interpretation reference](docs/output-interpretation.md)
 documents the complete directory tree, every report column, every QC flag
@@ -664,11 +677,13 @@ compares depth over the locus with depth over a single-copy backbone, using the
 same Q20/MQ20 filters as the per-base evidence table:
 
 ```bash
-locus-recon-depth-ratio --bam reads_vs_draft.sorted.bam --locus contig_7:250422-251237 --exclude plasmid_1 --tsv locus_depth.tsv
+locus-recon-depth-ratio --bam SAMPLE/full_map.sorted.bam --locus contig_7:250422-251237 --exclude plasmid_1 --tsv locus_depth.tsv
 ```
 
-The BAM is the one the standard workflow already produced during read
-recruitment; no realignment is needed. The command reports the ratio with a
+The BAM is `<sample>/full_map.sorted.bam`, the reads mapped to the draft
+assembly that the standard workflow writes during read recruitment, so no
+realignment is needed as long as the sample was not run with `--cleanup`. The
+command reports the ratio with a
 block-bootstrap confidence interval and an `ambiguity_index`. Passing the draft
 assembly with `--reference` adds the locus GC content as a descriptive field.
 
@@ -684,7 +699,7 @@ Two questions are kept apart on purpose:
   discovery BLAST query coordinates to obtain it:
 
 ```bash
-locus-recon-depth-ratio --bam reads_vs_draft.sorted.bam --locus contig_56:1-4210 --gene-span 1-4210 --locus contig_8:900-3600 --gene-span 4380-7104 --gene-length 7104
+locus-recon-depth-ratio --bam SAMPLE/full_map.sorted.bam --locus contig_56:1-4210 --gene-span 1-4210 --locus contig_8:900-3600 --gene-span 4380-7104 --gene-length 7104
 ```
 
 The two answers routinely disagree, and on a fragmented locus the disagreement
@@ -712,23 +727,26 @@ name the specific qualification. Multiplying the ratio by the number of regions
 is not a substitute, since it counts assembly breaks and not copies.
 
 The command prints one line per locus and, with `--tsv`, writes the same values
-as a table. These two lines come from the deposited *Acinetobacter baumannii*
-validation runs, a single-copy strain and one carrying a tandem amplification of
-the same gene:
+as a table. Two of the deposited *Acinetobacter baumannii* validation runs show
+the two outcomes, a single-copy strain and one carrying a tandem amplification
+of the same gene
+([`validation/aphA1-copy-number/results.tsv`](validation/aphA1-copy-number/results.tsv)):
 
-The seven-run *aphA1* analysis remains part of the main validation, where
-aggregate
-gene-depth ratios compared against published qPCR copy numbers.
+| Strain (run) | `dosage_estimate` | Bootstrap interval | `depth_call` | Published qPCR copies |
+|---|---|---|---|---|
+| MRSN 3361 (SRR15734215) | 0.952 | 0.945-0.968 | `SINGLE_COPY_COMPATIBLE` | 1 |
+| MRSN 57 (SRR17023755) | 10.451 | 10.211-10.869 | `MULTICOPY_DEPTH` | 10 ± 2 |
+
+The seven-run *aphA1* analysis is part of the main validation, where aggregate
+gene-depth ratios are compared against published qPCR copy numbers.
 
 Anything that qualifies the number is printed underneath as a note rather than
 folded into the call. A ratio may need to be read as a lower bound, a backbone
 may be too small to trust, and some regions may contribute zero depth to the
-dosage.
-The TSV adds the filtered and unfiltered locus depth, the backbone median and
-its MAD, the gene spans used, and the per-region ratios
-behind `dosage_estimate`, plus query-span union and overlap metrics, so any
-reported number can be traced back to the
-depths it came from.
+dosage. The TSV adds the filtered and unfiltered locus depth, the backbone
+median and its MAD, the gene spans used, and the per-region ratios behind
+`dosage_estimate`, plus query-span union and overlap metrics, so any reported
+number can be traced back to the depths it came from.
 
 ### What the verdict in the output means
 
@@ -750,17 +768,21 @@ external validation against published qPCR copy numbers are in
 
 ### Add graph context without changing the depth result
 
-When the corresponding SPAdes GFA is available, `locus-recon-copy-number`
+When the assembly graph of the draft is available, `locus-recon-copy-number`
 places the unchanged depth fields beside a bounded count of distinct flanking
-contexts. The bait used to define the locus is aligned directly to embedded GFA
-segments; both bait ends must recover the same positive number of contexts
-before an integer context count is reported.
+contexts. The graph is the `assembly_graph_after_simplification.gfa` written by
+the SPAdes run that produced the draft assembly, whose contigs the BAM and
+`--locus` coordinates refer to; the local graph under `<sample>/spades_local/`
+covers only the recruited reads and cannot count genomic contexts. The bait
+used to define the locus is aligned directly to embedded GFA segments; both
+bait ends must recover the same positive number of contexts before an integer
+context count is reported.
 
 ```bash
 locus-recon-copy-number \
-  --bam SAMPLE.reads_vs_draft.sorted.bam \
+  --bam SAMPLE/full_map.sorted.bam \
   --locus NODE_19:901-3789 \
-  --gfa SAMPLE/spades/assembly_graph_after_simplification.gfa \
+  --gfa draft_assembly/SAMPLE/assembly_graph_after_simplification.gfa \
   --bait loci.fasta --bait-id 23S \
   --output-json SAMPLE.23S.copy-number.json \
   --output-tsv SAMPLE.23S.copy-number.tsv
@@ -770,10 +792,13 @@ Interpret `copy_number_call` together with `copy_number_kind`:
 
 | Kind/method | Meaning |
 |---|---|
-| `INTEGER_CONTEXT_COUNT` / `GRAPH_DEPTH_CONSENSUS` | Both graph ends support the same integer context count and depth agrees at the single- versus multicopy classification level. |
+| `INTEGER_CONTEXT_COUNT` / `GRAPH_DEPTH_CONSENSUS` | Both graph ends support the same integer context count, depth agrees at the single- versus multicopy classification level, and the count lies inside the depth interval. |
+| `INTEGER_CONTEXT_COUNT` / `GRAPH_COUNT_OVER_DISCORDANT_DEPTH` | As above, but the count falls outside the depth interval (`DEPTH_GRAPH_NUMERIC_DISCORDANCE`). The graph count is returned as the better-resolved observation, and the method name records that the two lines of evidence disagree on the number. |
 | `MEAN_DEPTH_DOSAGE` / `DEPTH_TANDEM_COMPATIBLE` | The graph retains one flanking context but depth supports a collapsed tandem amplification; the continuous dosage remains authoritative. This is the expected geometry for the amplified *aphA1* example. |
 | `MEAN_DEPTH_DOSAGE` / `DEPTH_ONLY` | No exact graph count was usable; the command retains the depth estimate and flags unresolved graph evidence when a graph was supplied. |
-| `LOWER_BOUND` or `NOT_ESTIMATED` | Topology or depth does not identify an exact count; inspect status, bounds, and flags rather than coercing a number. |
+| `LOWER_BOUND` / `GRAPH_LOWER_BOUND` | Depth rejects one copy and the graph resolves only a lower bound on the contexts (one-sided, asymmetric, or at a traversal limit). |
+| `LOWER_BOUND` with `DEPTH_LOWER_BOUND` | Depth rejects one copy but `ambiguity_index` is below 0.70, so the dosage is only a floor; the larger of the depth floor and any graph floor is reported in `copy_number_lower_bound`. |
+| `NOT_ESTIMATED` | The evidence does not identify a count: `EVIDENCE_CONFLICT` when the graph resolves several contexts but depth is single-copy compatible, `INDETERMINATE` otherwise. Inspect status, bounds, and flags rather than coercing a number. |
 
 `DEPTH_GRAPH_NUMERIC_DISCORDANCE` means that an integer graph count falls
 outside the unchanged depth interval. It preserves both observations and is
@@ -790,9 +815,11 @@ cannot contain, and the allele is short by that much.
 This is checked separately from read support, and it has to be. Every per-base
 statistic describes the bases that were reported and none of them can describe
 bases that were never reported, so a truncated allele can otherwise pass with a
-perfect coverage and quality profile. An overhang above 10 bp raises
+perfect coverage and quality profile. An overhang of 10 bp or more raises
 `ALLELE_SPAN_CLIPPED_AT_CONTIG_END`, reports the shortfall in
-`span_clipped_bp`, and blocks `HIGH`.
+`span_clipped_bp`, and blocks `HIGH`. The same bases are restored before the
+length checks, so a truncation is scored once rather than again as a length
+deviation.
 
 Locus-Recon then checks whether the missing sequence is present elsewhere in
 the local assembly. When another candidate contig aligns to the lost interval,
@@ -816,16 +843,17 @@ the same region even though the FASTA scaffold kept only one. A third command,
 `locus-recon-graph-paths`, reads that graph and writes out the paths:
 
 ```bash
-locus-recon-graph-paths --gfa work/SAMPLE/spades/assembly_graph_after_simplification.gfa --output SAMPLE.graph_paths.fasta --summary SAMPLE.graph_paths.tsv --min-length 6000 --max-length 8000
+locus-recon-graph-paths --gfa SAMPLE/spades_local/assembly_graph_after_simplification.gfa --output SAMPLE.graph_paths.fasta --summary SAMPLE.graph_paths.tsv --min-length 6000 --max-length 8000
 ```
 
-The GFA file is the one the local assembly already produced; the length bounds
-keep enumeration to paths the size of the locus you are after.
+The GFA file is the one the local assembly already produced in
+`<sample>/spades_local/`; the length bounds keep enumeration to paths the size
+of the locus you are after.
 
 Passing the reads makes the command do the competitive mapping itself:
 
 ```bash
-locus-recon-graph-paths --gfa work/SAMPLE/spades/assembly_graph_after_simplification.gfa --output SAMPLE.graph_paths.fasta --summary SAMPLE.graph_paths_ranked.tsv --min-length 6000 --max-length 8000 --reads-r1 SAMPLE.target_R1.fq.gz --reads-r2 SAMPLE.target_R2.fq.gz --threads 12
+locus-recon-graph-paths --gfa SAMPLE/spades_local/assembly_graph_after_simplification.gfa --output SAMPLE.graph_paths.fasta --summary SAMPLE.graph_paths_ranked.tsv --min-length 6000 --max-length 8000 --reads-r1 SAMPLE/target_R1.fq.gz --reads-r2 SAMPLE/target_R2.fq.gz --threads 12
 ```
 
 All retained paths are indexed together, so every read is placed once, across
@@ -848,9 +876,9 @@ equally well, the paths cannot be told apart at that read length, and the
 command says so instead of presenting an arbitrary order as a preference. That
 is the expected outcome for a tandem array whose repeat unit is shorter than
 the library insert, and it is the measurement that justifies moving to long
-reads. What the ranking buys is an ordering and a
-quantity where there was previously a list: it separates a path the reads cover
-end to end from one that is carried by a pile-up over a few positions. If the
+reads. What the ranking adds to the unranked list is an ordering and a
+quantity: it separates a path the reads cover end to end from one that is
+carried by a pile-up over a few positions. If the
 aligner or samtools is unavailable the command keeps the unranked summary and
 says so, rather than failing.
 
@@ -861,8 +889,9 @@ Using the verified `ERR467623` read pair, the archived draft assembly, and the
 32-link GFA and exported all 512 terminal paths across nine variable graph
 regions. The deposit includes the GFA, every path, input and output checksums,
 portable provenance, and the alignment that connects the accepted candidates
-to their nearest graph paths. It is explicitly a contemporary reproducible
-rerun, not a relabelled copy of the unavailable historical GFA.
+to their nearest graph paths. The graph was regenerated from the archived reads
+and draft assembly; it is a reproducible rerun, not the graph file of the
+original exploratory analysis, which is not available.
 
 The [command-line reference](docs/cli-reference.md#locus-recon-graph-paths)
 documents the safety bounds and the summary columns.
@@ -876,11 +905,11 @@ nine complementary stages and states the role of each one.
 |---|---|---|---|
 | Deterministic 13-sample mock | Can a known locus be recovered across assembly breaks, and can weak, mixed, paralogous or absent targets be refused safely? | Exact reconstruction, mixture detection, ambiguity handling and explicit no-result behaviour | Regression evidence for this truth model, not a universal sensitivity or limit of detection |
 | Constructed 27-case dosage series | Does normalised depth separate one, two and three known copies across 20×, 50× and 100× and three GC strata? | Correct aggregate class in all cases and median absolute error of 0.04 copies | Deterministic error-free reads do not model library-specific GC bias |
-| Constructed 14-case completeness series | Does the measured shortfall equal the sequence actually missing, across one- and two-sided truncations, a reverse-orientation suffix loss and three split geometries? | Exact agreement with constructed truth in all fourteen cases, with the reconstruction unchanged by the measurement | Constructed geometries on error-free reads isolate the measurement; they do not model discovery failure on real assemblies |
+| Constructed 14-case completeness series | Does the measured shortfall equal the sequence actually missing, across one- and two-sided truncations, a reverse-orientation suffix loss and three split geometries? | Exact agreement with constructed truth in all fourteen cases, with every reported sequence identical to truth over the span its contig carries | Constructed geometries on error-free reads isolate the measurement; they do not model discovery failure on real assemblies |
 | Seven-run *aphA1* panel | Can the depth module recover a clinically relevant aminoglycoside-resistance amplification from real *A. baumannii* reads? | Concordance for four single-copy and three amplified runs, with both available qPCR values reproduced within their published intervals | Several runs belong to one clinical and selection series |
-| Five-genome 23S and *gyrB* panel | Can graph context help at the low-copy boundary when 23S depth rejects one copy but overshoots the known two-copy state? | Two 23S contexts and one *gyrB* context in every genome, with the depth measurement unchanged by the graph observation | The panel informed the graph extension and is not held-out performance validation |
-| Real-read audit of the same five genomes against their closed sequences | Does the confidence layer separate correct from incorrect reconstructions when truth is known and the catalogue is distant? | Nine of ten reconstructions exact, the tenth reported as truncated with its missing bases located, and five exact *gyrB* alleles retained at `HIGH` despite 96.2-96.7% catalogue identity | Five genomes at two loci in one species; not an estimate of exact-reconstruction sensitivity across taxa |
-| Tier calibration over every case with known truth | When the tool reports a tier, what does that tier buy the reader: is the top tier reachable, is it right when reached, and does it degrade as evidence degrades? | All 21 single-copy intact cases reached the top tier and every one matched truth exactly, with no false accepts in 62 cases; 30 of the 41 withheld cases also matched truth; and across the whole set exactly one reported sequence has a wrong base, at 8x, withheld at `LOW` | 62 cases at six loci in three species, 35 on real reads; a calibration of what the tiers mean on these cases, not an estimate of sensitivity across taxa |
+| Five-genome 23S and *gyrB* panel | Can graph context help at the low-copy boundary when 23S depth rejects one copy but overshoots the known two-copy state? | Two 23S contexts and one *gyrB* context in every genome, with the depth measurement unchanged by the graph observation | The panel informed the design of the graph method and is not held-out performance validation |
+| Real-read audit of the same five genomes against their closed sequences | Does the confidence layer separate correct from incorrect reconstructions when truth is known and the catalogue is distant? | [[CALIB-01]] of ten reconstructions exact; [[CALIB-02]] of five *gyrB* alleles exact at `HIGH` at [[CALIB-03]] catalogue identity; non-exact cases: [[CALIB-04 non-exact reconstructions, how they were reported and what the completeness flags located]] | Five genomes at two loci in one species; not an estimate of exact-reconstruction sensitivity across taxa |
+| Tier calibration over every case with known truth | When the tool reports a tier, what does that tier buy the reader: is the top tier reachable, is it right when reached, and does it degrade as evidence degrades? | Deterministic stage: all six supported cases at `HIGH` and exact, no false accepts in 27 cases, and 19 of the 21 withheld cases exact over the span they reported. All four stages: [[CALIB-05 supported cases that reached HIGH, of supported cases]] supported cases at `HIGH`, [[CALIB-07 false accepts]] false accepts in 62 cases, and [[CALIB-08 withheld cases exact over their span, of withheld cases]] withheld cases exact | 62 cases, 35 on real reads; a calibration of what the tiers mean on these cases, not an estimate of sensitivity across taxa |
 | Frame, input-validation and graph-evidence checks on the deposited *tcdB* material | Do the reporting behaviours hold independently of bait orientation, are bad inputs named rather than passed on, does the graph answer for a scaffold placeholder, and can competitive scoring rank graph paths? | Identical internal-stop counts in all four orientation combinations where a forward-only scan reports 103 stops, three input errors named at the record, three of three placeholder verdicts, and a constructed positive control in which the source path is the only candidate with uniquely anchored coverage | Constructed placeholders and simulated control reads isolate the logic; on the published read pair the 512 paths cannot be separated at all, which bounds what the ranking can do with 100 bp reads |
 | LIBA-6656 *tcdB* application | Can the complete evidence system resolve a biologically important toxin locus when the draft assembly suggests one incomplete mixed sequence? | Two read-compatible candidates in chromosome-associated and extrachromosomal contexts, plus a correct refusal to report unsupported dosage | Short reads do not establish replicon closure or long-range phase |
 
@@ -889,10 +918,13 @@ nine complementary stages and states the role of each one.
 The mock includes intact, centrally broken and near-terminally broken
 assemblies, nominal depths from 3× to 40×, controlled mixtures from 5% to 50%,
 a close paralogue and a target-negative genome. All six predefined core
-criteria passed. The 507 bp truth was recovered exactly from supported intact
-and fragmented assemblies. Mixtures at 10%, 20% and 50% were detected without a
-mixture call in successful pure controls. The paralogue was assigned SUSPECT and
-HOLD, while the 3×, 5× and target-negative samples returned no allele.
+criteria passed. The 507 bp truth was recovered exactly, at `HIGH`, from the
+intact and both fragmented assemblies, and exactly at every depth of the
+sensitivity series, where the tier followed the support: `SUSPECT` at 3× and
+5×, `LOW` at 10× and `MEDIUM` at 20×. All four mixtures were detected, the 5%
+mixture at exactly the two-site minimum, and no successful pure control carried
+a mixture call. The paralogue was assigned `SUSPECT` and `HOLD`, and the
+target-negative sample returned no allele.
 
 The separation between execution and biological disposition is intentional.
 An exact sequence may still remain in `REVIEW` when stringent support criteria
@@ -906,13 +938,16 @@ allow every decision to be inspected.
 Fourteen constructed cases cover flush contig ends, one- and two-sided
 truncations from 9 bp to 100 bp, a reverse-orientation suffix loss and three
 split geometries. The measured shortfall equalled the constructed truth in all
-fourteen cases, with a maximum absolute error of 0 bp. Nine cases cross the
+fourteen cases, with a maximum absolute error of 0 bp. Nine cases reach the
 10 bp reporting threshold; the 9 bp and 10 bp truncations bracket it in both
 directions. Two of the three split cases had their continuation contig named,
 and the third, whose missing interval is absent from the assembly, was measured
-and received none. In every case the reported reconstruction was byte-identical
-to what the workflow returns with the check disabled, which is the point. The
-measurement observes the reconstruction, it does not repair it.
+and received none. In every case the reported sequence was identical to the
+constructed truth over the span its contig carries: the measurement observes
+the reconstruction, it does not repair it. The span layer changed the tier only
+where the design says it should. The two split cases whose missing interval
+another contig carries were held at `SUSPECT`; every simple truncation, and the
+split whose missing interval the assembly lacks, was reported at `MEDIUM`.
 
 The measurement runs the production code path rather than a re-implementation,
 so what the benchmark measures is what a user's run measures.
@@ -920,31 +955,36 @@ so what the benchmark measures is what a user's run measures.
 ### Reconstruction against closed genomes
 
 The five *H. pylori* genomes are closed, so each reconstruction can be compared
-with its own truth. Nine of the ten reconstructions matched base for base. All
-five *gyrB* alleles were exact and retained `HIGH` and `PASS` while sitting
-96.2-96.7% from the single catalogue reference, carrying
-`DIVERGENT_FROM_REFERENCE` as an advisory annotation; had catalogue distance
-constrained the tier, all five correct sequences would have been downgraded and
-sent to review. The one reconstruction that was not exact, Hpfe0006 23S at
-89.0% identity to truth, was held at `SUSPECT` and `HOLD` on read- and
-length-side evidence, with 317 bp missing and the completeness flag naming
-where they went. The confidence layer therefore separated the ten cases the way
-the truth does, and it did so without consulting the catalogue.
+with its own truth. The bait is a fixed catalogue allele from strain 26695, and
+the non-coding 23S rRNA gene is reconstructed with `--noncoding-locus`.
+
+| Quantity | Result |
+|---|---|
+| Reconstructions identical to the closed sequence (23S and *gyrB*, ten loci) | [[CALIB-01]] |
+| *gyrB* reconstructions exact and reported at `HIGH` and `PASS` | [[CALIB-02]] of 5 |
+| Identity of those *gyrB* reconstructions to the catalogue allele | [[CALIB-03]] |
+| Reconstructions that were not exact, and how they were reported | [[CALIB-04]] |
+
+A *gyrB* allele that is exact and reported at `HIGH` while sitting several
+percent from the only catalogue allele carries `DIVERGENT_FROM_REFERENCE` as an
+advisory annotation; had catalogue distance constrained the tier, a correct
+sequence would have been downgraded and sent to review.
 
 ### Depth and graph copy number
 
-The profile thresholds were fixed from 916 single-copy 4 kb segments. The
-prespecified 27-case series then classified all one-copy, two-copy and three-copy
-geometries correctly. Estimates ranged from 0.94 to 1.10, 1.94 to 2.10 and 2.92
-to 3.14 copies, respectively.
+The 1.5 aggregate-depth threshold was fixed before any amplified locus was
+analysed. The prespecified 27-case series then classified all one-copy,
+two-copy and three-copy geometries correctly. Estimates ranged from 0.94 to
+1.10, 1.94 to 2.10 and 2.92 to 3.14 copies, respectively.
 
 The real *aphA1* experiment is retained as the main biological validation of
 depth dosage. MRSN 57 returned 10.451 copies against 10 ± 2 by qPCR. MRSN 58
 returned 77.672 against 75 ± 14. MRSN 56 after ten days of *in vitro*
 tobramycin induction returned 91.408 but had no published point estimate, so it
 supports amplified-class concordance rather than quantitative interval
-concordance. The complete accessions, checksums, criteria and regeneration
-scripts are under
+concordance. The per-run results are in
+[`validation/aphA1-copy-number/`](validation/aphA1-copy-number/results.tsv),
+and the accessions, checksums, criteria and regeneration scripts are under
 [`validation/depth-copy-number/`](validation/depth-copy-number/PRESPECIFIED_CRITERIA.md).
 
 The 23S panel tested a smaller integer state. All five two-copy loci were
@@ -952,49 +992,57 @@ The 23S panel tested a smaller integer state. All five two-copy loci were
 `SINGLE_COPY_COMPATIBLE`. The 23S ratios ranged from 2.546 to 3.221, above the
 two-copy expectation, and the graph observation did not alter them.
 Two-ended graph traversal recovered the deposited two-context state for 23S and
-one context for *gyrB*. This is a transparent development demonstration because
-the panel guided the graph extension.
+one context for *gyrB*. Because the panel guided the design of the graph
+method, this is a demonstration rather than held-out validation.
 
 ### What a tier is worth
 
 The deposit under
 [`validation/tier-calibration/`](validation/tier-calibration/README.md) asks the
 question a reviewer asks of any tool that withholds results: if the top tier is
-rarely reached, is it reachable, and is it right when reached? Across the 37
-cases in this repository that have known truth, the answer separates into three
-statements.
+rarely reached, is it reachable, and is it right when reached? It pools every
+case in this repository that has known truth, 62 cases in four stages, 35 of
+them on real reads: the 27 deterministic benchmark cases, the closed-genome
+audit, a divergence arm whose loci are chosen by measured distance to the bait,
+and a depth series that subsamples the accepted locus. Case classes are
+prespecified from the input, never read off the results.
 
-**The top tier is reachable and precise.** Every one of the 21 cases where the
-locus was single copy, intact and adequately covered reached `HIGH`, and every
-result in `HIGH` matched truth exactly. There were **no false accepts in 62
-cases**. Fifteen of those cases are real reads against closed genomes, where
-*gyrB*, *glmM* and *ureB* were reconstructed exactly in all five genomes while
-the nearest catalogue allele sat at 96.0-97.2% identity: catalogue distance does
-not by itself suppress the tier.
+**The deterministic stage.** All six supported benchmark cases reached `HIGH`
+and matched truth exactly (precision 1.00, exact 95% interval 0.54-1.00). None
+of the 21 other cases was accepted, and 19 of them reconstructed truth exactly
+over the span they reported, including the 3× and 5× mock samples held at
+`SUSPECT`, all eleven truncated or split loci, and the four mixtures, whose
+majority allele is the truth. The paralogue and the target-negative genome are
+the only cases that do not match truth, and both were withheld.
 
-**An overall acceptance rate is not a performance measure.** It is 21 of 62 here
-only because 41 of the cases were built or subsampled to be refused - truncated
-by construction, mixed, below the depth floor, paralogous, target-negative,
-multi-copy, subsampled to 8-15x, or 11 points diverged from the bait. On a
-dataset of fragmented or hypervariable targets the rate is expected to approach
-zero, which is the designed behaviour rather than a failure.
+**All four stages.**
 
-**A withheld result is not a wrong result.** 30 of the 41 withheld cases
-reconstructed truth exactly over the span they reported, including four
-two-copy 23S loci whose consensus was exact but whose copy of origin the reads
-cannot establish. The tier states what the reads establish, not what the
-sequence happens to be.
+| Quantity | Result |
+|---|---|
+| Supported cases (single copy, close to the bait, intact, adequate depth, pure culture) that reached `HIGH` | [[CALIB-05]] |
+| Precision of `HIGH`, with its exact 95% interval | [[CALIB-06 top-tier precision and Clopper-Pearson interval]] |
+| False accepts | [[CALIB-07]] |
+| Withheld cases that were exact over the span they reported | [[CALIB-08]] |
+| Reported sequences whose bases disagree with truth, with their tiers | [[CALIB-09 cases with a base-level disagreement, depth and tier]] |
+| Depth series: tiers and exactness at ~15× and ~8× | [[CALIB-10 tiers and exact sequences per depth]] |
+| Divergence arm: identity to the one-allele bait and tiers reached | [[CALIB-11 per-locus identity to the bait, tiers and truth]] |
+| Two-copy 23S loci: tier and exactness of the reported consensus | [[CALIB-12 multi-copy cases withheld and exact]] |
 
-**The tier degrades with the evidence, and the one wrong base was withheld.**
-Subsampling the accepted locus to ~15x and ~8x moved every one of the ten
-libraries off the top tier, monotonically and without exception, while the
-reported sequence stayed exact in nine of them. The tenth is the only case in
-all 62 whose bases disagree with truth - one substitution at 8x - and it was
-reported at `LOW` with reduced depth, patchy support and elevated uncertain
-bases. Catalogue distance shows the same graded behaviour: at 88.7% identity to
-a one-allele bait, *cagA* fell to `MEDIUM` or `SUSPECT` in all five genomes
-while remaining identical to the annotated allele over the whole overlap, with
-only its boundary in doubt.
+Two statements hold by construction and frame how to read the table.
+
+**An overall acceptance rate is not a performance measure.** Most of the cases
+were built or subsampled to be refused: truncated by construction, mixed,
+below the depth floor, paralogous, target-negative, multi-copy, subsampled, or
+far from the bait. On a dataset of fragmented or hypervariable targets the rate
+is expected to approach zero, which is the designed behaviour rather than a
+failure. Precision of the top tier and the count of false accepts are the
+quantities that describe the tool.
+
+**A withheld result is not a wrong result.** The tier states what the reads
+establish, not what the sequence happens to be. A two-copy 23S consensus can be
+exact while its copy of origin is not established by the reads, and a
+subsampled library can return the right sequence at a depth where the reads do
+not establish it.
 
 ### Frame, input validation and graph evidence
 
@@ -1007,12 +1055,12 @@ Holding one allele out and building the profile from the remaining 110, the
 internal-stop count is **0 in all four bait and candidate orientation
 combinations**, and the reported frame mirrors the candidate's orientation. A
 forward-only scan reports **103** internal stops for the same candidate on the
-reverse strand, which is the quantity that previously drove a clean open
-reading frame to `SUSPECT`. Three derived bait files are each rejected or
-flagged by name: a 64-character identifier, restored alignment gaps, and a
-400 bp unrelated fragment. A three-allele length profile reports `profile n=3`
-with `CATALOGUE_LENGTH_PROFILE_UNDERPOWERED` where the full profile reports
-`profile n=110` without it.
+reverse strand, the count that would drive a clean open reading frame to
+`SUSPECT` if frames were read on one strand only. Three derived bait files are
+each rejected or flagged by name: a 64-character identifier, restored alignment
+gaps, and a 400 bp unrelated fragment. A three-allele length profile reports
+`profile n=3` with `CATALOGUE_LENGTH_PROFILE_UNDERPOWERED` where the full
+profile reports `profile n=110` without it.
 
 For the placeholder junction, 512 terminal paths are enumerated from the
 deposited graph and three candidates constructed from the longest: a

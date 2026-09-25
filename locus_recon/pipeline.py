@@ -26,7 +26,6 @@ from .mapping import (
 from .blast import (
     collapse_overlapping_hits,
     describe_full_query_span,
-    estimate_full_query_span,
     find_span_continuation,
     parse_discovery_blast_hit,
     rank_local_blast_hit,
@@ -36,6 +35,38 @@ from .assembly_graph import assess_placeholder_junctions
 from .qc import (
     assess_allele_quality, format_qc_report, write_qc_report_file,
 )
+
+
+def build_spades_command(
+    spades: str,
+    out_dir: str,
+    threads: int,
+    memory_gb: int,
+    *,
+    r1: str = None,
+    r2: str = None,
+    singletons: str = None,
+    single_cell: bool = False,
+) -> list:
+    """Return the SPAdes command for one local assembly.
+
+    SPAdes runs in its default mode, or with ``--sc`` for the documented
+    retry, and never with ``--careful``: each reported base is checked by
+    remapping the recruited reads instead of by SPAdes' mismatch corrector, so
+    the command is the same whichever SPAdes version is installed.
+    """
+    command = [spades]
+    if single_cell:
+        command.append("--sc")
+    if singletons:
+        command += ["-s", singletons]
+    if r1 and r2:
+        command += ["-1", r1, "-2", r2]
+    command += [
+        "-o", out_dir, "-t", str(threads), "-m", str(memory_gb),
+        "--phred-offset", "33",
+    ]
+    return command
 
 
 # ---------------------------------------------------------------------------
@@ -331,17 +362,15 @@ def process_sample(
             local_asm  = os.path.join(spades_dir, "scaffolds.fasta")
             if os.path.isdir(spades_dir):
                 shutil.rmtree(spades_dir)
-            spades_cmd = [
-                tools["spades.py"],
-                "-o", spades_dir, "-t", threads_str,
-                "-m", str(global_args.memory_per_sample), "--phred-offset", "33",
-            ]
-            if has_pairs:
-                spades_cmd[1:1] = ["-1", r1_gz, "-2", r2_gz]
-            if has_singletons:
-                spades_cmd[1:1] = ["-s", s_gz]
-            if global_args.spades_careful_supported:
-                spades_cmd.insert(1, "--careful")
+            spades_inputs = {
+                "r1": r1_gz if has_pairs else None,
+                "r2": r2_gz if has_pairs else None,
+                "singletons": s_gz if has_singletons else None,
+            }
+            spades_cmd = build_spades_command(
+                tools["spades.py"], spades_dir, global_args.threads,
+                global_args.memory_per_sample, **spades_inputs,
+            )
             try:
                 run_command(spades_cmd, slh, description="SPAdes")
                 result["spades_mode"] = "standard"
@@ -358,8 +387,11 @@ def process_sample(
                     "retrying with --sc for non-uniform/low-depth reads."
                 )
                 shutil.rmtree(spades_dir)
-                retry_cmd = [argument for argument in spades_cmd if argument != "--careful"]
-                retry_cmd.insert(1, "--sc")
+                retry_cmd = build_spades_command(
+                    tools["spades.py"], spades_dir, global_args.threads,
+                    global_args.memory_per_sample, single_cell=True,
+                    **spades_inputs,
+                )
                 try:
                     run_command(retry_cmd, slh, description="SPAdes --sc retry")
                     result["spades_mode"] = "single-cell-retry"

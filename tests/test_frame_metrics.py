@@ -9,6 +9,7 @@ from locus_recon.qc import (
     MIN_LENGTH_PROFILE_N,
     assess_allele_quality,
     count_internal_stops_six_frames,
+    format_qc_report,
     profile_bait_database,
     _count_internal_stops,
 )
@@ -185,3 +186,22 @@ def test_genuine_stops_are_not_attributed_to_a_placeholder(tmp_path):
         flag.startswith("PLACEHOLDER_FRAMESHIFT_EXPLAINS_STOPS")
         for flag in qc["flags"]
     )
+
+
+def test_qc_report_names_the_six_frame_labels_used_in_the_table(tmp_path):
+    """The readable scorecard and the batch table must name the same frame."""
+    antisense = reverse_complement(_orf())
+    bait = _write_bait(tmp_path, [(f"a{i}", antisense) for i in range(3)])
+    profile = profile_bait_database(bait)
+    qc = assess_allele_quality(
+        antisense, profile, 100.0, 100.0, "locus",
+        remap_metrics=REMAP,
+        ambiguity_metrics={"ambiguous": False, "bitscore_margin": 100.0},
+    )
+    report = format_qc_report("sample", "locus", qc, profile)
+
+    assert qc["coding_frame_used"].startswith("-")
+    assert f"Frame used    : {qc['coding_frame_used']:>7}" in report
+    assert "Bait frame(s) : " + ", ".join(profile["expected_coding_frame_labels"]) in report
+    cds = report[report.index("CDS INTEGRITY"):]
+    assert not any(label in cds for label in ("+0", "-0"))

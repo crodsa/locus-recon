@@ -17,7 +17,7 @@ if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
 from locus_recon.depth_ratio import estimate_locus_copy_number
-from validation.common import build_provenance, write_json
+from validation.common import build_provenance, compact_summary, write_json
 
 
 COPIES = (1, 2, 3)
@@ -96,12 +96,36 @@ def _map(reference: Path, r1: Path, r2: Path, bam: Path, aligner: str, threads: 
     subprocess.run(["samtools", "index", str(bam)], check=True)
 
 
+_THREE_DECIMALS = (
+    "ratio", "ratio_ci_low", "ratio_ci_high", "dosage_estimate", "absolute_error",
+    "ambiguity_index",
+)
+
+
+def _write_results_table(path: Path, results: list[dict]) -> None:
+    """Write the per-case table with fixed decimal places."""
+    with path.open("w", newline="") as handle:
+        writer = csv.DictWriter(handle, fieldnames=list(results[0]), delimiter="\t")
+        writer.writeheader()
+        for row in results:
+            formatted = dict(row)
+            for key in _THREE_DECIMALS:
+                formatted[key] = f"{row[key]:.3f}"
+            formatted["locus_gc"] = f"{row['locus_gc']:.2f}"
+            writer.writerow(formatted)
+
+
 def main() -> int:
     repo_root = REPO_ROOT
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--work-dir", type=Path, required=True)
     parser.add_argument("--threads", type=int, default=2)
     parser.add_argument("--n-boot", type=int, default=1000)
+    parser.add_argument(
+        "--deposit-dir", type=Path,
+        help="also write results.tsv, evaluation.json and run_summary.json here "
+             "(validation/constructed-copy-series)",
+    )
     args = parser.parse_args()
     if min(args.threads, args.n_boot) < 1:
         parser.error("threads and bootstrap count must be positive")
@@ -159,7 +183,7 @@ def main() -> int:
                     "ratio_ci_high": result.ratio_ci_high,
                     "depth_call": result.depth_call,
                     "dosage_estimate": result.dosage_estimate,
-                    "absolute_error": abs(result.dosage_estimate - copies),
+                    "absolute_error": round(abs(result.dosage_estimate - copies), 3),
                     "ambiguity_index": result.ambiguity_index,
                 })
                 inputs.extend([reference, source_path, r1, r2])
@@ -171,10 +195,7 @@ def main() -> int:
     results_dir = args.work_dir / "results"
     results_dir.mkdir(exist_ok=True)
     table = results_dir / "constructed_copy_series.tsv"
-    with table.open("w", newline="") as handle:
-        writer = csv.DictWriter(handle, fieldnames=list(results[0]), delimiter="\t")
-        writer.writeheader()
-        writer.writerows(results)
+    _write_results_table(table, results)
     write_json(results_dir / "constructed_copy_series.json", results)
     one_copy_false = sum(
         row["depth_call"] == "MULTICOPY_DEPTH" for row in results if row["truth_copies"] == 1
@@ -183,7 +204,7 @@ def main() -> int:
         row["depth_call"] != "MULTICOPY_DEPTH" for row in results if row["truth_copies"] > 1
     )
     errors = sorted(row["absolute_error"] for row in results)
-    median_error = errors[len(errors) // 2]
+    median_error = round(errors[len(errors) // 2], 3)
     evaluation = {
         "schema_version": "1.0",
         "cases": len(results),
@@ -224,6 +245,18 @@ def main() -> int:
     provenance["complete"] = True
     provenance["criteria_passed"] = evaluation["all_prespecified_criteria_passed"]
     write_json(results_dir / "workflow_provenance.json", provenance)
+    if args.deposit_dir:
+        args.deposit_dir.mkdir(parents=True, exist_ok=True)
+        _write_results_table(args.deposit_dir / "results.tsv", results)
+        write_json(args.deposit_dir / "evaluation.json", evaluation)
+        write_json(args.deposit_dir / "run_summary.json", compact_summary(
+            provenance,
+            criteria_passed=evaluation["all_prespecified_criteria_passed"],
+            complete=True,
+            note=("Every input is regenerated deterministically by the workflow; "
+                  "workflow_provenance.json in its --work-dir holds the checksum "
+                  "of each one."),
+        ))
     return 0 if evaluation["all_prespecified_criteria_passed"] else 1
 
 

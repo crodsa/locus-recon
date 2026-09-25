@@ -2,6 +2,12 @@
 
 Frozen: 2026-08-27, before generating or analysing the series.
 
+> **Editorial note.** The windowed profile named in the design and in
+> criterion 4 is not part of Locus-Recon 1.0.0 (see the editorial note in
+> [`../depth-copy-number/PRESPECIFIED_CRITERIA.md`](../depth-copy-number/PRESPECIFIED_CRITERIA.md)),
+> so the committed table carries no profile state. The record below is kept as
+> written; criteria 1 to 3 are evaluated exactly as prespecified.
+
 This secondary validation isolates depth-estimator behaviour under exact,
 known geometry. It does not represent independent biological validation.
 
@@ -15,7 +21,7 @@ known geometry. It does not represent independent biological validation.
   reference, 150 bp paired reads, and 350 bp fragments;
 - fixed base seed 20260817, error-free reads, BWA-MEM2/BWA mapping and samtools
   sorting;
-- v1.0 Q20/MQ20 filters, 500 bp bootstrap blocks, 1,000 resamples, seed
+- Q20/MQ20 filters, 500 bp bootstrap blocks, 1,000 resamples, seed
   20260817, one exact 4 kb/20-window calibrated profile;
 - no threshold fitting or post-result sample exclusion.
 

@@ -104,7 +104,8 @@ __all__ = [
 ]
 
 # Excluded SAM flags: unmapped, secondary, QC fail, optical/PCR duplicate,
-# supplementary. Matches what the remap evidence table already discards.
+# supplementary. The base- and mapping-quality floors are the same Q20/MQ20
+# used by the per-base evidence table.
 DEFAULT_EXCL_FLAGS = "UNMAP,SECONDARY,QCFAIL,DUP,SUPPLEMENTARY"
 
 # Lower bound the aggregate interval must clear before single copy is rejected.
@@ -165,9 +166,10 @@ class DepthRatioResult:
     single_copy_rejected: bool
     reliable: bool
     notes: list[str] = field(default_factory=list)
-    # `assembly_copies` and `copies_estimate` are retained as compatibility
-    # aliases. Their explicit replacements name the estimands rather than
-    # implying that an assembly interval is a biological copy.
+    # `assembly_copies` and `copies_estimate` carry the same values as
+    # `assembly_region_count` and `dosage_estimate`. The longer names are the
+    # ones to read: they name the estimands rather than implying that an
+    # assembly interval is a biological copy.
     assembly_region_count: int = 0
     dosage_estimate: float | None = None
     dosage_status: str = "NOT_ESTIMATED"
@@ -480,8 +482,8 @@ def _unit_ratio_dosage(spans, gene_length: int) -> float:
     """
     cover = [0] * gene_length
     for start, end in spans:
-        lo = max(1, int(start))
-        hi = min(gene_length, int(end))
+        lo = max(1, min(int(start), int(end)))
+        hi = min(gene_length, max(int(start), int(end)))
         for i in range(lo - 1, hi):
             cover[i] += 1
     covered = [c for c in cover if c > 0]
@@ -1007,15 +1009,56 @@ def estimate_locus_copy_number(
 
 
 # --------------------------------------------------------------------------- #
-# CLI (also usable standalone, before integration)
+# Standalone CLI (locus-recon-depth-ratio)
 # --------------------------------------------------------------------------- #
+def _positive_int(value: str) -> int:
+    import argparse
+    parsed = int(value)
+    if parsed < 1:
+        raise argparse.ArgumentTypeError("must be at least 1")
+    return parsed
+
+
+def _nonnegative_int(value: str) -> int:
+    import argparse
+    parsed = int(value)
+    if parsed < 0:
+        raise argparse.ArgumentTypeError("cannot be negative")
+    return parsed
+
+
+def _positive_float(value: str) -> float:
+    import argparse
+    parsed = float(value)
+    if not parsed > 0:
+        raise argparse.ArgumentTypeError("must be greater than 0")
+    return parsed
+
+
+def _package_version() -> str:
+    """Installed package version, also when this module runs as a script."""
+    try:
+        from . import VERSION
+        return VERSION
+    except ImportError:
+        try:
+            from importlib.metadata import version
+            return version("locus-recon")
+        except Exception:  # pragma: no cover - not installed, run as a file
+            return "unknown"
+
+
 def _cli() -> int:
     import argparse
     import csv
     import sys
 
+    VERSION = _package_version()
+
     ap = argparse.ArgumentParser(
+        prog="locus-recon-depth-ratio",
         description="Normalised locus depth ratio (copies per collapsed representative)")
+    ap.add_argument("--version", action="version", version=f"%(prog)s {VERSION}")
     ap.add_argument("--bam", required=True, help="reads mapped to the DRAFT assembly")
     ap.add_argument("--locus", required=True, action="append",
                     help="contig:start-end; repeat for multiple discovery intervals")
@@ -1027,14 +1070,15 @@ def _cli() -> int:
                          "interval, in the same order and repeated once per "
                          "interval; required with --gene-length to obtain a copy "
                          "estimate for a locus split across several fragments")
-    ap.add_argument("--gene-length", type=int,
+    ap.add_argument("--gene-length", type=_positive_int,
                     help="length of one copy of the gene (bp); pair with --gene-span")
-    ap.add_argument("--min-bq", type=int, default=20)
-    ap.add_argument("--min-mq", type=int, default=20)
-    ap.add_argument("--call-threshold", type=float, default=1.5)
+    ap.add_argument("--min-bq", type=_nonnegative_int, default=20)
+    ap.add_argument("--min-mq", type=_nonnegative_int, default=20)
+    ap.add_argument("--call-threshold", type=_positive_float,
+                    default=CALL_THRESHOLD_DEFAULT)
     ap.add_argument("--seed", type=int, default=20260817)
-    ap.add_argument("--n-boot", type=int, default=1000)
-    ap.add_argument("--max-backbone-bootstrap-blocks", type=int, default=512,
+    ap.add_argument("--n-boot", type=_positive_int, default=1000)
+    ap.add_argument("--max-backbone-bootstrap-blocks", type=_positive_int, default=512,
                     help="deterministic cap on 500 bp backbone blocks resampled "
                          "for the confidence interval; the point denominator "
                          "still uses every eligible base")

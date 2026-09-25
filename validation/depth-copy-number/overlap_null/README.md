@@ -41,13 +41,31 @@ lower bound on the inflation, and it is what `geometry_expected_dosage` reports.
 
 `dosage_status` returns `REVIEW_OVERLAPPING_SPANS` whenever spans overlap. No
 correction is applied and no threshold is fitted: this control comes from one
-genome, one depth and one aligner, and calibrating a correction on a single
-geometry is the failure mode that removed the windowed depth profile from this
-release. The control establishes that the estimand is not identified under
-overlap; it does not establish a transferable slope.
+genome, one depth and one aligner, and a correction calibrated on a single
+geometry would not transfer, which is also why Locus-Recon reports no windowed
+depth profile. The control establishes that the estimand is not identified
+under overlap; it does not establish a transferable slope.
+
+## Reproduce
+
+The draft assembly and the read alignment are not redistributed; the
+`liba6656-depth` workflow regenerates the alignment from ENA run `ERR467623`.
+
+```bash
+python validation/depth-copy-number/overlap_null/run_overlap_null.py \
+  --assembly LIBA6656_ST154.assembly.fasta \
+  --bam ERR467623_vs_LIBA6656_draft.sorted.bam \
+  --locus-contigs .11940_5_90.1,.11940_5_90.29,.11940_5_90.56,.11940_5_90.59,.11940_5_90.63,.11940_5_90.76,.11940_5_90.77,.11940_5_90.8 \
+  --case-evaluation validation/liba6656-depth/evaluation.json \
+  --outdir validation/depth-copy-number/overlap_null
+```
+
+The fit is an ordinary least-squares regression of dosage on the overlapped
+fraction, and the interval is the 95% prediction interval from the t
+distribution with n − 2 degrees of freedom.
 
 ## Files
 
-- `run_overlap_null.py` — the control
+- `run_overlap_null.py` — the control, the fit and the case comparison
 - `null_dose_overlap_control.csv` — 87 retained pseudo-queries
 - `null_dose_overlap_control.json` — fit, prediction and the case comparison

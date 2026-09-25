@@ -3,7 +3,6 @@ import pytest
 from locus_recon.io import classify_result_disposition
 from locus_recon.qc import (
     assess_allele_quality,
-    classify_catalogue_status,
     profile_bait_database,
 )
 from locus_recon.utils import DESCRIPTIVE_FLAG_PREFIXES
@@ -164,11 +163,11 @@ def test_case_d_divergence_plus_uncertain_bases_downgrades_on_read_evidence(
 
 
 def test_length_deviation_caps_at_medium_independently_of_identity(tmp_path):
-    """The length cap must not depend on catalogue identity in either direction.
+    """An isolated length deviation is MEDIUM whatever the catalogue identity.
 
-    Pre-correction, identity >= 97% rescued a length-flagged reconstruction to
-    MEDIUM while the same evidence at lower identity fell through to LOW or
-    SUSPECT.  Both now resolve to MEDIUM.
+    Identity to the nearest catalogue allele must not move the tier in either
+    direction, so the same length-flagged evidence resolves to MEDIUM at 99%
+    and at 90% identity.
     """
     bait = tmp_path / "bait.fa"
     bait.write_text(
@@ -340,7 +339,7 @@ def test_unclipped_span_leaves_high_confidence_intact(tmp_path):
 
 
 def test_omitted_span_metrics_behave_as_unclipped(tmp_path):
-    # Backward compatibility: callers predating the span layer must be unaffected.
+    # A caller that supplies no span evidence gets the unclipped result.
     assert _assess_span(tmp_path, None)["confidence"] == "HIGH"
 
 
@@ -382,3 +381,147 @@ def test_both_contig_ends_clipped_are_summed_and_named(tmp_path):
     flag = next(f for f in qc["flags"] if f.startswith("ALLELE_SPAN_CLIPPED_AT_CONTIG_END"))
     assert "25 bp at contig start" in flag and "35 bp at contig end" in flag
     assert "truncated by 60 bp" in flag
+
+
+# ---------------------------------------------------------------------------
+# A length flag may lower the tier the other evidence sets, never raise it
+# ---------------------------------------------------------------------------
+
+_TIER_ORDER = {"HIGH": 0, "MEDIUM": 1, "LOW": 2, "SUSPECT": 3}
+_UNIT = "GCAAAG"  # no stop codon in any of the six frames
+
+
+def _length_profile(tmp_path):
+    """Five alleles, median 33 bp and IQR 6 bp, all multiples of three."""
+    bait = tmp_path / "length_bait.fa"
+    alleles = ["ATG" + _UNIT * n for n in (4, 5, 5, 6, 6)]
+    bait.write_text("".join(f">a{i}\n{seq}\n" for i, seq in enumerate(alleles)))
+    return profile_bait_database(str(bait))
+
+
+def _moderate_remap(depth=False, breadth=False, uncertain=False, mapq=False):
+    """Read evidence carrying the requested BELOW_HIGH deviations only."""
+    return {
+        "per_base_available": True,
+        "mean_depth": 12.0 if depth else 40.0,
+        "breadth_pct": 98.0 if breadth else 100.0,
+        "pct_bases_lt5": 0.0,
+        "tier_uncertain_base_fraction": 0.03 if uncertain else 0.0,
+        "interior_uncertain_base_fraction": 0.03 if uncertain else 0.0,
+        "interior_metric_used": True,
+        "internal_zero_depth_positions": 0,
+        "mean_base_quality": 36.0,
+        "mean_mapping_quality": 35.0 if mapq else 60.0,
+        "strand_balance_pct": 80.0,
+        "mixture_detected": False,
+        "mixed_site_count": 0,
+        "candidate_mixed_sites": 0,
+        "strand_biased_sites": 0,
+        "reference_discordant_sites": 0,
+    }
+
+
+def _tier(profile, sequence, remap):
+    return assess_allele_quality(
+        sequence, profile, 99.5, 100.0, "abc",
+        remap_metrics=remap,
+        ambiguity_metrics={"ambiguous": False, "bitscore_margin": 100.0},
+        exact_known_allele=False,
+    )
+
+
+@pytest.mark.parametrize("depth", [False, True])
+@pytest.mark.parametrize("breadth", [False, True])
+@pytest.mark.parametrize("uncertain", [False, True])
+@pytest.mark.parametrize("mapq", [False, True])
+def test_length_flag_never_raises_the_tier(tmp_path, depth, breadth, uncertain, mapq):
+    profile = _length_profile(tmp_path)
+    remap = _moderate_remap(depth, breadth, uncertain, mapq)
+    expected_length = "ATG" + _UNIT * 5            # 33 bp, the bait median
+    marginal = "ATG" + _UNIT * 6 + "GCA"            # 42 bp, outside 1x IQR
+    anomalous = "ATG" + _UNIT * 9 + "GCA"           # 60 bp, outside 3x IQR
+
+    baseline = _tier(profile, expected_length, remap)
+    assert not any(f.startswith("LENGTH_") for f in baseline["flags"])
+    for longer in (marginal, anomalous):
+        qc = _tier(profile, longer, remap)
+        assert any(f.startswith("LENGTH_") for f in qc["flags"])
+        assert _TIER_ORDER[qc["confidence"]] >= _TIER_ORDER[baseline["confidence"]], (
+            qc["confidence"], baseline["confidence"], qc["flags"],
+        )
+
+
+def test_length_deviation_plus_moderate_read_flags_is_not_rescued(tmp_path):
+    """Four moderate read-evidence flags hold the call; a length flag keeps it held."""
+    profile = _length_profile(tmp_path)
+    remap = _moderate_remap(depth=True, breadth=True, uncertain=True, mapq=True)
+    assert _tier(profile, "ATG" + _UNIT * 5, remap)["confidence"] == "SUSPECT"
+    held = _tier(profile, "ATG" + _UNIT * 6 + "GCA", remap)
+    assert held["confidence"] == "SUSPECT"
+    # The candidate-novel label is descriptive and still attached.
+    assert any(f.startswith("POSSIBLE_NOVEL_ALLELE") for f in held["flags"])
+
+
+def test_marginal_length_with_one_moderate_flag_is_low(tmp_path):
+    profile = _length_profile(tmp_path)
+    remap = _moderate_remap(depth=True)
+    assert _tier(profile, "ATG" + _UNIT * 5, remap)["confidence"] == "MEDIUM"
+    assert _tier(profile, "ATG" + _UNIT * 6 + "GCA", remap)["confidence"] == "LOW"
+
+
+def test_isolated_length_deviation_of_any_size_is_medium(tmp_path):
+    profile = _length_profile(tmp_path)
+    remap = _moderate_remap()
+    for sequence in ("ATG" + _UNIT * 6 + "GCA", "ATG" + _UNIT * 9 + "GCA"):
+        qc = _tier(profile, sequence, remap)
+        assert qc["confidence"] == "MEDIUM", qc["flags"]
+
+
+# ---------------------------------------------------------------------------
+# One missing interval is scored once
+# ---------------------------------------------------------------------------
+
+def _truncated(profile, sequence, clipped_bp, remap):
+    return assess_allele_quality(
+        sequence, profile, 100.0, 100.0, "abc",
+        remap_metrics=remap,
+        ambiguity_metrics={"ambiguous": False, "bitscore_margin": 100.0},
+        span_metrics={"clipped_bp": clipped_bp, "clipped_start_bp": 0,
+                      "clipped_end_bp": clipped_bp, "continuation": None},
+        exact_known_allele=False,
+    )
+
+
+def test_contig_end_truncation_is_not_also_scored_as_a_length_deviation(tmp_path):
+    # 33 bp is the bait median; a contig end removed the last 18 bp.  The
+    # length deficit is the truncation itself, reported by the clip flag.
+    profile = _length_profile(tmp_path)
+    qc = _truncated(profile, "ATG" + _UNIT * 2, 18, _moderate_remap())
+    assert qc["confidence"] == "MEDIUM", qc["flags"]
+    assert any(f.startswith("ALLELE_SPAN_CLIPPED_AT_CONTIG_END") for f in qc["flags"])
+    assert not any(f.startswith("LENGTH_") for f in qc["flags"])
+    assert (qc["length_delta"], qc["span_restored_bp"]) == (-18, 18)
+    assert qc["length_delta_span_restored"] == 0
+
+
+def test_truncation_with_one_further_moderate_flag_is_low(tmp_path):
+    profile = _length_profile(tmp_path)
+    qc = _truncated(profile, "ATG" + _UNIT * 2, 18, _moderate_remap(depth=True))
+    assert qc["confidence"] == "LOW", qc["flags"]
+
+
+def test_length_deviation_left_after_restoring_the_clip_is_still_flagged(tmp_path):
+    # Restoring the 10 clipped bases leaves the allele 8 bp short of the
+    # median: a difference in the reported bases, flagged with its basis.
+    profile = _length_profile(tmp_path)
+    qc = _truncated(profile, "ATG" + _UNIT * 2, 10, _moderate_remap())
+    flag = next(f for f in qc["flags"] if f.startswith("LENGTH_"))
+    assert "delta=8 bp with the 10 clipped bp restored" in flag
+    assert qc["confidence"] == "LOW", qc["flags"]
+
+
+def test_sub_threshold_clip_is_not_restored(tmp_path):
+    profile = _length_profile(tmp_path)
+    qc = _truncated(profile, "ATG" + _UNIT * 4 + "GCA", 9, _moderate_remap())
+    assert qc["span_restored_bp"] == 0
+    assert qc["length_delta"] == qc["length_delta_span_restored"]

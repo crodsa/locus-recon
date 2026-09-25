@@ -1,6 +1,6 @@
 # Prespecified two-copy 23S rRNA validation
 
-Frozen: 2026-08-27, before running the hardened v1.0 estimator on this panel.
+Frozen: 2026-08-27, before running the estimator on this panel.
 
 ## Question and evidence boundary
 
@@ -55,7 +55,7 @@ for selection.
 
 ## Primary criteria
 
-Thresholds remain the v1.0 prespecified values; they will not be tuned after
+Thresholds remain the prespecified values; they will not be tuned after
 observing this panel.
 
 1. Zero of five single-copy `gyrB` controls may be classified

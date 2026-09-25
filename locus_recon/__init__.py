@@ -1,4 +1,4 @@
-"""Locus-Recon: targeted MLST locus reconstruction."""
+"""Locus-Recon: reconstruction of fragmented bacterial loci and depth-based locus copy number."""
 
 VERSION = "1.0.0"
 __version__ = VERSION

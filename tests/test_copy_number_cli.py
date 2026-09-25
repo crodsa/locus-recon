@@ -94,3 +94,17 @@ def test_cli_version(capsys):
         main(["--version"])
     assert exc.value.code == 0
     assert f"locus-recon-copy-number {VERSION}" in capsys.readouterr().out
+
+
+@pytest.mark.parametrize("option,value", [
+    ("--min-bq", "-1"), ("--min-mq", "-5"), ("--call-threshold", "0"),
+])
+def test_copy_number_cli_rejects_out_of_range_numbers(tmp_path, option, value):
+    bam = tmp_path / "reads.bam"
+    bam.write_text("")
+    with pytest.raises(SystemExit) as exc:
+        main([
+            "--bam", str(bam), "--locus", "contig:1-100",
+            "--output-json", str(tmp_path / "out.json"), option, value,
+        ])
+    assert exc.value.code == 2

@@ -3,7 +3,7 @@ message: "If you use this software, please cite the archived version and the all
 title: "Locus-Recon: reconstruction of fragmented bacterial loci and depth-based locus copy number from short reads"
 type: software
 version: "1.0.0"
-date-released: 2026-09-05
+date-released: 2026-09-25
 authors:
   - family-names: "Rodríguez"
     given-names: "César"

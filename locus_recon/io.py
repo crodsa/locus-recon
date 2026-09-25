@@ -347,7 +347,8 @@ def write_batch_report(
         "uncertain_base_count", "uncertain_base_fraction",
         "interior_uncertain_base_count", "interior_uncertain_base_fraction",
         "internal_zero_depth_positions", "terminal_margin_bp",
-        "span_clipped_bp", "span_continuation_contig", "span_continuation_bp",
+        "span_clipped_bp", "span_clipped_start_bp", "span_clipped_end_bp",
+        "span_continuation_contig", "span_continuation_bp",
         "span_continuation_overlap_bp",
         "mean_base_quality", "mean_mapping_quality", "strand_balance_pct",
         "candidate_mixed_sites", "mixed_site_count", "strand_biased_sites",
@@ -368,7 +369,7 @@ def write_batch_report(
             )
             writer.writerow([
                 r["sample_id"],
-                workflow_status,  # compatibility alias: `status`
+                workflow_status,  # `status`: same value as `workflow_status`
                 workflow_status,
                 disposition,
                 locus,
@@ -414,6 +415,8 @@ def write_batch_report(
                 r.get("internal_zero_depth_positions", "") if has_qc else "",
                 r.get("terminal_margin_bp", "") if has_qc else "",
                 r.get("span_clipped_bp", 0),
+                r.get("span_clipped_start_bp", 0),
+                r.get("span_clipped_end_bp", 0),
                 r.get("span_continuation_contig", ""),
                 r.get("span_continuation_bp", 0),
                 r.get("span_continuation_overlap_bp", 0),
@@ -443,9 +446,9 @@ def write_allele_catalogs(
 ) -> dict:
     """Write accepted, review, hold, and all-candidate FASTA collections.
 
-    ``*_reconstructed_alleles.fasta`` is a copy of the PASS-only accepted
-    catalogue.  It does not carry every technically successful reconstruction;
-    those are in the all-candidate collection.
+    The accepted collection holds PASS results only; every technically
+    successful reconstruction, whatever its disposition, is in the
+    all-candidate collection.
 
     Args:
         results:    List of per-sample result dicts.
@@ -462,9 +465,6 @@ def write_allele_catalogs(
         "hold": os.path.join(output_dir, f"{locus}_hold_candidates.fasta"),
         "all_candidates": os.path.join(
             output_dir, f"{locus}_reconstructed_candidates.fasta"
-        ),
-        "legacy_accepted": os.path.join(
-            output_dir, f"{locus}_reconstructed_alleles.fasta"
         ),
     }
     contents = {role: [] for role in paths}
@@ -488,7 +488,6 @@ def write_allele_catalogs(
         contents["all_candidates"].append(content)
         if disposition == "PASS":
             contents["accepted"].append(content)
-            contents["legacy_accepted"].append(content)
         elif disposition == "REVIEW":
             contents["review"].append(content)
         else:
@@ -503,21 +502,4 @@ def write_allele_catalogs(
             "Sequence collection written (%d candidates): %s",
             len(contents[role]), path,
         )
-
-    log.warning(
-        "%s_reconstructed_alleles.fasta is a compatibility alias containing "
-        "PASS-only accepted alleles; use the explicit candidate collections",
-        locus,
-    )
     return output
-
-
-def write_allele_catalog(
-    results: List[dict],
-    output_dir: str,
-    locus: str,
-) -> Tuple[str, int]:
-    """Compatibility wrapper returning the PASS-only legacy catalogue."""
-    catalogues = write_allele_catalogs(results, output_dir, locus)
-    legacy = catalogues["legacy_accepted"]
-    return legacy["path"], legacy["count"]

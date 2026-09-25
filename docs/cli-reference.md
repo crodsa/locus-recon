@@ -1,7 +1,7 @@
 # Command-line reference
 
 This page documents installation, all public command-line options, resource
-planning, cleanup, provenance, and exit behavior for Locus-Recon 1.0. For a
+planning, cleanup, provenance, and exit behavior for Locus-Recon 1.0.0. For a
 first run, begin with the [README quick start](../README.md#quick-start).
 
 ## Installation and dependencies
@@ -30,21 +30,20 @@ The environment currently pins:
 
 | Component | Environment constraint | Runtime behavior |
 |---|---:|---|
-| Python | `3.11.13` | Package metadata supports Python ≥3.9. CI tests Python 3.9, 3.11, and 3.12 on Linux. |
+| Python | `3.11.13` | Package metadata supports Python ≥3.9. CI tests Python 3.9, 3.11, 3.12, and 3.13 on Linux. |
 | pip | `25.2` | Installs the local Python package. |
 | tqdm | `4.67.1` | Provides optional byte-stream progress display. |
 | BLAST+ | `2.16.0` | `blastn` and `makeblastdb` are required. |
 | BWA-MEM2 | `2.2.1` | Preferred short-read aligner. The code accepts `bwa` as a fallback if `bwa-mem2` is absent. |
 | samtools | `1.22.1` | The code enforces samtools ≥1.12 because mate rescue uses `samtools view -N`. |
-| SPAdes | `4.2.0` | SPAdes 3 uses `--careful`; the workflow detects SPAdes 4 and omits the removed/deprecated option. |
+| SPAdes | `4.2.0` | Local assembly runs in SPAdes' default mode; `--careful` is not used. |
 
-At startup, Locus-Recon resolves executable paths, checks samtools version,
-detects SPAdes behavior, and records detected paths and versions in
-`run_manifest.json`. A missing required dependency terminates the batch before
-sample processing.
+At startup, Locus-Recon resolves executable paths, checks the samtools version,
+and records detected paths and versions in `run_manifest.json`. A missing
+required dependency terminates the batch before sample processing.
 
 The project verifies Python/package behavior on Linux in CI. The bundled
-end-to-end reference run was generated on macOS arm64. Native Windows
+end-to-end reference run was generated on Linux x86_64. Native Windows
 execution is not validated by the project; use a Linux environment such as WSL
 when working from Windows.
 
@@ -134,8 +133,13 @@ only to force a desired sample to reconstruct.
 
 | Option | Default | Accepted value | What it controls |
 |---|---:|---|---|
-| `--min-base-quality` | `20` | integer ≥0 Phred | Minimum base quality supplied to `samtools mpileup`; lower-quality bases do not contribute to depth or alternative evidence. |
+| `--min-base-quality` | `20` | integer ≥0 Phred | Minimum base quality supplied to `samtools mpileup`; lower-quality bases do not contribute to depth or alternative evidence. Base qualities are BAQ-recalibrated first. |
 | `--min-mapping-quality` | `20` | integer ≥0 Phred | Minimum alignment mapping quality supplied to mpileup. |
+
+The pileup is run with `-A`, so a read whose pair the aligner could not mark as
+properly paired, which is common against a candidate of a few hundred bases,
+still counts on its own strand. Without it, those reads would be dropped
+selectively and could manufacture strand imbalance at alternative sites.
 | `--mixture-min-fraction` | `0.05` | number >0 and <0.5 | Lower alternative-fraction boundary for a candidate mixed site. The upper boundary is `1 - value`; values above that are reference-discordant. |
 | `--mixture-min-sites` | `2` | integer ≥1 | Number of credible bidirectional mixed positions required for `mixture_detected=true`. |
 | `--mixture-min-alt-depth` | `2` | integer ≥1 | Minimum quality-filtered alternative observations required at a candidate mixed site. |
@@ -152,11 +156,12 @@ whole-genome contamination screen and does not phase component alleles.
 |---|---:|---|
 | `--noncoding-locus`, `--noncoding_locus` | off | Disables coding-frame integrity checks. Use only for a genuinely non-coding target or a definition for which coding-frame checks are inappropriate. |
 
-When coding checks are active, the bait set is evaluated in all three forward
-frames. The frame or tied frames with the fewest internal stops are treated as
-plausible. Candidate length modulo three is compared with the bait length mode,
-and internal stops are counted in the best plausible frame. Start and terminal
-stop codons are not required.
+When coding checks are active, the bait set is evaluated in all six reading
+frames, and the frame or tied frames with the fewest internal stops are
+reported as plausible. For a candidate, `internal_stops` is the minimum over
+all six frames and `qc_coding_frame_used` names the frame that achieved it.
+Candidate length modulo three is compared with the bait length mode. Start and
+terminal stop codons are not required.
 
 ## Utility options
 
@@ -165,8 +170,8 @@ stop codons are not required.
 | `-h`, `--help` | Print help and exit. |
 | `--version` | Print the installed Locus-Recon version and exit. |
 
-Hyphenated spellings are preferred for new scripts. The underscore aliases in
-the tables remain accepted for backward compatibility.
+Where a table lists an underscore spelling beside the hyphenated one, both are
+accepted; the hyphenated form is used throughout this documentation.
 
 ## Resource planning
 
@@ -225,7 +230,7 @@ allow. Use a separate main output directory per locus and parameterization.
 2. profiles and validates the bait FASTA;
 3. parses the samplesheet and validates assembly/R1/R2 file presence and basic
    readability;
-4. resolves required executables and checks samtools/SPAdes behavior;
+4. resolves required executables and checks the samtools version;
 5. builds the shared bait BLAST database;
 6. writes `run_manifest.json`; and
 7. exits without mapping reads or creating normal per-sample reconstruction
@@ -237,12 +242,12 @@ batch-wide validation/dependency/database step fails.
 ## Local assembly behavior
 
 SPAdes receives the rescued paired reads, recovered singletons, the per-sample
-thread count, a Phred offset of 33, and the per-sample memory allowance. SPAdes
-3 receives `--careful`; SPAdes 4 does not.
+thread count, a Phred offset of 33, and the per-sample memory allowance, and
+runs in its default mode; `--careful` is not used.
 
 If standard SPAdes fails and its log contains `Invalid kmer coverage histogram`,
-Locus-Recon removes the failed SPAdes directory and retries with `--sc` without
-`--careful`. A successful retry is recorded as `single-cell-retry`. If the retry
+Locus-Recon removes the failed SPAdes directory and retries with `--sc`. A
+successful retry is recorded as `single-cell-retry`. If the retry
 encounters the same condition, the sample is `SKIP`. Other SPAdes command
 failures remain execution failures.
 
@@ -272,7 +277,12 @@ It preserves, among other summaries:
 - all batch-level report, catalog, log, database, and manifest files.
 
 Omit `--cleanup` when validating a new study, investigating a problematic
-sample, or retaining BAM/SPAdes evidence for audit.
+sample, or retaining BAM/SPAdes evidence for audit. It also removes the inputs
+of the companion commands: `full_map.sorted.bam`, which `locus-recon-depth-ratio`
+and `locus-recon-copy-number` read, and the local graph in `spades_local/` and
+the recruited reads `target_R1.fq.gz` and `target_R2.fq.gz`, which
+`locus-recon-graph-paths` reads. Leave it off for any sample you may analyse
+with those commands.
 
 ### Rerunning into an existing directory
 
@@ -351,13 +361,14 @@ python -m build
 ```
 
 The build command requires the `build` package if it is not already installed.
-CI runs the Python tests on Python 3.9, 3.11, and 3.12 and separately verifies
-that the source distribution and wheel can be built.
+CI runs the Python tests on Python 3.9, 3.11, 3.12, and 3.13, runs `ruff check`,
+and separately verifies that the source distribution and wheel can be built.
 
 ## Auxiliary commands
 
-Two commands complement the main `locus-recon` batch workflow. Both act on files
-the workflow already produced; neither realigns reads or re-runs discovery.
+Three commands complement the main `locus-recon` batch workflow. They act on
+files the workflow or the draft assembly already produced; none realigns reads
+or re-runs discovery. A sample run with `--cleanup` no longer has their inputs.
 
 ### `locus-recon-graph-paths`
 
@@ -367,18 +378,18 @@ assigns no truth label, and every exported path still requires competitive read
 validation.
 
 ```bash
-locus-recon-graph-paths --gfa work/SAMPLE/spades/assembly_graph_after_simplification.gfa --output SAMPLE.graph_paths.fasta --summary SAMPLE.graph_paths.tsv --min-length 6000 --max-length 8000
+locus-recon-graph-paths --gfa SAMPLE/spades_local/assembly_graph_after_simplification.gfa --output SAMPLE.graph_paths.fasta --summary SAMPLE.graph_paths.tsv --min-length 6000 --max-length 8000
 ```
 
 | option | meaning |
 |---|---|
-| `--gfa` | `assembly_graph_after_simplification.gfa` from the local assembly |
+| `--gfa` | `assembly_graph_after_simplification.gfa` from the local assembly, in `<sample>/spades_local/` |
 | `--output` | FASTA destination for the retained paths |
 | `--summary` | path metadata TSV (default `OUTPUT.paths.tsv`) |
 | `--min-length`, `--max-length` | discard paths outside this length range (`--max-length 0` disables) |
 | `--max-paths`, `--max-nodes` | safety bounds on enumeration |
 | `--prefix` | identifier prefix for exported candidates |
-| `--reads-r1`, `--reads-r2` | recruited reads for competitive scoring; all retained paths are indexed together so the reads compete for placement |
+| `--reads-r1`, `--reads-r2` | recruited reads for competitive scoring (`<sample>/target_R1.fq.gz`, `<sample>/target_R2.fq.gz`); all retained paths are indexed together so the reads compete for placement |
 | `--threads` | threads for competitive scoring (default 4) |
 | `--min-mapping-quality` | depth is counted only from alignments at or above this quality, excluding reads that fit several paths equally well (default 20) |
 | `--score-dir` | destination for the scoring BAM and text outputs (default: `graph_path_scores/` beside `--output`) |
@@ -394,10 +405,11 @@ aligner is available the unranked summary is kept and the reason is printed.
 ### `locus-recon-depth-ratio`
 
 Normalised locus depth ratio, for loci whose copies are identical and therefore
-invisible to allelic evidence. Takes the BAM produced during read recruitment.
+invisible to allelic evidence. Takes `<sample>/full_map.sorted.bam`, the reads
+mapped to the draft assembly during read recruitment.
 
 ```bash
-locus-recon-depth-ratio --bam SAMPLE.reads_vs_draft.sorted.bam --locus contig_7:250422-251237 --exclude plasmid_1 --exclude plasmid_2 --tsv SAMPLE.locus_depth.tsv
+locus-recon-depth-ratio --bam SAMPLE/full_map.sorted.bam --locus contig_7:250422-251237 --exclude plasmid_1 --exclude plasmid_2 --tsv SAMPLE.locus_depth.tsv
 ```
 
 | option | meaning |
@@ -415,23 +427,26 @@ locus-recon-depth-ratio --bam SAMPLE.reads_vs_draft.sorted.bam --locus contig_7:
 | `--tsv` | write the full result as a one-row TSV |
 
 `--gene-span` and `--gene-length` are what turn the ratio into
-`dosage_estimate` for a locus split across several assembly regions. The legacy
-`copies_estimate` field is retained as an identical compatibility alias.
-Incomplete query coverage withholds dosage; overlapping query spans are
-reported with a review status and overlap metrics.
+`dosage_estimate` for a locus split across several assembly regions;
+`copies_estimate` carries the same value under a shorter name. Incomplete query
+coverage qualifies the dosage rather than withholding it
+(`ESTIMATED_PARTIAL_COVERAGE`, with `query_coverage_fraction`); overlapping
+query spans set `REVIEW_OVERLAPPING_SPANS` and report overlap metrics.
 Thresholds and their null distributions are documented in
 [`validation/depth-copy-number/PRESPECIFIED_CRITERIA.md`](../validation/depth-copy-number/PRESPECIFIED_CRITERIA.md).
 
 ### `locus-recon-copy-number`
 
 Add optional SPAdes graph-context evidence to the unchanged depth result. JSON
-is the required machine-readable output; TSV is optional.
+is the required machine-readable output; TSV is optional. The graph is the one
+the SPAdes run that produced the draft assembly wrote, whose contigs the BAM and
+`--locus` coordinates refer to, not the local graph in `<sample>/spades_local/`.
 
 ```bash
 locus-recon-copy-number \
-  --bam SAMPLE.reads_vs_draft.sorted.bam \
+  --bam SAMPLE/full_map.sorted.bam \
   --locus NODE_19:901-3789 \
-  --gfa SAMPLE/spades/assembly_graph_after_simplification.gfa \
+  --gfa draft_assembly/SAMPLE/assembly_graph_after_simplification.gfa \
   --bait loci.fasta --bait-id 23S \
   --output-json SAMPLE.23S.copy-number.json \
   --output-tsv SAMPLE.23S.copy-number.tsv
@@ -443,7 +458,7 @@ above. Additional options are:
 
 | option | meaning |
 |---|---|
-| `--gfa` | SPAdes GFA 1.x with embedded segment sequences. Must be supplied together with `--bait`. |
+| `--gfa` | SPAdes GFA 1.x of the draft assembly, with embedded segment sequences. Must be supplied together with `--bait`. |
 | `--bait` | FASTA containing the target sequence used to locate the locus in GFA segments. |
 | `--bait-id` | Exact first-token FASTA identifier; required when `--bait` has more than one record. |
 | `--blastn` | BLASTN executable (default `blastn`). |
@@ -462,6 +477,10 @@ above. Additional options are:
 An `INTEGER_CONTEXT_COUNT` is distinct from a `MEAN_DEPTH_DOSAGE`. A matched
 single graph context plus `MULTICOPY_DEPTH` returns the continuous dosage as
 `DEPTH_TANDEM_COMPATIBLE`; this preserves tandem arrays such as *aphA1* rather
-than incorrectly replacing their dosage with one. Supplying invalid graph
-inputs is an error; valid but unresolved topology is retained as an explicit
-uncertainty state.
+than incorrectly replacing their dosage with one. An integer count outside the
+depth interval is returned under `GRAPH_COUNT_OVER_DISCORDANT_DEPTH` with
+`DEPTH_GRAPH_NUMERIC_DISCORDANCE`. When `ambiguity_index` is below 0.70 and
+depth still rejects one copy, the dosage is only a floor: the result is a
+`LOWER_BOUND` flagged `DEPTH_LOWER_BOUND`, carrying the larger of the depth and
+graph floors. Supplying invalid graph inputs is an error; valid but unresolved
+topology is retained as an explicit uncertainty state.

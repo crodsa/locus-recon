@@ -2,8 +2,8 @@ stage	case	case_class	workflow_status	disposition	sequence_confidence	matches_tr
 mock truth set	baseline_intact_A	supported	SUCCESS	PASS	HIGH	yes	exact reconstruction
 mock truth set	fragmented_mid_A	supported	SUCCESS	PASS	HIGH	yes	exact reconstruction
 mock truth set	fragmented_terminal_A	supported	SUCCESS	PASS	HIGH	yes	exact reconstruction
-mock truth set	depth_03x_A	degraded	SKIP	HOLD		no	sensitivity series
-mock truth set	depth_05x_A	degraded	SKIP	HOLD		no	sensitivity series
+mock truth set	depth_03x_A	degraded	SUCCESS	HOLD	SUSPECT	yes	sensitivity series
+mock truth set	depth_05x_A	degraded	SUCCESS	HOLD	SUSPECT	yes	sensitivity series
 mock truth set	depth_10x_A	degraded	SUCCESS	REVIEW	LOW	yes	sensitivity series
 mock truth set	depth_20x_A	degraded	SUCCESS	REVIEW	MEDIUM	yes	sensitivity series
 mock truth set	mixture_05pct_B	degraded	SUCCESS	HOLD	SUSPECT	yes	mixture detected
@@ -25,4 +25,4 @@ completeness benchmark	truncated_both_30_40	truncated	SUCCESS	REVIEW	MEDIUM	yes	
 completeness benchmark	reverse_truncated_suffix_60	truncated	SUCCESS	REVIEW	MEDIUM	yes	60 bp withheld by construction
 completeness benchmark	split_overlap_100	truncated	SUCCESS	HOLD	SUSPECT	yes	522 bp withheld by construction
 completeness benchmark	split_no_overlap	truncated	SUCCESS	HOLD	SUSPECT	yes	822 bp withheld by construction
-completeness benchmark	split_absent_from_assembly	truncated	SUCCESS	HOLD	SUSPECT	yes	822 bp withheld by construction
+completeness benchmark	split_absent_from_assembly	truncated	SUCCESS	REVIEW	MEDIUM	yes	822 bp withheld by construction

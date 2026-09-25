@@ -1,5 +1,5 @@
-Looking to launch executable "/home/crodsa/conda/envs/locus-recon/bin/bwa-mem2.avx2", simd = .avx2
-Launching executable "/home/crodsa/conda/envs/locus-recon/bin/bwa-mem2.avx2"
+Looking to launch executable "<env>/bin/bwa-mem2.avx2", simd = .avx2
+Launching executable "<env>/bin/bwa-mem2.avx2"
 [bwa_index] Pack FASTA... 0.01 sec
 * Entering FMI_search
 init ticks = 101579924

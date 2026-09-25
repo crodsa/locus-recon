@@ -336,7 +336,7 @@ def test_span_overlap_is_exposed_as_review_state(fake_depth):
     )
 
     assert res.assembly_region_count == 2
-    assert res.assembly_copies == 2  # deprecated compatibility alias
+    assert res.assembly_copies == 2  # same value under the short name
     assert res.gene_total_aligned_bp == 3100
     assert res.gene_union_covered_bp == 3000
     assert res.gene_overlap_bp == 100
@@ -372,9 +372,9 @@ def test_overlapping_spans_match_the_disjoint_formula_when_disjoint(fake_depth):
         "x.bam", ["chr_locus:1-1500", "chr_locus2:1-1500"],
         gene_spans=spans, gene_length=3000, n_boot=100,
     )
-    legacy = dr.length_weighted_copies(spans, res.region_ratios, 3000)
+    length_weighted = dr.length_weighted_copies(spans, res.region_ratios, 3000)
     assert res.gene_overlap_bp == 0
-    assert res.dosage_estimate == pytest.approx(legacy, abs=0.001)
+    assert res.dosage_estimate == pytest.approx(length_weighted, abs=0.001)
     assert res.dosage_status == "ESTIMATED"
 
 
@@ -510,3 +510,30 @@ def test_interval_containing_no_integer_says_so(fake_depth):
     res = dr.estimate_locus_copy_number("x.bam", ["chr_locus:1-7104"], n_boot=200)
     assert not [k for k in range(0, 8) if res.ratio_ci_low <= k <= res.ratio_ci_high]
     assert any("contains no integer" in n for n in res.notes)
+
+
+def test_depth_ratio_cli_reports_version(monkeypatch, capsys):
+    from locus_recon import VERSION
+    from locus_recon.depth_ratio import main
+
+    monkeypatch.setattr("sys.argv", ["locus-recon-depth-ratio", "--version"])
+    with pytest.raises(SystemExit) as exc:
+        main()
+    assert exc.value.code == 0
+    assert capsys.readouterr().out.strip() == f"locus-recon-depth-ratio {VERSION}"
+
+
+@pytest.mark.parametrize("option,value", [
+    ("--n-boot", "0"), ("--min-bq", "-1"), ("--gene-length", "0"),
+    ("--call-threshold", "-1.5"), ("--max-backbone-bootstrap-blocks", "0"),
+])
+def test_depth_ratio_cli_rejects_out_of_range_numbers(monkeypatch, option, value):
+    from locus_recon.depth_ratio import main
+
+    monkeypatch.setattr(
+        "sys.argv",
+        ["locus-recon-depth-ratio", "--bam", "x.bam", "--locus", "c:1-10", option, value],
+    )
+    with pytest.raises(SystemExit) as exc:
+        main()
+    assert exc.value.code == 2

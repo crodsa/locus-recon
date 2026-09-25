@@ -1,15 +1,14 @@
 #!/usr/bin/env python3
-# WITHDRAWN CRITERION (v1.1). The statistics this script computes — the
-# dispersion index H and the window P90 — were removed from
-# `locus_recon.depth_ratio` in v1.1 because their thresholds were calibrated
-# against single-copy backbone only and their sensitivity to real partial
-# amplifications was never measured. The script is kept unchanged as the
-# record of how the published thresholds were derived, and is referenced by
-# `../PRESPECIFIED_CRITERIA.md`. It no longer describes shipped behaviour and
-# is not executed by any test.
+# Not part of the released estimator. The windowed statistics this script
+# computes, the dispersion index H and the window P90, were prespecified in
+# `../PRESPECIFIED_CRITERIA.md` but are not implemented in
+# `locus_recon.depth_ratio`: their thresholds were calibrated against
+# single-copy backbone only and their sensitivity to real partial
+# amplifications was never measured. The script is the record of how those
+# prespecified thresholds were derived and is not executed by any test.
 """Null distributions of the two windowed statistics over single-copy sequence.
 
-Both thresholds used by `locus_recon.depth_ratio` come from this script:
+Both prespecified window thresholds come from this script:
 the dispersion index H = (P75 - P25) / P50 and the window P90, computed over
 non-overlapping 4,000 bp segments (20 windows of 200 bp) of a backbone that
 contains no target locus.

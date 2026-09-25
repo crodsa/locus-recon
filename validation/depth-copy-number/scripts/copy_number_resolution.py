@@ -1,12 +1,8 @@
 #!/usr/bin/env python3
-# WITHDRAWN CRITERION (v1.1). The statistics this script computes — the
-# dispersion index H and the window P90 — were removed from
-# `locus_recon.depth_ratio` in v1.1 because their thresholds were calibrated
-# against single-copy backbone only and their sensitivity to real partial
-# amplifications was never measured. The script is kept unchanged as the
-# record of how the published thresholds were derived, and is referenced by
-# `../PRESPECIFIED_CRITERIA.md`. It no longer describes shipped behaviour and
-# is not executed by any test.
+# Post hoc analysis of the released length-weighted estimator. The windowed
+# statistics H and P90 it also prints are descriptive only: those prespecified
+# criteria are not implemented in `locus_recon.depth_ratio` (see
+# `../PRESPECIFIED_CRITERIA.md`). Not executed by any test.
 """How finely the length-weighted estimator resolves adjacent low copy numbers.
 
 Post hoc. Predictions (b), (e) and (f) were written down in advance and are

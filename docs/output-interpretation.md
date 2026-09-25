@@ -1,7 +1,7 @@
 # Output and interpretation reference
 
 This page documents the files, report fields, confidence system, and review
-logic implemented by Locus-Recon 1.0. Start with the
+logic implemented by Locus-Recon 1.0.0. Start with the
 [README result guide](../README.md#read-the-results) if you want a shorter
 introduction.
 
@@ -15,7 +15,7 @@ Locus-Recon reports four related but independent decisions.
    read evidence, whether the sequence is internally coherent, and whether the
    locus span is complete. It is `HIGH`, `MEDIUM`, `LOW`, or `SUSPECT`, is
    assigned only after `SUCCESS`, and is reported by `sequence_confidence`
-   (with `qc_confidence` retained as a compatibility alias).
+   and, with the same value, by `qc_confidence`.
 3. **Result disposition** maps the preceding evidence to an action: `PASS`,
    `REVIEW`, or `HOLD`.
 4. **Catalogue status** asks how the reconstructed sequence relates to the
@@ -55,7 +55,6 @@ results/target_locus/
 ├── target_locus_review_required_candidates.fasta
 ├── target_locus_hold_candidates.fasta
 ├── target_locus_reconstructed_candidates.fasta
-├── target_locus_reconstructed_alleles.fasta  # legacy PASS-only alias
 ├── bait_database/
 │   ├── target_locus.*
 │   └── makeblastdb.log
@@ -96,7 +95,12 @@ Never interpret `copy_number_call` without `copy_number_kind`. An
 describes a continuous depth-supported mean. `DEPTH_TANDEM_COMPATIBLE` is the
 expected combination when a tandem array has one flanking context but elevated
 depth. `DEPTH_GRAPH_NUMERIC_DISCORDANCE` retains disagreement between an exact
-graph count and the depth interval without overwriting either value.
+graph count and the depth interval without overwriting either value; the count
+is then returned under the method `GRAPH_COUNT_OVER_DISCORDANT_DEPTH` rather
+than `GRAPH_DEPTH_CONSENSUS`. When `ambiguity_index` is below 0.70 and depth
+still rejects one copy, the depth dosage is only a floor, and the record is a
+`LOWER_BOUND` flagged `DEPTH_LOWER_BOUND` that carries the larger of the depth
+and graph floors in `copy_number_lower_bound`.
 
 The JSON `provenance` object records input paths and SHA-256 hashes, effective
 depth and graph parameters, external-tool versions, and the retained BLASTN
@@ -112,7 +116,6 @@ mean not identified or not applicable, not zero.
 | `<locus>_review_required_candidates.fasta` | `REVIEW` candidates (`MEDIUM` or `LOW`). | Yes while adjudication is ongoing. |
 | `<locus>_hold_candidates.fasta` | Reconstructed `HOLD` candidates (`SUSPECT`). | Yes for audit; do not treat as accepted alleles. |
 | `<locus>_reconstructed_candidates.fasta` | Every successful reconstruction, irrespective of disposition. | Yes for a complete audit trail. |
-| `<locus>_reconstructed_alleles.fasta` | Compatibility alias containing the same PASS-only records as `accepted_alleles`. | Only for legacy consumers. |
 | `run_manifest.json` | Program/Python versions, complete command, parsed parameters, platform, bait and samplesheet SHA-256 values, bait profile, resolved sample paths and file metadata, executable paths, and detected tool versions. | Yes; primary provenance record. |
 | `locus_recon_batch_<locus>.log` | Main-process setup, progress, dependency, and batch-summary messages. | Yes. |
 | `bait_database/` | BLAST nucleotide database built once for the whole batch from the supplied bait FASTA. | Retain when preserving a complete run; it can be regenerated from the checksummed bait. |
@@ -170,7 +173,7 @@ are empty for `SKIP` and `FAIL` rows.
 | Column | Meaning |
 |---|---|
 | `sample_id` | Unique samplesheet identifier and per-sample directory name. |
-| `status` | Compatibility alias identical to `workflow_status`. |
+| `status` | Same value as `workflow_status`, kept as the first column for quick filtering. |
 | `workflow_status` | `SUCCESS`, `SKIP`, or `FAIL`. See [status semantics](#status-semantics). |
 | `result_disposition` | `PASS`, `REVIEW`, or `HOLD`; controls the candidate collection into which a successful reconstruction is written. |
 | `locus` | Value passed to `--locus`. |
@@ -188,7 +191,7 @@ are empty for `SKIP` and `FAIL` rows.
 | `nearest_allele_identity_pct` | The same percent identity, reported in the catalogue-status block. It does not constrain sequence confidence. |
 | `catalogue_status` | `EXACT_MATCH`, `NONEXACT_MATCH` (≥97% but not exact), `DIVERGENT_FROM_REFERENCE` (85–97%), or `HIGHLY_DIVERGENT_FROM_REFERENCE` (<85%). |
 | `catalogue_review_recommended` | `true` whenever the sequence is not an exact catalogue match, so a curator decides whether it is a new allele. |
-| `sequence_confidence` | Sequence confidence tier; identical to `qc_confidence`, named explicitly to separate it from catalogue status. |
+| `sequence_confidence` | Sequence confidence tier, the same value as `qc_confidence`, named explicitly to separate it from catalogue status. |
 | `validation_coverage_pct` | Percentage of the reconstructed query covered by the selected validation hit. |
 
 ### Discovery, recruitment, and assembly
@@ -206,7 +209,7 @@ are empty for `SKIP` and `FAIL` rows.
 | Column | Meaning |
 |---|---|
 | `qc_confidence` | `HIGH`, `MEDIUM`, `LOW`, or `SUSPECT`; populated only for `SUCCESS`. |
-| `qc_length_delta` | Candidate length minus the bait-set median length, in bp. |
+| `qc_length_delta` | Candidate length minus the bait-set median length, in bp, as observed. When the span is clipped at a contig end, the length flags judge this difference with the clipped bases restored; the QC report prints both values. |
 | `qc_length_zscore` | Candidate length relative to bait mean and standard deviation; when bait length variance is effectively zero, a difference greater than one bp is represented by `999.0`. |
 | `qc_gc_pct` | Candidate GC percentage. |
 | `qc_gc_deviation` | Absolute percentage-point difference between candidate GC and bait-set mean GC. |
@@ -297,9 +300,9 @@ the command rather than generating normal per-sample `FAIL` rows.
 
 The bait set defines expected length and GC behavior. Length tolerance is the
 bait interquartile range (IQR) when nonzero; otherwise it is the greater of the
-bait length standard deviation and 3 bp. Coding checks infer plausible forward
-frames by finding the frame or frames with the fewest internal stops across the
-bait records. Start and stop codons are not required because many typing loci
+bait length standard deviation and 3 bp. Coding checks infer plausible frames
+by finding the frame or frames, over all six, with the fewest internal stops
+across the bait records. Start and stop codons are not required because many typing loci
 are internal gene fragments.
 
 Fixed flag boundaries are summarized below. These confidence thresholds
@@ -334,8 +337,11 @@ point where the locus is projected onto its contig: the full bait span is
 projected from the alignment, and if that projection runs past either end of
 the contig, the overhang is sequence the reconstruction cannot contain.
 
-The overhang is reported as `span_clipped_bp` and, above 10 bp, raises
-`ALLELE_SPAN_CLIPPED_AT_CONTIG_END`, which blocks `HIGH`. The 10 bp floor
+The overhang is reported as `span_clipped_bp` and, at 10 bp or more, raises
+`ALLELE_SPAN_CLIPPED_AT_CONTIG_END`, which blocks `HIGH`. The same missing
+bases also shorten the allele, so the length checks are evaluated with them
+restored and a truncation is scored once, by this flag; any length deviation
+that remains is flagged as usual, with the restoration stated in the flag. The 10 bp floor
 exists because terminal alignments routinely stop a base or two short of the
 query end for reasons that carry no completeness information.
 
@@ -370,17 +376,20 @@ Classification is rule-based and explainable:
 
 - no tier-affecting flags gives `HIGH`; a `HIGH` result may still carry
   flags marked `descriptive`;
-- one modest flag with acceptable length behavior generally gives `MEDIUM`;
-- up to two modest flags with broader acceptable length behavior can give
-  `LOW`;
-- any severe flag, or a larger combination of deviations, gives `SUSPECT`;
-- an isolated length deviation with no severe flag is assigned `MEDIUM`,
-  independently of catalogue identity, and is additionally marked
-  `POSSIBLE_NOVEL_ALLELE` when identity is at least 97%; and
+- any severe flag gives `SUSPECT`;
+- exactly one moderate flag gives `MEDIUM`, whether it is a length deviation of
+  any size or another moderate deviation;
+- two moderate flags give `LOW` when the length is within three times the
+  tolerance, and `SUSPECT` otherwise;
+- three or more moderate flags give `SUSPECT`;
+- a length deviation with no severe flag and identity of at least 97% is also
+  marked `POSSIBLE_NOVEL_ALLELE`; and
 - catalogue-relationship flags (`CATALOGUE_*`, `POSSIBLE_NOVEL_ALLELE`) are
   descriptive and never enter the tier decision.
 
-These labels prioritize review. They are not calibrated probabilities.
+A length flag counts like any other moderate flag, so adding one can lower the
+tier the remaining evidence sets and never raise it. These labels prioritize
+review. They are not calibrated probabilities.
 
 ## QC flag reference
 
@@ -389,7 +398,7 @@ implemented flag names by the evidence they represent.
 
 | Evidence family | Implemented flags | Meaning |
 |---|---|---|
-| Length | `LENGTH_MARGINAL`, `LENGTH_DEVIANT`, `LENGTH_ANOMALOUS` | Candidate length is outside 1×, 2×, or 3× the effective bait tolerance around the median. |
+| Length | `LENGTH_MARGINAL`, `LENGTH_DEVIANT`, `LENGTH_ANOMALOUS` | Candidate length is outside 1×, 2×, or 3× the effective bait tolerance around the median; when the span is clipped at a contig end, with the clipped bases restored. |
 | Possible length variant | `POSSIBLE_NOVEL_ALLELE` | Length differs, identity is at least 97%, and no severe flag was present. Descriptive: a review hypothesis, not a confirmed new allele, and not a tier determinant. |
 | Catalogue relationship | `CATALOGUE_DIVERGENCE_BELOW_HIGH`, `CATALOGUE_DIVERGENT`, `CATALOGUE_HIGHLY_DIVERGENT` | Identity to the nearest catalogue allele is below 97%, 93%, or 85%, respectively. Descriptive: these annotate novelty and never constrain sequence confidence. |
 | Validation coverage | `COVERAGE_BELOW_HIGH`, `REDUCED_COVERAGE`, `LOW_COVERAGE` | Query coverage is below 95%, 90%, or 80%, respectively. A `LOW_COVERAGE` successful row normally cannot occur with default minimum gates but can occur after threshold changes. |
@@ -415,9 +424,12 @@ implemented flag names by the evidence they represent.
 
 ## Per-base support columns
 
-`allele_remap.support.tsv` is generated by `samtools mpileup -aa` after applying
-`--min-base-quality` and `--min-mapping-quality`. It therefore includes
-zero-depth positions and has one row per reconstructed coordinate.
+`allele_remap.support.tsv` is generated by `samtools mpileup -A -aa`, with base
+alignment quality (BAQ) recalibration, after applying `--min-base-quality` and
+`--min-mapping-quality`. It therefore includes zero-depth positions and has one
+row per reconstructed coordinate. `-A` keeps read pairs that the aligner could
+not mark as properly paired, which is common against a candidate a few hundred
+bases long; dropping them would remove reads selectively by position and strand.
 
 | Column | Meaning |
 |---|---|

@@ -115,9 +115,39 @@ def test_batch_report_writes_workflow_status_and_disposition(tmp_path):
     ], str(report), "aroE", run_date="2026-01-01 00:00:00")
     with report.open() as handle:
         row = next(csv.DictReader(handle, delimiter="\t"))
-    assert row["status"] == "SUCCESS"  # documented compatibility alias
+    assert row["status"] == "SUCCESS"  # same value as workflow_status
     assert row["workflow_status"] == "SUCCESS"
     assert row["result_disposition"] == "HOLD"
+
+
+def test_batch_report_splits_the_span_shortfall_by_contig_end(tmp_path):
+    report = tmp_path / "report.tsv"
+    write_batch_report([
+        {
+            "sample_id": "s1",
+            "status": "SUCCESS",
+            "qc_confidence": "SUSPECT",
+            "span_clipped_bp": 70,
+            "span_clipped_start_bp": 30,
+            "span_clipped_end_bp": 40,
+            "span_continuation_contig": "NODE_2",
+            "span_continuation_bp": 40,
+            "span_continuation_overlap_bp": 12,
+        }
+    ], str(report), "aroE", run_date="2026-01-01 00:00:00")
+    with report.open() as handle:
+        reader = csv.DictReader(handle, delimiter="\t")
+        row = next(reader)
+        header = reader.fieldnames
+    span_columns = [
+        "span_clipped_bp", "span_clipped_start_bp", "span_clipped_end_bp",
+        "span_continuation_contig", "span_continuation_bp",
+        "span_continuation_overlap_bp",
+    ]
+    start = header.index("span_clipped_bp")
+    assert header[start:start + len(span_columns)] == span_columns
+    assert (row["span_clipped_start_bp"], row["span_clipped_end_bp"]) == ("30", "40")
+    assert row["span_continuation_contig"] == "NODE_2"
 
 
 def _write_candidate(path, sample_id):
@@ -160,7 +190,8 @@ def test_catalogues_separate_accepted_review_hold_and_all_candidates(tmp_path):
     assert _fasta_ids(tmp_path / "aroE_reconstructed_candidates.fasta") == [
         "high", "medium", "low", "suspect",
     ]
-    assert _fasta_ids(tmp_path / "aroE_reconstructed_alleles.fasta") == ["high"]
+    assert not (tmp_path / "aroE_reconstructed_alleles.fasta").exists()
+    assert set(catalogues) == {"accepted", "review", "hold", "all_candidates"}
     assert catalogues["accepted"]["count"] == 1
     assert catalogues["review"]["count"] == 2
     assert catalogues["hold"]["count"] == 1

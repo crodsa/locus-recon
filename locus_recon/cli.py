@@ -102,7 +102,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(
         prog="locus-recon",
         description=(
-            f"{PROGRAM} v{VERSION} -- reconstruct MLST loci from fragmented "
+            f"{PROGRAM} v{VERSION} -- reconstruct a target locus from fragmented "
             "assemblies and the paired reads used to build them"
         ),
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
@@ -125,7 +125,7 @@ def main() -> None:
     )
     req.add_argument(
         "-b", "--bait", required=True, metavar="FASTA",
-        help="Multi-FASTA of all known alleles for the target locus (from PubMLST).",
+        help="Multi-FASTA of curated known alleles for the target locus (e.g. from PubMLST).",
     )
     req.add_argument(
         "-l", "--locus", required=True, type=_safe_name, metavar="NAME",
@@ -359,9 +359,6 @@ def main() -> None:
         log.error(f"Dependency check failed: {exc}")
         print(f"ERROR: {exc}", file=sys.stderr)
         sys.exit(1)
-    args.spades_careful_supported = bool(
-        tools.pop("_spades_careful_supported", True)
-    )
     args.aligner_name = aligner_name
 
     bait_db_dir = os.path.join(args.main_output_dir, "bait_database")
@@ -459,8 +456,8 @@ def main() -> None:
     )
     write_batch_report(all_results, report_path, args.locus, run_date=run_date)
 
-    # Disposition-aware candidate collections.  The legacy allele path contains
-    # PASS-only sequences and is retained only as a compatibility alias.
+    # Disposition-aware candidate collections: accepted (PASS), review, hold,
+    # and every technically successful candidate.
     catalogues = write_allele_catalogs(
         all_results, args.main_output_dir, args.locus
     )

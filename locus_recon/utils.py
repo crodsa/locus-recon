@@ -271,38 +271,9 @@ def check_dependencies(use_progress: bool) -> Tuple[dict, str]:
             "Create the environment with: mamba env create -f environment.yml"
         )
 
-    tools["_spades_careful_supported"] = _check_spades_version(tools["spades.py"])
     _check_samtools_version(tools["samtools"])
     log.info("All dependencies satisfied.")
     return tools, aligner_name
-
-
-def _check_spades_version(spades_path: str) -> bool:
-    """Detect SPAdes version; warn if --careful is deprecated (>=v4.0).
-
-    Args:
-        spades_path: Absolute path to the spades.py executable.
-
-    Returns:
-        ``False`` for SPAdes 4+, where ``--careful`` was removed; otherwise
-        ``True`` for backward compatibility.
-    """
-    try:
-        result = subprocess.run(
-            [spades_path, "--version"],
-            capture_output=True, text=True, timeout=10,
-        )
-        version_str = result.stdout.strip() or result.stderr.strip()
-        log.debug(f"SPAdes version string: {version_str}")
-        match = re.search(r"v?(\d+)\.(\d+)", version_str)
-        if match and int(match.group(1)) >= 4:
-            log.warning(f"SPAdes {version_str}: --careful deprecated in v4+; will be omitted.")
-            careful_supported = False
-        else:
-            careful_supported = True
-    except Exception:
-        careful_supported = True
-    return careful_supported
 
 
 def _check_samtools_version(samtools_path: str) -> None:

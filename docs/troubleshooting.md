@@ -1,6 +1,6 @@
 # Troubleshooting guide
 
-This guide connects Locus-Recon 1.0 messages and unexpected results to the
+This guide connects Locus-Recon 1.0.0 messages and unexpected results to the
 evidence files that can explain them. It does not treat every negative result as
 a software error or every reconstruction as biologically correct.
 
@@ -21,7 +21,8 @@ defaults and ranges, see the [command-line reference](cli-reference.md).
 
 A missing file can be expected when the sample stopped before that workflow
 stage. `--cleanup` removes bulky files only after `SUCCESS`; principal tables,
-BED intervals, logs, and per-base support remain.
+BED intervals, logs, and per-base support remain, but the inputs of the
+companion commands do not.
 
 ## Installation and startup
 
@@ -448,6 +449,17 @@ SPAdes working directory is explicitly removed before local assembly.
 Use a new main output directory for every bait release or parameterization that
 must remain traceable. Compare manifests rather than assuming an old directory
 still represents one coherent run.
+
+### A companion command cannot find its input
+
+`locus-recon-depth-ratio` and `locus-recon-copy-number` read
+`<sample>/full_map.sorted.bam`; `locus-recon-graph-paths` reads the local graph
+in `<sample>/spades_local/` and the recruited reads `target_R1.fq.gz` and
+`target_R2.fq.gz`. `--cleanup` deletes all of them after a successful sample.
+Rerun that sample without `--cleanup` into a new output directory.
+`locus-recon-copy-number` also needs the assembly graph of the
+draft itself, which comes from the SPAdes run that built the draft, not from
+Locus-Recon.
 
 ### Disk usage remains high after `--cleanup`
 

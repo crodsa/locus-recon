@@ -29,10 +29,13 @@ Case classes:
                   is expected to fall as depth falls, and a degraded
                   reconstruction must be withheld rather than accepted.
   multi-copy      the locus is annotated in more than one copy in the closed
-                  genome, so near-identical copies collapse in a short-read
-                  draft.  A correct tool withholds the top tier even when the
-                  consensus it reports is exact, because the reads cannot
-                  establish which copy was reconstructed.
+                  genome, so identical copies collapse in a short-read draft.
+                  The tier states read support for the reported bases and is
+                  not a copy-number statement: the consensus of identical
+                  copies is supported by every read, so the class records
+                  whether that consensus is exact and at which tier it is
+                  reported.  Copy number is the depth and graph modules'
+                  question (``validation/low-copy-23S/``).
   degraded        depth below the stated floor, a controlled allele mixture, a
                   paralogue, or a target-negative genome.  A correct tool
                   withholds these, and withholding is not an error.
@@ -50,23 +53,35 @@ where the top tier has to be earned on real reads: five closed *H. pylori*
 chromosomes, their Illumina runs, and a fixed external bait from strain 26695.
 Sample-specific truth is never used as a bait.  For each genome and locus the
 draft is assembled, the locus reconstructed, and the candidate compared to the
-annotated gene sequence of that same closed genome.
+annotated gene sequence of that same closed genome.  Non-coding loci (the 23S
+rRNA gene) are reconstructed with ``--noncoding-locus``, as the documentation
+requires, so reading-frame checks are not applied to them.
+
+Stage C adds the single-copy loci furthest from the bait, chosen by measured
+identity, and stage D reconstructs the accepted locus again from reads
+subsampled to lower depth.
+
+Each run updates only the stages it executed: tables and summary blocks of the
+other stages already in ``--outdir`` are kept, and the combined block, the
+all-cases table and the figure are recomputed from the per-case tables on disk.
 
 Usage:
-    # Stage A only, deterministic, no network or external tools
+    # Stage A only: deterministic, no network or external tools
     python validation/run_tier_calibration.py --outdir validation/tier-calibration
 
-    # Stage A and B
+    # All four stages
     python validation/run_tier_calibration.py \
         --outdir validation/tier-calibration \
         --manifest validation/tier-calibration/closed_genome_manifest.tsv \
-        --workdir /scratch/tier-calibration --threads 24
+        --workdir /scratch/tier-calibration --threads 24 \
+        --divergent-loci 3 --depth-series 15,8 --depth-isolate
 """
 
 import argparse
 import csv
 import gzip
 import json
+import math
 import re
 import shutil
 import subprocess
@@ -81,7 +96,6 @@ from locus_recon.io import read_fasta_sequences, reverse_complement  # noqa: E40
 from validation.common import (  # noqa: E402
     build_provenance,
     run_checked,
-    sha256_file,
     write_json,
 )
 
@@ -107,6 +121,8 @@ CANDIDATE_LOCI = {
     "vacA": "vacuolating cytotoxin, mosaic and highly divergent",
     "cagA": "cytotoxin-associated antigen, divergent and variably present",
 }
+# Loci that are not protein coding: reconstructed with --noncoding-locus.
+NONCODING_LOCI = {"23S"}
 TOP_TIER = "HIGH"
 # A single-copy locus within this distance of the bait is as close to it as the
 # housekeeping loci are, so it belongs in `supported` rather than `divergent`.
@@ -193,6 +209,42 @@ def stage_a(repo_root, outdir):
     return summarise(rows, stage="benchmarks")
 
 
+def clopper_pearson(successes, trials, alpha=0.05):
+    """Exact two-sided binomial confidence interval, rounded to 3 decimals.
+
+    A precision of 1.00 over a handful of cases is compatible with a much
+    lower true precision, so every rate is reported with its interval.
+    """
+    if not trials:
+        return None
+
+    def upper_tail(p):  # P(X >= successes), increasing in p
+        return sum(
+            math.comb(trials, k) * p ** k * (1 - p) ** (trials - k)
+            for k in range(successes, trials + 1)
+        )
+
+    def lower_tail(p):  # P(X <= successes), decreasing in p
+        return sum(
+            math.comb(trials, k) * p ** k * (1 - p) ** (trials - k)
+            for k in range(0, successes + 1)
+        )
+
+    def solve(tail, increasing):
+        low, high = 0.0, 1.0
+        for _ in range(100):
+            middle = (low + high) / 2
+            if (tail(middle) < alpha / 2) == increasing:
+                low = middle
+            else:
+                high = middle
+        return (low + high) / 2
+
+    lower = 0.0 if successes == 0 else solve(upper_tail, increasing=True)
+    upper = 1.0 if successes == trials else solve(lower_tail, increasing=False)
+    return [round(lower, 3), round(upper, 3)]
+
+
 def summarise(rows, stage):
     """Acceptance rate and top-tier precision, overall and per case class."""
     def bucket(subset):
@@ -205,10 +257,12 @@ def summarise(rows, stage):
             "cases": len(subset),
             "reached_top_tier": len(top),
             "acceptance_rate": round(len(top) / len(subset), 3) if subset else None,
+            "acceptance_rate_ci95": clopper_pearson(len(top), len(subset)),
             "top_tier_exact": len(exact_in_top),
             "top_tier_precision": (
                 round(len(exact_in_top) / len(top), 3) if top else None
             ),
+            "top_tier_precision_ci95": clopper_pearson(len(exact_in_top), len(top)),
             "false_accepts": len(top) - len(exact_in_top),
             "withheld_but_exact": len(withheld_exact),
         }
@@ -334,12 +388,16 @@ def _reconstruct(repo_root, sample_dir, strain, locus, bait, draft, r1, r2, thre
         "sample_id\tassembly_path\tr1_path\tr2_path\n"
         f"{strain}\t{draft}\t{r1}\t{r2}\n"
     )
+    command = [
+        sys.executable, "-m", "locus_recon.cli",
+        "--samplesheet", str(samplesheet), "--main-output-dir", str(out),
+        "--bait", bait, "--locus", locus,
+        "--threads", str(threads), "--memory-per-sample", "32", "--no-progress",
+    ]
+    if locus in NONCODING_LOCI:
+        command.append("--noncoding-locus")
     completed = subprocess.run(
-        [sys.executable, "-m", "locus_recon.cli",
-         "--samplesheet", str(samplesheet), "--main-output-dir", str(out),
-         "--bait", bait, "--locus", locus,
-         "--threads", str(threads), "--memory-per-sample", "32", "--no-progress"],
-        cwd=repo_root, capture_output=True, text=True, check=False,
+        command, cwd=repo_root, capture_output=True, text=True, check=False,
     )
     reports = list(out.glob(f"locus_recon_report_{locus}.tsv"))
     if not reports:
@@ -446,8 +504,8 @@ def stage_b(repo_root, outdir, manifest_path, workdir, threads):
 
         for locus in ("gyrB", "23S"):
             # The class follows the annotation, not the result: a locus the
-            # closed genome carries twice cannot be attributed to a single copy
-            # from short reads, so withholding is correct behaviour.
+            # closed genome carries more than once is multi-copy whatever tier
+            # its reconstruction is reported at.
             case_class = "supported" if len(truth[locus]) == 1 else "multi-copy"
             print(f"  [{strain}] reconstructing {locus}", flush=True)
             record, sequence, exit_code = _reconstruct(
@@ -735,13 +793,247 @@ def stage_d_depth(repo_root, outdir, manifest_path, workdir, threads, depths,
     return summarise(rows, stage="depth series"), rows
 
 
+STAGE_TABLES = (
+    ("stage_a_benchmarks", "tier_calibration_benchmarks.tsv"),
+    ("stage_b_closed_genomes", "tier_calibration_closed_genomes.tsv"),
+    ("stage_c_divergent_loci", "tier_calibration_divergent_loci.tsv"),
+    ("stage_d_depth_series", "tier_calibration_depth_series.tsv"),
+)
+CONTROL_TABLE = ("stage_d_isolate_control", "tier_calibration_depth_series_isolate.tsv")
+ALL_CASES_HEADER = [
+    "stage", "case", "case_class", "workflow_status", "disposition",
+    "sequence_confidence", "matches_truth", "evidence", "relation_to_annotation",
+    "qc_flags",
+]
+TIER_ORDER = ("HIGH", "MEDIUM", "LOW", "SUSPECT")
+# One-hue ordinal ramp, darkest for the top tier; grey for no reconstruction.
+TIER_COLOURS = {
+    "HIGH": "#104281", "MEDIUM": "#256abf", "LOW": "#5598e7", "SUSPECT": "#86b6ef",
+    "": "#c3c2b7",
+}
+CLASS_ORDER = ("supported", "divergent", "low-depth", "truncated", "multi-copy", "degraded")
+
+
+CLASS_ORDER = ("supported", "divergent", "low-depth", "truncated", "multi-copy",
+               "degraded")
+
+
+def markdown_table(block):
+    """Per-class Markdown table of one summary block, as quoted in the README."""
+    def row(name, entry):
+        precision = entry["top_tier_precision"]
+        interval = entry.get("top_tier_precision_ci95")
+        if precision is None:
+            shown = "—"
+        elif interval:
+            shown = f"{precision:.2f} ({interval[0]:.2f}-{interval[1]:.2f})"
+        else:
+            shown = f"{precision:.2f}"
+        return (f"| {name} | {entry['reached_top_tier']} / {entry['cases']} | "
+                f"{shown} | {entry['false_accepts']} | "
+                f"{entry['withheld_but_exact']} |")
+
+    classes = block["by_case_class"]
+    lines = [
+        "| case class | reached the top tier | top-tier precision (95% CI) "
+        "| false accepts | withheld but exact |",
+        "|---|---|---|---|---|",
+    ]
+    ordered = [name for name in CLASS_ORDER if name in classes]
+    ordered += sorted(name for name in classes if name not in CLASS_ORDER)
+    lines += [row(f"`{name}`", classes[name]) for name in ordered]
+    lines.append(row("**all**", block["overall"]))
+    return "\n".join(lines) + "\n"
+
+
+def _table_rows(path):
+    """Rows of one per-case stage table, in the all-cases column order."""
+    return [
+        [
+            record["stage"], record["case"], record["case_class"],
+            record["workflow_status"], record["disposition"],
+            record["sequence_confidence"], record["matches_truth"],
+            record.get("evidence", record.get("case_design", "")),
+            record.get("relation_to_annotation", ""),
+            record.get("qc_flags", ""),
+        ]
+        for record in read_tsv(path)
+    ]
+
+
+def combine(outdir):
+    """Recompute the combined calibration from the per-case tables on disk.
+
+    The combined block is never carried forward from an earlier summary: it
+    describes exactly the cases whose tables are present.  It is returned only
+    when every stage is present; otherwise the missing stages are named.  The
+    assembler-mode control is appended to the all-cases table with its own
+    stage label but kept out of the aggregate, because it re-uses the
+    libraries of the depth series.
+    """
+    outdir = Path(outdir)
+    rows, missing = [], []
+    for key, filename in STAGE_TABLES:
+        path = outdir / filename
+        if path.is_file():
+            rows.extend(_table_rows(path))
+        else:
+            missing.append(key)
+    control_path = outdir / CONTROL_TABLE[1]
+    control_rows = _table_rows(control_path) if control_path.is_file() else []
+    write_tsv(outdir / "tier_calibration_all_cases.tsv", ALL_CASES_HEADER,
+              rows + control_rows)
+    combined = None if missing else summarise(rows, stage="all cases with known truth")
+    return combined, missing, rows
+
+
+def plot_calibration(rows, outdir):
+    """Draw the calibration figure from the per-case rows.
+
+    Panel a counts the reported tier per case class, panel b gives the share of
+    each class reaching the top tier with its exact 95% interval, and panel c
+    follows the depth series across depths.  Requires matplotlib; the figure
+    is skipped, with a message, when it is not installed.
+    """
+    try:
+        import matplotlib
+        matplotlib.use("Agg")
+        import matplotlib.pyplot as plt
+    except ImportError:
+        print("matplotlib is not installed: tier_calibration.{pdf,svg} not drawn.")
+        return []
+
+    ink, muted, grid = "#0b0b0b", "#52514e", "#e1e0d9"
+    classes = [name for name in CLASS_ORDER if any(row[2] == name for row in rows)]
+    plt.rcParams.update({
+        "font.family": "sans-serif", "font.size": 8, "axes.edgecolor": "#c3c2b7",
+        "axes.labelcolor": muted, "xtick.color": muted, "ytick.color": muted,
+        "svg.hashsalt": "locus-recon-tier-calibration",
+    })
+    from matplotlib.lines import Line2D
+    from matplotlib.ticker import MaxNLocator
+
+    figure, axes = plt.subplots(
+        1, 3, figsize=(11.0, 4.0), gridspec_kw={"width_ratios": [1.4, 1.0, 1.0]},
+    )
+
+    # a: reported tier per class, stacked
+    panel = axes[0]
+    for index, name in enumerate(classes):
+        members = [row for row in rows if row[2] == name]
+        left = 0
+        for tier in TIER_ORDER + ("",):
+            count = sum(1 for row in members if row[5] == tier)
+            if count:
+                panel.barh(index, count, left=left, height=0.62,
+                           color=TIER_COLOURS[tier], edgecolor="white", linewidth=1)
+                left += count
+        exact = sum(1 for row in members if row[6] == "yes")
+        panel.text(left + 0.4, index, f"{exact}/{len(members)} exact",
+                   va="center", color=muted)
+    panel.set_yticks(range(len(classes)), classes)
+    panel.invert_yaxis()
+    panel.xaxis.set_major_locator(MaxNLocator(integer=True))
+    panel.set_xlim(0, max(len([row for row in rows if row[2] == name])
+                          for name in classes) * 1.35)
+    panel.set_xlabel("cases")
+    panel.set_title("a  Reported tier by case class", loc="left", color=ink)
+    handles = [
+        plt.Rectangle((0, 0), 1, 1, color=TIER_COLOURS[tier])
+        for tier in TIER_ORDER + ("",)
+    ]
+    panel.legend(handles, list(TIER_ORDER) + ["no result"], frameon=False,
+                 fontsize=7, ncol=5, loc="upper center",
+                 bbox_to_anchor=(0.5, -0.16), handlelength=1.0, columnspacing=1.0)
+
+    # b: share reaching the top tier, with its exact interval
+    panel = axes[1]
+    for index, name in enumerate(classes):
+        members = [row for row in rows if row[2] == name]
+        top = sum(1 for row in members if row[5] == TOP_TIER)
+        low, high = clopper_pearson(top, len(members))
+        share = 100.0 * top / len(members)
+        panel.plot([100 * low, 100 * high], [index, index], color=TIER_COLOURS["MEDIUM"],
+                   linewidth=2, solid_capstyle="round")
+        panel.plot(share, index, "o", color=TIER_COLOURS["HIGH"], markersize=6)
+        panel.text(108, index, f"{top}/{len(members)}", va="center", color=muted)
+    panel.set_yticks(range(len(classes)), [])
+    panel.tick_params(axis="y", length=0)
+    panel.invert_yaxis()
+    panel.set_xlim(0, 124)
+    panel.set_xticks([0, 50, 100])
+    panel.set_xlabel(f"reaching {TOP_TIER} (%, exact 95% interval)")
+    panel.grid(axis="x", color=grid, linewidth=0.6)
+    false_accepts = sum(
+        1 for row in rows if row[5] == TOP_TIER and row[6] != "yes"
+    )
+    panel.set_title(
+        f"b  {false_accepts} false accepts in {len(rows)} cases", loc="left", color=ink,
+    )
+
+    # c: the depth series, tier against library depth
+    panel = axes[2]
+    series = {}
+    for row in rows:
+        stage, case = row[0], row[1]
+        if stage == "closed-genome audit" and case.endswith(" gyrB"):
+            strain = case.split()[0]
+            series.setdefault(strain, {})["full"] = row
+        elif stage == "depth series":
+            strain, _locus, depth = case.split()[:3]
+            series.setdefault(strain, {})[depth] = row
+    depth_labels = [label for label in ("8x", "15x", "full")
+                    if any(label in points for points in series.values())]
+    tier_y = {tier: index for index, tier in enumerate(TIER_ORDER)}
+    tier_y[""] = len(TIER_ORDER)
+    for offset, (strain, points) in enumerate(sorted(series.items())):
+        jitter = (offset - (len(series) - 1) / 2) * 0.06
+        xs, ys, tiers, exact = [], [], [], []
+        for x, label in enumerate(depth_labels):
+            if label in points:
+                row = points[label]
+                xs.append(x + jitter)
+                ys.append(tier_y.get(row[5], len(TIER_ORDER)))
+                tiers.append(row[5])
+                exact.append(row[6] == "yes")
+        panel.plot(xs, ys, color=grid, linewidth=1, zorder=1)
+        for x, y, tier, is_exact in zip(xs, ys, tiers, exact):
+            panel.plot(x, y, "o", markersize=6, zorder=2,
+                       markerfacecolor=TIER_COLOURS[tier] if is_exact else "white",
+                       markeredgecolor=TIER_COLOURS[tier] if tier else muted)
+    panel.set_xticks(range(len(depth_labels)), depth_labels)
+    panel.set_yticks(range(len(TIER_ORDER) + 1), list(TIER_ORDER) + ["no result"])
+    panel.set_ylim(len(TIER_ORDER) + 0.5, -0.5)
+    panel.set_xlabel("library depth")
+    panel.set_title("c  The tier falls with depth", loc="left", color=ink)
+    panel.legend(
+        [Line2D([], [], marker="o", linestyle="", color=muted),
+         Line2D([], [], marker="o", linestyle="", color=muted, markerfacecolor="white")],
+        ["identical to truth", "bases differ from truth"],
+        frameon=False, fontsize=7, loc="upper center", bbox_to_anchor=(0.5, -0.16),
+        ncol=2,
+    )
+
+    for panel in axes:
+        panel.spines[["top", "right"]].set_visible(False)
+    figure.tight_layout()
+    written = []
+    for suffix in ("pdf", "svg"):
+        path = Path(outdir) / f"tier_calibration.{suffix}"
+        figure.savefig(path, metadata={"Date": None} if suffix == "svg" else
+                       {"CreationDate": None})
+        written.append(path)
+    plt.close(figure)
+    return written
+
+
 def main():
     parser = argparse.ArgumentParser(
         description="Calibrate the confidence tiers against known truth.",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
     parser.add_argument("--outdir", default="validation/tier-calibration")
-    parser.add_argument("--manifest", help="Closed-genome manifest for stage B.")
+    parser.add_argument("--manifest", help="Closed-genome manifest for stages B-D.")
     parser.add_argument("--workdir", default="tier_calibration_work")
     parser.add_argument("--threads", type=int, default=8)
     parser.add_argument(
@@ -762,31 +1054,72 @@ def main():
 
     outdir = Path(args.outdir)
     outdir.mkdir(parents=True, exist_ok=True)
-    summary = {"stage_a_benchmarks": stage_a(REPO_ROOT, outdir)}
+    summary_path = outdir / "TIER_CALIBRATION.json"
+    provenance_path = outdir / "PROVENANCE.json"
+    # Stages not executed by this run keep their deposited blocks; the
+    # combined block is always recomputed below from the tables on disk.
+    summary = json.loads(summary_path.read_text()) if summary_path.is_file() else {}
+    summary.pop("combined", None)
+    summary.pop("pending_stages", None)
+    stage_provenance = {}
+    if provenance_path.is_file():
+        stage_provenance = json.loads(provenance_path.read_text()).get("stages", {})
+    tools = {
+        "python": [sys.executable, "--version"],
+        "blastn": ["blastn", "-version"],
+        "spades": ["spades.py", "--version"],
+    }
+    parameters = {
+        "top_tier": TOP_TIER,
+        "top_disposition": TOP_DISPOSITION,
+        "bait_assembly": BAIT_ASSEMBLY,
+        "mock_case_classes": MOCK_CLASSES,
+        "noncoding_loci": sorted(NONCODING_LOCI),
+        "threads": args.threads,
+    }
+
+    summary["stage_a_benchmarks"] = stage_a(REPO_ROOT, outdir)
     print("[A] deposited benchmarks: "
           f"{summary['stage_a_benchmarks']['overall']['cases']} cases, "
           f"{summary['stage_a_benchmarks']['overall']['false_accepts']} false accepts")
     for name, block in summary["stage_a_benchmarks"]["by_case_class"].items():
         print(f"    {name:10s} {block['reached_top_tier']}/{block['cases']} at "
               f"{TOP_TIER}, precision {block['top_tier_precision']}")
+    stage_provenance["stage_a_benchmarks"] = build_provenance(
+        workflow="tier_calibration/stage_a", repo_root=REPO_ROOT,
+        inputs=[
+            REPO_ROOT / "validation" / "reference_results" / "validation_results.tsv",
+            REPO_ROOT / "validation" / "reference_results"
+            / "locus_recon_report_mockLocus.tsv",
+            REPO_ROOT / "validation" / "completeness-benchmark"
+            / "completeness_benchmark_results.tsv",
+        ],
+        parameters=parameters, tools={"python": tools["python"]},
+    )
 
-    inputs = [
-        REPO_ROOT / "validation" / "reference_results" / "validation_results.tsv",
-        REPO_ROOT / "validation" / "completeness-benchmark"
-        / "completeness_benchmark_results.tsv",
-    ]
-    if args.manifest:
-        block, rows = stage_b(
-            REPO_ROOT, outdir, args.manifest, args.workdir, args.threads
+    def real_data_inputs(stage_rows_path):
+        cache = Path(args.workdir) / "downloads"
+        return (
+            [Path(args.manifest), stage_rows_path]
+            + sorted(outdir.glob("bait_*_26695.fasta"))
+            + sorted(cache.glob("*_from_genomic.fna.gz"))
+            + sorted(cache.glob("*.fastq.gz"))
         )
+
+    if args.manifest:
+        block, _rows = stage_b(REPO_ROOT, outdir, args.manifest, args.workdir, args.threads)
         summary["stage_b_closed_genomes"] = block
         print(f"[B] closed genomes: {block['overall']['cases']} cases, "
               f"{block['overall']['reached_top_tier']} at {TOP_TIER}, "
               f"{block['overall']['false_accepts']} false accepts")
-        inputs.append(Path(args.manifest))
+        stage_provenance["stage_b_closed_genomes"] = build_provenance(
+            workflow="tier_calibration/stage_b", repo_root=REPO_ROOT,
+            inputs=real_data_inputs(outdir / STAGE_TABLES[1][1]),
+            parameters=parameters, tools=tools,
+        )
 
     if args.manifest and args.divergent_loci:
-        block, divergent_rows = stage_c_divergence(
+        block, _rows = stage_c_divergence(
             REPO_ROOT, outdir, args.manifest, args.workdir, args.threads,
             args.divergent_loci,
         )
@@ -794,6 +1127,13 @@ def main():
         print(f"[C] divergent loci: {block['overall']['cases']} cases, "
               f"{block['overall']['reached_top_tier']} at {TOP_TIER}, "
               f"{block['overall']['false_accepts']} false accepts")
+        stage_provenance["stage_c_divergent_loci"] = build_provenance(
+            workflow="tier_calibration/stage_c", repo_root=REPO_ROOT,
+            inputs=real_data_inputs(outdir / STAGE_TABLES[2][1])
+            + [outdir / "locus_selection.tsv"],
+            parameters={**parameters, "divergent_loci": args.divergent_loci},
+            tools=tools,
+        )
 
     if args.manifest and args.depth_series:
         depths = [int(value) for value in args.depth_series.split(",")]
@@ -804,6 +1144,11 @@ def main():
         print(f"[D] depth series: {block['overall']['cases']} cases, "
               f"{block['overall']['reached_top_tier']} at {TOP_TIER}, "
               f"{block['overall']['false_accepts']} false accepts")
+        stage_provenance["stage_d_depth_series"] = build_provenance(
+            workflow="tier_calibration/stage_d", repo_root=REPO_ROOT,
+            inputs=real_data_inputs(outdir / STAGE_TABLES[3][1]),
+            parameters={**parameters, "depth_series": depths}, tools=tools,
+        )
 
         if args.depth_isolate:
             # Same subsampled libraries, assembled with --isolate at every
@@ -812,52 +1157,63 @@ def main():
             # counting it as further cases would double the same libraries.
             control, control_rows = stage_d_depth(
                 REPO_ROOT, outdir, args.manifest, args.workdir, args.threads,
-                depths, isolate=True,
-                filename="tier_calibration_depth_series_isolate.tsv",
+                depths, isolate=True, filename=CONTROL_TABLE[1],
                 stage="depth series, --isolate control",
             )
-            summary["stage_d_isolate_control"] = control
             agreement = sum(
                 1 for primary, repeated in zip(depth_rows, control_rows)
                 if primary[5] == repeated[5]
             )
-            summary["stage_d_isolate_control"]["tier_agreement_with_primary"] = (
+            control["tier_agreement_with_primary"] = (
                 f"{agreement}/{len(control_rows)}"
             )
+            summary["stage_d_isolate_control"] = control
             print(f"[D-control] --isolate at every depth: "
                   f"{control['overall']['cases']} cases, "
                   f"{control['overall']['reached_top_tier']} at {TOP_TIER}, "
                   f"tier identical to the primary series in "
                   f"{agreement}/{len(control_rows)}")
 
-    write_json(outdir / "TIER_CALIBRATION.json", summary)
-    write_json(
-        outdir / "PROVENANCE.json",
-        build_provenance(
-            workflow="tier_calibration",
-            repo_root=REPO_ROOT,
-            inputs=inputs,
-            parameters={
-                "top_tier": TOP_TIER,
-                "top_disposition": TOP_DISPOSITION,
-                "bait_assembly": BAIT_ASSEMBLY,
-                "mock_case_classes": MOCK_CLASSES,
-                "threads": args.threads,
-                "stage_b_run": bool(args.manifest),
-            },
-            tools={
-                "python": [sys.executable, "--version"],
-                "blastn": ["blastn", "-version"],
-                "spades": ["spades.py", "--version"],
-            },
-        ),
-    )
+    combined, missing, rows = combine(outdir)
+    if combined is None:
+        summary["pending_stages"] = missing
+        print("Combined calibration not written: missing " + ", ".join(missing))
+    else:
+        summary["combined"] = combined
+        written = plot_calibration(rows, outdir)
+        if written:
+            print("Figure: " + ", ".join(str(path) for path in written))
+
+    # The tables quoted in the README, rendered from the summary rather than
+    # transcribed by hand.
+    tables = ["# Tier calibration tables", "",
+              "Rendered by `run_tier_calibration.py` from `TIER_CALIBRATION.json`.", ""]
+    titles = [("combined", "All four stages"), ("stage_a_benchmarks", "Stage A"),
+              ("stage_b_closed_genomes", "Stage B"),
+              ("stage_c_divergent_loci", "Stage C"),
+              ("stage_d_depth_series", "Stage D"),
+              ("stage_d_isolate_control", "Stage D, --isolate control")]
+    for key, title in titles:
+        if key in summary:
+            tables += [f"## {title}", "", markdown_table(summary[key])]
+    (outdir / "tier_calibration_tables.md").write_text("\n".join(tables))
+    if combined is not None:
+        print("\n" + markdown_table(combined))
+
+    write_json(summary_path, summary)
+    write_json(provenance_path, {
+        "schema_version": "1.0", "workflow": "tier_calibration",
+        "stages": stage_provenance,
+    })
+    checksums = {}
+    for record in stage_provenance.values():
+        for entry in record.get("inputs", []):
+            checksums[entry["path"]] = (entry["size_bytes"], entry["sha256"])
     write_tsv(
-        outdir / "INPUT_CHECKSUMS.tsv",
-        ["path", "size_bytes", "sha256"],
-        [[str(p), Path(p).stat().st_size, sha256_file(p)] for p in inputs],
+        outdir / "INPUT_CHECKSUMS.tsv", ["path", "size_bytes", "sha256"],
+        [[path, size, digest] for path, (size, digest) in sorted(checksums.items())],
     )
-    print(f"\nWrote {outdir}/TIER_CALIBRATION.json")
+    print(f"\nWrote {summary_path}")
 
 
 if __name__ == "__main__":

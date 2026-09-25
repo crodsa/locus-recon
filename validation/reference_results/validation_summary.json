@@ -10,31 +10,31 @@
   },
   "depth_series": [
     {
-      "breadth_pct": 0.0,
-      "exact_truth_match": false,
+      "breadth_pct": 99.0,
+      "exact_truth_match": true,
       "nominal_depth": 3.0,
-      "observed_remap_depth": 0.0,
-      "status": "SKIP"
+      "observed_remap_depth": 3.2,
+      "status": "SUCCESS"
     },
     {
-      "breadth_pct": 0.0,
-      "exact_truth_match": false,
+      "breadth_pct": 95.5,
+      "exact_truth_match": true,
       "nominal_depth": 5.0,
-      "observed_remap_depth": 0.0,
-      "status": "SKIP"
+      "observed_remap_depth": 4.8,
+      "status": "SUCCESS"
     },
     {
       "breadth_pct": 98.8,
       "exact_truth_match": true,
       "nominal_depth": 10.0,
-      "observed_remap_depth": 7.8,
+      "observed_remap_depth": 9.7,
       "status": "SUCCESS"
     },
     {
       "breadth_pct": 99.0,
       "exact_truth_match": true,
       "nominal_depth": 20.0,
-      "observed_remap_depth": 14.4,
+      "observed_remap_depth": 19.3,
       "status": "SUCCESS"
     }
   ],

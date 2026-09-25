@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.0.0 — 2026-09-05
+## 1.0.0 — 2026-09-25
 
 Initial public release. Locus-Recon reconstructs a target locus from short
 reads when the assembly has broken it across contigs or collapsed
@@ -16,15 +16,18 @@ supported by the reads.
   paralogue ambiguity is assessed, and unaligned bait termini are projected
   onto the local scaffolds rather than truncating a candidate to a single BLAST
   HSP.
-- Local read recruitment, mate rescue and per-region SPAdes assembly, with an
-  automatic single-cell-mode retry for low or non-uniform coverage. Samples
+- Local read recruitment, mate rescue and per-region SPAdes assembly in the
+  default SPAdes mode, with an automatic single-cell-mode retry for low or
+  non-uniform coverage. Samples
   that cannot be recovered are reported as `SKIP` data conditions rather than
   software failures.
 - Independent remap validation of every candidate: quality-filtered per-base
   evidence carrying base quality, mapping quality, forward and reverse depth,
   strand balance, allele fractions and Fisher strand-bias tests, including
   rescued singleton reads, written to a per-candidate
-  `allele_remap.support.tsv` for inspection.
+  `allele_remap.support.tsv` for inspection. The pileup uses BAQ and `-A`, so
+  read pairs that the aligner cannot mark as properly paired against a short
+  candidate are counted rather than dropped by position and strand.
 - Explicit mixed-allele detection requiring alternative support on both strands
   at several sites, with configurable quality, fraction, site-count and
   alternative-depth thresholds. Mixture, strand-bias and
@@ -36,7 +39,7 @@ supported by the reads.
 
 ### Sequence confidence and catalogue relationship
 
-- `sequence_confidence` (aliased `qc_confidence`) scores read support only:
+- `sequence_confidence` (also written as `qc_confidence`) scores read support only:
   per-base certainty, depth and breadth of competitive remapping, mixture
   evidence, length plausibility and span completeness. The per-base certainty
   verdict carries explicit reason codes and is evaluated over the allele
@@ -51,6 +54,11 @@ supported by the reads.
   under-represented lineage is `PASS`. Three descriptive flags name the
   distance — `CATALOGUE_DIVERGENCE_BELOW_HIGH`, `CATALOGUE_DIVERGENT` and
   `CATALOGUE_HIGHLY_DIVERGENT`.
+- The tier is monotone in the evidence. Any severe flag gives `SUSPECT`;
+  exactly one moderate flag, a length deviation of any size included, gives
+  `MEDIUM`; two give `LOW` while the length stays within three times the
+  bait-profile tolerance. A length flag counts like any other, so it can lower
+  the tier the remaining evidence sets but never raise it.
 - `result_disposition` follows the sequence tier; "accepted" is reserved for
   `PASS`.
 
@@ -74,6 +82,8 @@ supported by the reads.
   Only clips at or above `SPAN_CLIP_THRESHOLDS["min_flag_bp"]` (10 bp) are
   treated as evidence of truncation, since terminal alignments routinely stop a
   base or two short for reasons that carry no completeness information.
+- A reported truncation is scored once: the length checks are applied with the
+  clipped bases restored, and the QC report prints both length differences.
 - Six report columns: `span_clipped_bp`, `span_clipped_start_bp`,
   `span_clipped_end_bp`, `span_continuation_contig`, `span_continuation_bp`,
   `span_continuation_overlap_bp`.
@@ -91,12 +101,16 @@ reports the geometry and leaves the join to the analyst.
   `ambiguity_index` that marks a ratio as a lower bound when the assembler kept
   copies apart and mapping quality collapsed. The locus GC fraction is reported
   as a description of the locus; no GC-matched denominator is applied.
-- `copies_estimate`, a length-weighted copy number combining what the assembler
-  resolved with what it collapsed,
-  `copies = SUM_r (aligned_gene_bp_r * ratio_r) / gene_length`, reachable with
-  `--gene-span` and `--gene-length`. It reduces exactly to the ratio for a
-  single-fragment locus and is left at `None`, not guessed, when a locus spans
-  several fragments without gene coordinates.
+- `dosage_estimate`, a length-weighted copy number combining what the
+  assembler resolved with what it collapsed,
+  `dosage = SUM_r (aligned_gene_bp_r * ratio_r) / gene_length`, reachable with
+  `--gene-span` and `--gene-length` (also written as `copies_estimate`). It
+  reduces exactly to the ratio for a single-fragment locus and is left at
+  `None`, not guessed, when a locus spans several fragments without gene
+  coordinates. Incomplete query coverage qualifies it
+  (`ESTIMATED_PARTIAL_COVERAGE`), and overlapping query spans hold it for
+  review (`REVIEW_OVERLAPPING_SPANS`) with the value the same geometry returns
+  at unit ratios.
 - `MULTICOPY_DEPTH` requires the lower bootstrap bound to clear 1.5, a value
   asserted rather than fitted: over 300 single-copy 7,104 bp backbone segments
   from two real alignments the rule rejected single copy 0 times, with a largest
@@ -107,7 +121,10 @@ reports the geometry and leaves the join to the analyst.
   it with bounded, bait-anchored SPAdes graph-context inference, distinguishing
   integer context counts, continuous mean-depth dosage, lower bounds, evidence
   conflicts and indeterminate states, with deterministic graph/depth
-  reconciliation and provenance-rich JSON and TSV output.
+  reconciliation and provenance-rich JSON and TSV output. An integer count
+  outside the depth interval is returned as `GRAPH_COUNT_OVER_DISCORDANT_DEPTH`,
+  and a multicopy call with `ambiguity_index` below 0.70 is returned as a
+  `LOWER_BOUND` flagged `DEPTH_LOWER_BOUND`, since its dosage is only a floor.
 
 ### Structural evidence
 
@@ -174,8 +191,8 @@ reports the geometry and leaves the join to the analyst.
   path by the sequence uniquely anchored reads cover: `mapped_reads`,
   `unique_mean_depth`, `unique_breadth_pct`, `unsupported_bp` and `rank`, with
   `--threads`, `--min-mapping-quality` and `--score-dir`. Without reads the
-  command behaves as before; if no aligner is available the unranked summary is
-  kept and the reason reported.
+  command enumerates and summarises the paths only; if no aligner is available
+  the unranked summary is kept and the reason reported.
 - When no path carries uniquely placed reads, the command states that the
   enumerated paths cannot be told apart at that read length and that their
   order is arbitrary, rather than presenting a tie as a preference.
@@ -187,15 +204,17 @@ reports the geometry and leaves the join to the analyst.
   mixtures, a closely related paralogue and a negative control, with an
   end-to-end benchmark runner, a machine-readable evaluator, regression tests
   and compact reference results.
-- A tier calibration over every case in the repository with known truth, giving
-  the acceptance rate per prespecified case class and the precision of the top
-  tier: all 21 single-copy intact cases accepted and exact, no false accepts in
-  62 cases, and 30 of 41 withheld cases exact over the span they reported. Four
-  stages: the deposited benchmark verdicts, a closed-genome audit that runs end
-  to end on public reads with a fixed external bait, a divergence arm whose loci
-  are chosen by measured distance to that bait, and a depth series that
-  subsamples the accepted locus to ~15x and ~8x. Across the whole set exactly
-  one reported sequence disagrees with truth in its bases, at 8x, withheld.
+- A tier calibration over every case in the repository with known truth, 62
+  cases in four stages, giving the acceptance rate per prespecified case class
+  and the precision of the top tier with exact binomial intervals: the
+  deposited benchmark verdicts, a closed-genome audit that runs end to end on
+  public reads with a fixed external bait, a divergence arm whose loci are
+  chosen by measured distance to that bait, and a depth series that subsamples
+  the accepted locus to ~15x and ~8x. On the 27 deterministic cases all six
+  supported cases were accepted and exact, with no false accepts; across all
+  four stages, [[CALIB-05]] supported cases were accepted, with
+  [[CALIB-07]] false accepts and [[CALIB-08]] withheld cases exact over the
+  span they reported.
 - A deposit reusing the curated `tcdB` alleles and local assembly graph already
   in the repository to validate orientation-independent frame metrics, the bait
   database errors, length-profile reporting, the three placeholder junction
@@ -208,6 +227,9 @@ reports the geometry and leaves the join to the analyst.
   resolution distributions at one, two and 2.5 copies, and full
   external-validation output for the depth module under
   `validation/depth-copy-number/`, each with the script that regenerates it.
+- Validation workflows record the package version, a SHA-256 digest of the
+  package sources, portable input paths with their checksums, parameters and
+  tool versions, per stage or per run.
 - Per-run reproducibility manifests with checksums, parameters, inputs and tool
   versions; deterministic report ordering for parallel runs; dry-run
   validation; bounded numeric command-line arguments; memory-per-sample
@@ -217,4 +239,5 @@ reports the geometry and leaves the join to the analyst.
   Python 3.11.13, pip 25.2, tqdm 4.67.1, BLAST+ 2.16.0, BWA-MEM2 2.2.1,
   samtools 1.22.1 and SPAdes 4.2.0. The `test` extra is self-contained and
   selects Biopython 1.85 on Python 3.9 or 1.87 on Python 3.10 and newer,
-  matching the declared Python 3.9, 3.11 and 3.12 CI matrix.
+  matching the declared Python 3.9, 3.11, 3.12 and 3.13 CI matrix, which also
+  runs `ruff check` and builds the source distribution and wheel.

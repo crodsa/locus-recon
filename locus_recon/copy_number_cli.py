@@ -18,13 +18,31 @@ from .copy_number import (
     infer_graph_contexts,
     reconcile_copy_number,
 )
-from .depth_ratio import DepthRatioResult, estimate_locus_copy_number
+from .depth_ratio import (
+    CALL_THRESHOLD_DEFAULT,
+    DepthRatioResult,
+    estimate_locus_copy_number,
+)
 
 
 def _positive_int(value: str) -> int:
     parsed = int(value)
     if parsed < 1:
         raise argparse.ArgumentTypeError("must be positive")
+    return parsed
+
+
+def _nonnegative_int(value: str) -> int:
+    parsed = int(value)
+    if parsed < 0:
+        raise argparse.ArgumentTypeError("cannot be negative")
+    return parsed
+
+
+def _positive_float(value: str) -> float:
+    parsed = float(value)
+    if not parsed > 0:
+        raise argparse.ArgumentTypeError("must be greater than 0")
     return parsed
 
 
@@ -172,9 +190,11 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--exclude", action="append", default=[])
     parser.add_argument("--gene-span", action="append", default=[])
     parser.add_argument("--gene-length", type=_positive_int)
-    parser.add_argument("--min-bq", type=int, default=20)
-    parser.add_argument("--min-mq", type=int, default=20)
-    parser.add_argument("--call-threshold", type=float, default=1.5)
+    parser.add_argument("--min-bq", type=_nonnegative_int, default=20)
+    parser.add_argument("--min-mq", type=_nonnegative_int, default=20)
+    parser.add_argument(
+        "--call-threshold", type=_positive_float, default=CALL_THRESHOLD_DEFAULT,
+    )
     parser.add_argument("--seed", type=int, default=20260817)
     parser.add_argument("--n-boot", type=_positive_int, default=1000)
     parser.add_argument("--max-backbone-bootstrap-blocks", type=_positive_int, default=512)

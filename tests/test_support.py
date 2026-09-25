@@ -1,8 +1,11 @@
+import subprocess
+
 import pytest
 
 from locus_recon.support import (
     analyze_pileup_lines,
     assess_base_certainty,
+    collect_per_base_support,
     fisher_exact_two_sided,
     parse_pileup_bases,
 )
@@ -254,3 +257,33 @@ def test_interior_metric_falls_back_when_locus_is_short():
     assert summary["interior_length"] == 0
     assert summary["interior_metric_used"] is False
     assert summary["tier_uncertain_base_fraction"] == pytest.approx(1.0)
+
+
+def test_per_base_support_counts_reads_whose_mate_is_off_the_allele(tmp_path, monkeypatch):
+    """mpileup runs with -A, so paired reads not flagged as properly paired count.
+
+    On a reconstructed allele a few hundred bases long many mates fall outside
+    the reference, and at low depth the aligner flags no pair as proper at all.
+    Without -A every paired read would be discarded and the allele reported as
+    unsupported although reads cover it.
+    """
+    calls = []
+
+    def fake_run(command, **kwargs):
+        calls.append(list(command))
+        stdout = "allele\t1\tA\t2\t.,\tII\tJJ\n" if "mpileup" in command else ""
+        return subprocess.CompletedProcess(command, 0, stdout=stdout, stderr="")
+
+    monkeypatch.setattr("locus_recon.support.subprocess.run", fake_run)
+    summary = collect_per_base_support(
+        "samtools", "allele.fasta", "allele.bam", str(tmp_path / "support.tsv"),
+        allele_length=1, min_base_quality=20, min_mapping_quality=20,
+        mixture_min_fraction=0.05, mixture_min_sites=2, mixture_min_alt_depth=2,
+    )
+
+    mpileup = next(command for command in calls if "mpileup" in command)
+    assert "-A" in mpileup
+    assert mpileup[mpileup.index("-Q") + 1] == "20"
+    assert mpileup[mpileup.index("-q") + 1] == "20"
+    assert summary["mean_depth"] == 2.0
+    assert summary["breadth_pct"] == 100.0

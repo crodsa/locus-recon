@@ -1,14 +1,31 @@
 # Depth-based copy number: prespecified criteria and validation record
 
-> **Editorial note.** This document is the prespecification as written before
-> the analyses and is retained unedited as a record of what was fixed in
-> advance. The windowed-profile criteria it describes (dispersion index H,
-> window P90, the 4 kb/20-window calibration geometry) are not implemented in
-> the released software: they were calibrated against single-copy backbone
-> segments and never evaluated against loci with known partial amplifications,
-> so their sensitivity was never measured. The aggregate ratio criteria and the
-> external qPCR comparison below are in force and are what the released code
-> applies.
+> **Editorial note.** Sections 1 to 5 record what was fixed in advance of the
+> analyses; section 6 is post hoc and says so. Where Locus-Recon 1.0.0 departs
+> from the prespecification, the departure is listed here rather than written
+> into the record:
+>
+> - The windowed-profile criteria (dispersion index H, window P90 and the
+>   4 kb/20-window calibration geometry) are not implemented. They were
+>   calibrated against single-copy backbone segments and never evaluated
+>   against loci with known partial amplifications, so their sensitivity was
+>   never measured.
+> - Incomplete coverage of the query does not withhold `dosage_estimate`: the
+>   estimate is reported as the mean multiplicity over the covered query bases,
+>   with `dosage_status` `ESTIMATED_PARTIAL_COVERAGE`, the covered fraction and
+>   a bracket in which the uncovered bases count as zero copies or as the
+>   largest multiplicity observed.
+> - The external-validation record in section 4 (`external_validation.json`) is
+>   the run that fixed this record. The released estimator resamples at most
+>   512 evenly spaced backbone blocks for its interval; its results for the same
+>   seven runs are in
+>   [`../aphA1-copy-number/results.tsv`](../aphA1-copy-number/results.tsv).
+>   Point estimates and calls are identical (`single-copy consistent` is
+>   reported as `SINGLE_COPY_COMPATIBLE`), and the released intervals are
+>   slightly wider, by at most 1.2 copies at 78 copies.
+>
+> The aggregate ratio criteria and the external qPCR comparison are in force as
+> written and are what the released code applies.
 
 
 This directory documents how the decision rules in `locus_recon/depth_ratio.py`
@@ -118,7 +135,7 @@ come from the same code path; the machine-readable output is
 | e | splitting a single-copy locus into n fragments must not multiply the estimate | slope over n below 0.02 copies/fragment | n = 512 stretches of 7,104 bp split into n = 2..9: 0.984–0.989, slope **-0.00022** | PASS |
 | f | two disjoint single-copy stretches must give 2 | median near 2 | n = 256; median 1.985, P25/P75 1.81/2.17 | PASS |
 
-Test (e) is the one that matters. The legacy alternative
+Test (e) is the one that matters. The naive alternative
 `ratio * assembly_copies` uses a misleadingly named fragment count and returns
 1.97 (n = 2) through 8.85 (n = 9) on the same data, where
 the truth is 1 copy: it counts assembly fragments, not copies. When a locus
@@ -127,7 +144,7 @@ is left at `None` rather than guessed. The same applies when the union of query
 spans does not cover the full query. Overlapping query spans are not silently
 deduplicated: total aligned, union-covered, and overlapping bases are reported;
 the additive estimate is retained with `REVIEW_OVERLAPPING_SPANS`.
-`assembly_copies` and `copies_estimate` remain compatibility aliases for
+`assembly_copies` and `copies_estimate` carry the same values as
 `assembly_region_count` and `dosage_estimate`.
 
 ## 4. External validation: *aphA1* in *Acinetobacter baumannii*
@@ -153,9 +170,9 @@ fixed in a manifest before any run was analysed. Results in
 
 Class concordance was 4/4 among single-copy runs and 3/3 among amplified runs.
 The aggregate gene-depth estimates for MRSN 57 and MRSN 58 fall within their
-corresponding published qPCR uncertainty intervals. In the hardened rerun, the
-gene interval remains the aggregate estimand and the distinct 4 kb interval is
-the only geometry eligible for a calibrated profile call.
+corresponding published qPCR uncertainty intervals. The gene interval is the
+aggregate estimand; the separate 4 kb interval was the only geometry eligible
+for the prespecified profile call, which the released software does not make.
 
 ## 5. Declared limitations
 

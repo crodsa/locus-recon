@@ -349,9 +349,21 @@ def assess_allele_quality(
         length_zscore = 0.0 if length_delta_abs <= 1 else 999.0
 
     eff_tolerance    = iqr if iqr > 0 else max(stdev, 3.0)
-    length_within_1x = length_delta_abs <= eff_tolerance * 1.0
-    length_within_2x = length_delta_abs <= eff_tolerance * 2.0
-    length_within_3x = length_delta_abs <= eff_tolerance * 3.0
+
+    # A contig boundary inside the locus shortens the allele by the clipped
+    # bases, and ALLELE_SPAN_CLIPPED_AT_CONTIG_END reports that truncation on
+    # its own.  The length checks therefore judge the length the allele has
+    # with those bases restored, so one missing interval is not scored twice.
+    # A deviation that remains is a difference in the reported bases and is
+    # flagged as usual.
+    clipped_bp = int((span_metrics or {}).get("clipped_bp", 0) or 0)
+    span_restored_bp = (
+        clipped_bp if clipped_bp >= SPAN_CLIP_THRESHOLDS["min_flag_bp"] else 0
+    )
+    tier_length_delta_abs = abs(length_delta + span_restored_bp)
+    length_within_1x = tier_length_delta_abs <= eff_tolerance * 1.0
+    length_within_2x = tier_length_delta_abs <= eff_tolerance * 2.0
+    length_within_3x = tier_length_delta_abs <= eff_tolerance * 3.0
 
     n_count    = allele_seq.count("N")
     n_fraction = n_count / allele_len if allele_len > 0 else 0.0
@@ -415,7 +427,8 @@ def assess_allele_quality(
         length_within_1x=length_within_1x,
         length_within_2x=length_within_2x,
         length_within_3x=length_within_3x,
-        length_delta_abs=length_delta_abs,
+        length_delta_abs=tier_length_delta_abs,
+        span_restored_bp=span_restored_bp,
         identity=validation_identity,
         qcov=validation_qcov,
         n_fraction=n_fraction,
@@ -447,6 +460,8 @@ def assess_allele_quality(
         "expected_iqr_range": f"{median - eff_tolerance:.0f}-{median + eff_tolerance:.0f}",
         "length_delta":      length_delta,
         "length_delta_abs":  length_delta_abs,
+        "span_restored_bp":  span_restored_bp,
+        "length_delta_span_restored": length_delta + span_restored_bp,
         "length_zscore":     length_zscore,
         "length_within_iqr": length_within_1x,
         "effective_tolerance": eff_tolerance,
@@ -513,8 +528,8 @@ def assess_allele_quality(
         "hit_is_ambiguous":       ambiguity_metrics.get("ambiguous", False),
         # 'confidence' is the sequence confidence: it is decided by read
         # support, sequence integrity and span completeness only.
-        # 'sequence_confidence' is the explicit alias; 'confidence' is retained
-        # for backwards compatibility with existing parsers.
+        # 'sequence_confidence' carries the same tier under the name used in
+        # the report, which keeps it apart from catalogue status.
         "confidence":  confidence,
         "sequence_confidence": confidence,
         "flags":       flags,
@@ -605,6 +620,7 @@ def _classify_confidence(
     length_profile_n: int = 0,
     stops_without_placeholder: int = 0,
     placeholder_bp_excised: int = 0,
+    span_restored_bp: int = 0,
 ) -> Tuple[str, List[str]]:
     """Assign a sequence confidence tier and generate explanatory flag strings.
 
@@ -624,20 +640,23 @@ def _classify_confidence(
     remap_th = REMAP_THRESHOLDS
 
     profile_note = f", profile n={length_profile_n}" if length_profile_n else ""
+    restored_note = (
+        f" with the {span_restored_bp} clipped bp restored" if span_restored_bp else ""
+    )
     if not length_within_1x:
         if length_within_2x:
             flags.append(
-                f"LENGTH_MARGINAL (delta={length_delta_abs:.0f} bp, "
+                f"LENGTH_MARGINAL (delta={length_delta_abs:.0f} bp{restored_note}, "
                 f"outside 1xIQR{profile_note})"
             )
         elif length_within_3x:
             flags.append(
-                f"LENGTH_DEVIANT (delta={length_delta_abs:.0f} bp, "
+                f"LENGTH_DEVIANT (delta={length_delta_abs:.0f} bp{restored_note}, "
                 f"outside 2xIQR{profile_note})"
             )
         else:
             flags.append(
-                f"LENGTH_ANOMALOUS (delta={length_delta_abs:.0f} bp, "
+                f"LENGTH_ANOMALOUS (delta={length_delta_abs:.0f} bp{restored_note}, "
                 f"outside 3xIQR{profile_note})"
             )
         if 0 < length_profile_n < MIN_LENGTH_PROFILE_N:
@@ -652,8 +671,8 @@ def _classify_confidence(
     # nearest curated allele is a statement about the reference catalogue, not
     # about whether the reported bases are supported by the reads, so these
     # flags are descriptive and never constrain the tier.  The identity
-    # thresholds are unchanged from earlier releases; they are reused here only
-    # to annotate how far the reconstruction sits from the nearest allele.
+    # thresholds of the tier table are reused here only to annotate how far
+    # the reconstruction sits from the nearest allele.
     if identity < th["low"]["min_identity"]:
         flags.append(
             f"CATALOGUE_HIGHLY_DIVERGENT ({identity:.1f}% to nearest allele)"
@@ -863,7 +882,7 @@ def _classify_confidence(
         # HIGH may now carry descriptive coverage notes.
         return "HIGH", flags
 
-    has_length_flag = any(f.startswith("LENGTH_") for f in flags)
+    has_length_flag = any(f.startswith("LENGTH_") for f in tier_flags)
 
     # SUSPECT is reserved for evidence that the sequence may misrepresent the
     # underlying biology -- not for merely thin coverage. Patchy remap support
@@ -882,23 +901,29 @@ def _classify_confidence(
         for f in tier_flags
     )
 
-    # A length difference from the bait profile, with no severe read-evidence
-    # flag, caps the tier at MEDIUM.  The cap does not depend on catalogue
-    # identity: gating it on identity would keep catalogue distance as a tier
-    # determinant, only in the upward direction.  The identity threshold is
-    # retained solely to label the case as a candidate novel allele.
-    if has_length_flag and not has_severe_flag:
-        if identity >= th["novel_override_identity"]:
-            flags.append(
-                f"POSSIBLE_NOVEL_ALLELE (length differs but identity >= "
-                f"{th['novel_override_identity']:.0f}% -- may be genuine indel variant)"
-            )
-        return "MEDIUM", flags
+    # A length difference with no severe flag and high identity is labelled a
+    # candidate novel allele.  The label is descriptive: it neither depends on
+    # nor sets the tier.
+    if (has_length_flag and not has_severe_flag
+            and identity >= th["novel_override_identity"]):
+        flags.append(
+            f"POSSIBLE_NOVEL_ALLELE (length differs but identity >= "
+            f"{th['novel_override_identity']:.0f}% -- may be genuine indel variant)"
+        )
 
     if has_severe_flag:
         return "SUSPECT", flags
 
-    n_flags = len([f for f in tier_flags if not f.startswith("POSSIBLE_")])
+    # An isolated length deviation -- the only tier-affecting observation -- is
+    # assigned MEDIUM whatever its size, and independently of catalogue
+    # identity: gating it on identity would make catalogue distance a tier
+    # determinant.  Alongside other deviations it is counted like any of them,
+    # so a length flag can only lower the tier the remaining evidence sets,
+    # never raise it.
+    if has_length_flag and len(tier_flags) == 1:
+        return "MEDIUM", flags
+
+    n_flags = len(tier_flags)
     if n_flags <= 1 and length_within_2x:
         return "MEDIUM", flags
     if n_flags <= 2 and length_within_3x:
@@ -957,6 +982,14 @@ def format_qc_report(
     lines += [
         f"|    Delta         : {delta_sign}{qc['length_delta']:>7} bp  "
         f"(Z-score={qc['length_zscore']:+.2f})",
+    ]
+    if qc.get("span_restored_bp"):
+        restored = qc["length_delta_span_restored"]
+        lines.append(
+            f"|    Clip restored : {'+' if restored > 0 else ''}{restored:>7} bp  "
+            f"({qc['span_restored_bp']} bp clipped at a contig end)"
+        )
+    lines += [
         f"|    Within IQR    : {'YES' if qc['length_within_iqr'] else 'NO <<'}",
         bar,
         "|  CATALOGUE RELATIONSHIP (does not set sequence confidence)",
@@ -973,7 +1006,7 @@ def format_qc_report(
         f"|    Breadth       : {qc['remap_breadth_pct']:>7.1f}%",
         f"|    Bases <5x     : {qc['remap_pct_bases_lt5']:>7.1f}%",
         f"|    Bases <10x    : {qc['remap_pct_bases_lt10']:>7.1f}%",
-        f"|    (coverage patchiness is descriptive only)",
+        "|    (coverage patchiness is descriptive only)",
         bar,
         "|  PER-BASE CERTAINTY  (tier-affecting)",
         f"|    Low-coverage   : {qc['low_coverage_position_count']:>7} positions (<5x)",
@@ -1007,15 +1040,24 @@ def format_qc_report(
             "(matches bait mode)" if not qc["frame_disrupted"]
             else "(differs from bait mode) <<"
         )
+        bait_frames = ", ".join(bait_profile.get("expected_coding_frame_labels", []))
         lines += [
             bar,
-            "|  CDS INTEGRITY",
-            "|    Bait-supported frame(s): "
-            + ", ".join(f"+{frame}" for frame in qc["evaluated_coding_frames"]),
+            "|  CDS INTEGRITY (all six reading frames)",
+            f"|    Bait frame(s) : {bait_frames or 'n/a'}",
+            f"|    Frame used    : {qc['coding_frame_used'] or 'n/a':>7}   "
+            "(fewest internal stops)",
+            f"|    Internal stops: {qc['internal_stops']:>7}   (in the frame used)",
+        ]
+        if qc["internal_stops_placeholder_closed"] != qc["internal_stops"]:
+            lines.append(
+                f"|    Without N runs: {qc['internal_stops_placeholder_closed']:>6}   "
+                "(interior placeholders excised)"
+            )
+        lines += [
             f"|    Length % 3    : {qc['length_mod3']:>7}   {frame_tag}",
             f"|    Bait mode % 3 : {qc['expected_length_mod3']:>7}",
-            f"|    Internal stops: {qc['internal_stops']:>7}   (in inferred frame)",
-            "|    Note: MLST definitions may be internal gene fragments;",
+            "|    Note: typing definitions may be internal gene fragments;",
             "|          start/stop codons are therefore not required.",
         ]
     else:

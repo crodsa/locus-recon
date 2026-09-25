@@ -1,0 +1,21 @@
+{
+  "assembly_region_count": 9,
+  "depth_call": "SINGLE_COPY_COMPATIBLE",
+  "dosage_ci_high": 2.702,
+  "dosage_ci_low": 2.069,
+  "dosage_estimate": 2.287,
+  "dosage_flags": [
+    "INCOMPLETE_QUERY_COVERAGE",
+    "OVERLAPPING_QUERY_SPANS",
+    "ZERO_RATIO_REGIONS"
+  ],
+  "dosage_status": "REVIEW_OVERLAPPING_SPANS",
+  "gene_overlap_bp": 5915,
+  "gene_overlap_fraction": 0.83263,
+  "gene_total_aligned_bp": 12931,
+  "gene_union_covered_bp": 7016,
+  "geometry_expected_dosage": 1.843,
+  "interpretation": "The two biological candidates remain supported by independent sequence, competitive-remapping and context evidence. The aggregate depth-only call is SINGLE_COPY_COMPATIBLE: the ratio of locus to backbone median depth does not reject one copy, which is the expected reading when the assembler has split the gene across fragments, since each fragment then carries roughly one copy of depth. The additive per-query-base dosage returns 2.287 (95% block-bootstrap CI 2.069-2.702) over 98.8% of the query, but 83.3% of the query is resolved by more than one discovery interval and that value is NOT a copy count. The same span geometry with every region at single copy returns 1.843, and an empirical control on 87 single-copy pseudo-queries from this assembly (validation/depth-copy-number/overlap_null/) predicts 2.211 [1.894, 2.528] at this overlapped fraction, so the observed value is not distinguishable from the single-copy null. Depth neither supports nor refutes two copies here; it is uninformative on this geometry, and the two-copy conclusion rests on the sequence, graph and remapping evidence alone.",
+  "query_coverage_fraction": 0.9876,
+  "schema_version": "1.0"
+}

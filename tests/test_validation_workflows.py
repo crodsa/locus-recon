@@ -11,6 +11,7 @@ from Bio.Seq import Seq
 from Bio.SeqFeature import SeqFeature, SimpleLocation
 from Bio.SeqRecord import SeqRecord
 
+from locus_recon import VERSION
 from validation.common import (
     build_provenance,
     require_files,
@@ -66,8 +67,15 @@ def test_provenance_hashes_inputs_and_records_parameters(tmp_path: Path):
     assert record["workflow"] == "unit-test"
     assert record["parameters"] == {"seed": 17}
     assert record["inputs"][0]["sha256"] == sha256_file(input_file)
-    assert record["tools"]["python"]["command"] == [sys.executable, "--version"]
+    # Inputs outside the repository are named, not located: the checksum
+    # identifies them, and an absolute path only describes the machine.
+    assert record["inputs"][0]["path"] == "input.txt"
+    assert record["tools"]["python"]["command"] == [Path(sys.executable).name, "--version"]
     assert record["tools"]["python"]["version"]
+    software = record["software"]
+    assert software["name"] == "locus-recon"
+    assert software["version"] == VERSION
+    assert len(software["source_sha256"]) == 64
     # A provenance record is always produced. Inside a checkout the commit is
     # the full SHA; outside one it is a recorded value or an explicit sentinel.
     # Asserting a 40-char SHA unconditionally made this test a statement about
@@ -78,7 +86,7 @@ def test_provenance_hashes_inputs_and_records_parameters(tmp_path: Path):
 
 
 def test_provenance_survives_outside_a_git_checkout(tmp_path: Path):
-    """The released source tarballs ship validation/ but no .git.
+    """Source archives ship validation/ but no .git.
 
     Querying git outside a checkout must therefore not raise: a workflow that
     failed here would do so after writing its results and before writing
@@ -146,10 +154,10 @@ def test_committed_liba_depth_result_reports_the_additive_dosage():
     """
     root = Path(__file__).resolve().parents[1]
     evaluation = json.loads(
-        (root / "validation/liba6656-depth-hardening/evaluation.json").read_text()
+        (root / "validation/liba6656-depth/evaluation.json").read_text()
     )
 
-    assert evaluation["schema_version"] == "1.1"
+    assert evaluation["schema_version"] == "1.0"
     assert evaluation["depth_call"] == "SINGLE_COPY_COMPATIBLE"
     assert evaluation["dosage_status"] == "REVIEW_OVERLAPPING_SPANS"
     assert evaluation["dosage_estimate"] == 2.287
@@ -181,13 +189,13 @@ def test_committed_aphA1_panel_retains_full_class_and_qpcr_concordance():
     assert evaluation["quantitative_qpcr_intervals_contain_estimate"] is True
     assert hashlib.sha256(
         (root / "validation/aphA1-copy-number/results.tsv").read_bytes()
-    ).hexdigest() == "0a094c4f3490eb5ff00de959ce9bfae5737b3961edc4eb86e32cf2e1318b02bc"
+    ).hexdigest() == "0b50d0084b695f83414eb0a4c3d924e785751bf98d10700463e0cd550f6dbe4c"
     assert hashlib.sha256(
         (root / "validation/aphA1-copy-number/evaluation.json").read_bytes()
     ).hexdigest() == "c6f185f0726b688ea9069c0f049d5ba861ba11da9fb336b1b72401ded3ef5e5d"
     assert hashlib.sha256(
         (root / "validation/aphA1-copy-number/run_summary.json").read_bytes()
-    ).hexdigest() == "426acff58ca690bb8fcfda6908b580f73552a74f883c294a73770356652d7560"
+    ).hexdigest() == "63fe7d8a2723ff85468848a37c114916e127c40ace44244ffd70cce4a2da12fc"
 
 
 def test_committed_low_copy_panel_meets_prespecified_two_copy_boundary():

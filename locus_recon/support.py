@@ -544,9 +544,17 @@ def collect_per_base_support(
     mixture_min_sites: int,
     mixture_min_alt_depth: int,
 ) -> dict:
-    """Run quality-filtered mpileup, write the evidence table, and summarize it."""
+    """Run quality-filtered mpileup, write the evidence table, and summarize it.
+
+    ``-A`` keeps paired reads that are not flagged as properly paired.  On a
+    reconstructed allele a few hundred bases long, many mates fall outside the
+    reference, and at low depth the aligner cannot estimate an insert size at
+    all, so no pair is flagged proper.  mpileup's default would then discard
+    every paired read, and it discards them unevenly by strand near each end,
+    which the strand-bias test would read as an artefact of the data.
+    """
     command = [
-        samtools_path, "mpileup", "-aa", "-s", "-d", "1000000",
+        samtools_path, "mpileup", "-A", "-aa", "-s", "-d", "1000000",
         "-Q", str(min_base_quality), "-q", str(min_mapping_quality),
         "-f", allele_fasta, sorted_bam,
     ]

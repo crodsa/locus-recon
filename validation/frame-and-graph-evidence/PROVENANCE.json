@@ -1,64 +1,133 @@
 {
-  "created_utc": "2026-09-18T20:53:10.825308+00:00",
-  "git_commit": "UNAVAILABLE (fatal: not a git repository (or any parent up to mount point /))",
-  "inputs": [
-    {
-      "path": "/data/PROJECTS/locus-recon-validation/repo/validation/liba6656-gfa-rerun/tcdB_111_ungapped_baits.fasta",
-      "sha256": "62662d9b6a8fc4f7f7a93a2336e2e3770156d72f6dbeb9f4d1454a11b4b22270",
-      "size_bytes": 789118
+  "runs": {
+    "check_6_path_scoring": {
+      "created_utc": "2026-09-18T20:53:10.825308+00:00",
+      "inputs": [
+        {
+          "path": "validation/liba6656-gfa-rerun/tcdB_111_ungapped_baits.fasta",
+          "sha256": "62662d9b6a8fc4f7f7a93a2336e2e3770156d72f6dbeb9f4d1454a11b4b22270",
+          "size_bytes": 789118
+        },
+        {
+          "path": "validation/liba6656-gfa-rerun/assembly_graph_after_simplification.gfa",
+          "sha256": "fa537d7b98a5a63c87415fc12eafc55a8c874c18b97f3c5660aa7d175a614aad",
+          "size_bytes": 14921
+        },
+        {
+          "path": "ERR467623_1.fastq.gz",
+          "sha256": "a40fd600fc724c413bafeeb27d2c018f6b9eb352895e7b92fdee799017b99595",
+          "size_bytes": 80763155
+        },
+        {
+          "path": "ERR467623_2.fastq.gz",
+          "sha256": "b72fe9e8640e693dcd33fc4e84918f6a801b71c4d6e6e233b46c88c0a6be030d",
+          "size_bytes": 79496842
+        }
+      ],
+      "parameters": {
+        "ambiguous_window_bp": 150,
+        "deposit": "validation/liba6656-gfa-rerun",
+        "flank_bp": 40,
+        "graph_path_max_length_bp": 9000,
+        "graph_path_min_length_bp": 8000,
+        "path_scoring_reads": true,
+        "placeholder_bp": 100,
+        "threads": 24
+      },
+      "schema_version": "1.0",
+      "software": {
+        "name": "locus-recon",
+        "version": "1.0.0"
+      },
+      "tools": {
+        "blastn": {
+          "command": [
+            "blastn",
+            "-version"
+          ],
+          "exit_code": 0,
+          "version": "blastn: 2.16.0+"
+        },
+        "python": {
+          "command": [
+            "python",
+            "--version"
+          ],
+          "exit_code": 0,
+          "version": "Python 3.11.13"
+        },
+        "samtools": {
+          "command": [
+            "samtools",
+            "--version"
+          ],
+          "exit_code": 0,
+          "version": "samtools 1.22.1"
+        }
+      },
+      "workflow": "frame_and_graph_evidence/check_6"
     },
-    {
-      "path": "/data/PROJECTS/locus-recon-validation/repo/validation/liba6656-gfa-rerun/assembly_graph_after_simplification.gfa",
-      "sha256": "fa537d7b98a5a63c87415fc12eafc55a8c874c18b97f3c5660aa7d175a614aad",
-      "size_bytes": 14921
-    },
-    {
-      "path": "/data/PROJECTS/locus-recon-validation/reads/ERR467623_1.fastq.gz",
-      "sha256": "a40fd600fc724c413bafeeb27d2c018f6b9eb352895e7b92fdee799017b99595",
-      "size_bytes": 80763155
-    },
-    {
-      "path": "/data/PROJECTS/locus-recon-validation/reads/ERR467623_2.fastq.gz",
-      "sha256": "b72fe9e8640e693dcd33fc4e84918f6a801b71c4d6e6e233b46c88c0a6be030d",
-      "size_bytes": 79496842
+    "checks_1_to_5": {
+      "created_utc": "2026-09-25T23:10:15.336948+00:00",
+      "git_commit": "f7a3e1dca6ce85b83d75c67ddfdea6834829fd02",
+      "inputs": [
+        {
+          "path": "validation/liba6656-gfa-rerun/tcdB_111_ungapped_baits.fasta",
+          "sha256": "62662d9b6a8fc4f7f7a93a2336e2e3770156d72f6dbeb9f4d1454a11b4b22270",
+          "size_bytes": 789118
+        },
+        {
+          "path": "validation/liba6656-gfa-rerun/assembly_graph_after_simplification.gfa",
+          "sha256": "fa537d7b98a5a63c87415fc12eafc55a8c874c18b97f3c5660aa7d175a614aad",
+          "size_bytes": 14921
+        }
+      ],
+      "parameters": {
+        "ambiguous_window_bp": 150,
+        "deposit": "validation/liba6656-gfa-rerun",
+        "flank_bp": 40,
+        "graph_path_max_length_bp": 9000,
+        "graph_path_min_length_bp": 8000,
+        "placeholder_bp": 100,
+        "threads": 2
+      },
+      "schema_version": "1.0",
+      "software": {
+        "git_commit": "f7a3e1dca6ce85b83d75c67ddfdea6834829fd02",
+        "git_tree_clean": false,
+        "name": "locus-recon",
+        "source_sha256": "3863abc32fb5446a72919c790cb2558217871410f441db1ecf17dde3de55cdcf",
+        "version": "1.0.0"
+      },
+      "tools": {
+        "blastn": {
+          "command": [
+            "blastn",
+            "-version"
+          ],
+          "exit_code": 0,
+          "version": "blastn: 2.16.0+"
+        },
+        "python": {
+          "command": [
+            "python",
+            "--version"
+          ],
+          "exit_code": 0,
+          "version": "Python 3.11.13"
+        },
+        "samtools": {
+          "command": [
+            "samtools",
+            "--version"
+          ],
+          "exit_code": 0,
+          "version": "samtools 1.22.1"
+        }
+      },
+      "workflow": "frame_and_graph_evidence/checks_1_to_5"
     }
-  ],
-  "parameters": {
-    "ambiguous_window_bp": 150,
-    "deposit": "validation/liba6656-gfa-rerun",
-    "flank_bp": 40,
-    "graph_path_max_length_bp": 9000,
-    "graph_path_min_length_bp": 8000,
-    "path_scoring_reads": true,
-    "placeholder_bp": 100,
-    "threads": 24
   },
   "schema_version": "1.0",
-  "tools": {
-    "blastn": {
-      "command": [
-        "blastn",
-        "-version"
-      ],
-      "exit_code": 0,
-      "version": "blastn: 2.16.0+"
-    },
-    "python": {
-      "command": [
-        "/home/crodsa/conda/envs/locus-recon/bin/python",
-        "--version"
-      ],
-      "exit_code": 0,
-      "version": "Python 3.11.13"
-    },
-    "samtools": {
-      "command": [
-        "samtools",
-        "--version"
-      ],
-      "exit_code": 0,
-      "version": "samtools 1.22.1"
-    }
-  },
   "workflow": "frame_and_graph_evidence"
 }

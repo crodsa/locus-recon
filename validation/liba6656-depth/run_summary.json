@@ -1,0 +1,32 @@
+{
+  "complete": true,
+  "created_utc": "2026-08-27T17:11:00.220245+00:00",
+  "input_sha256": {
+    "ERR467623_1.fastq.gz": "a40fd600fc724c413bafeeb27d2c018f6b9eb352895e7b92fdee799017b99595",
+    "ERR467623_2.fastq.gz": "b72fe9e8640e693dcd33fc4e84918f6a801b71c4d6e6e233b46c88c0a6be030d",
+    "LIBA6656_ST154.assembly.fasta.gz": "29a0d7a5ea71511eed56529586eee2d9b7f7712db50f07e8cd70e05abb408beb",
+    "liba6656_depth_regions.tsv": "9073ac1feb164630dc25450cd021cc96001bc02b915747bab1aabf700fa599be"
+  },
+  "note": "The executable workflow (validation/workflows/run_liba6656_depth.py) writes the full input and output records to workflow_provenance.json in its output directory.",
+  "parameters": {
+    "call_threshold": 1.5,
+    "gene_length": 7104,
+    "max_backbone_bootstrap_blocks": 512,
+    "min_bq": 20,
+    "min_mq": 20,
+    "n_boot": 1000,
+    "seed": 20260817,
+    "threads": 4
+  },
+  "schema_version": "1.0",
+  "software": {
+    "name": "locus-recon",
+    "version": "1.0.0"
+  },
+  "tools": {
+    "bwa-mem2": "2.2.1",
+    "python": "3.12.10",
+    "samtools": "1.22.1"
+  },
+  "workflow": "LIBA6656-tcdB-depth"
+}

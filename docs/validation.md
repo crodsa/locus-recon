@@ -12,10 +12,11 @@ Known alleles are aligned to the local scaffolds. Overlapping hits from multiple
 
 The candidate is aligned to a batch-shared BLAST database of known alleles.
 Extracted paired reads and singletons are independently remapped to the
-candidate. A quality-filtered samtools pileup includes zero-depth positions and
-records base quality, mapping quality, forward/reverse depth, reference and
-alternative observations, alternative fraction, and a two-sided Fisher strand
-bias test. Minimum identity, query coverage, mean depth, and breadth gates are
+candidate. A quality-filtered samtools pileup, with BAQ recalibration and `-A`
+so that read pairs not flagged as properly paired against a short candidate
+still count, includes zero-depth positions and records base quality, mapping
+quality, forward/reverse depth, reference and alternative observations,
+alternative fraction, and a two-sided Fisher strand bias test. Minimum identity, query coverage, mean depth, and breadth gates are
 applied before the result receives `SUCCESS` status.
 
 A candidate mixed site must exceed the configured alternative fraction and
@@ -23,10 +24,13 @@ depth and have alternative observations on both strands. The locus-level
 mixture call requires multiple such sites. One-strand alternatives are reported
 separately. Quality confidence additionally considers length relative to the
 bait distribution, GC deviation, ambiguous bases, reading-frame consistency,
-internal stops in bait-supported frames, depth patchiness, mean qualities,
+internal stops (the minimum over all six frames), completeness of the projected
+locus span, depth patchiness, mean qualities,
 strand balance, mixture evidence, reconstructed-reference discordance, and
-score separation from the second-best distinct local region. The QC tier and
-every downgrade reason are emitted in human-readable and tabular reports.
+score separation from the second-best distinct local region. A truncation at
+a contig end is scored once: the length checks are applied with the clipped
+bases restored. The QC tier and every downgrade reason are emitted in
+human-readable and tabular reports.
 
 ### Research-mode multi-copy analysis
 
@@ -136,8 +140,8 @@ In summary:
   set `REVIEW_OVERLAPPING_SPANS` in precedence over that, because the additive
   value is then not a copy count — see
   `validation/depth-copy-number/overlap_null/` — and `geometry_expected_dosage`
-  reports what the same spans return at unit ratios. `copies_estimate` is a
-  deprecated compatibility alias.
+  reports what the same spans return at unit ratios. `copies_estimate` carries
+  the same value as `dosage_estimate`.
 
 External validation used seven public Illumina runs of *Acinetobacter baumannii*
 strains with independently published *aphA1* copy numbers: four single-copy
@@ -171,16 +175,17 @@ The five-isolate *H. pylori* 23S panel was rerun from the frozen Illumina inputs
 and retained SPAdes graphs. All five 23S loci returned two matched contexts and
 `copy_number_call=2`; all five single-copy `gyrB` controls returned one. The raw
 23S depth ratios remained 2.546–3.221, and the workflow verified byte-equivalent
-values for all 23 archived depth columns. Because these examples
-informed the graph/depth design, they are a development and biological
-demonstration rather than an independent estimate of exact-copy sensitivity.
+values for all 23 columns of the depth-only table archived before the graph
+analysis. Because these examples informed the graph/depth design, they are a
+biological demonstration rather than an independent estimate of exact-copy
+sensitivity.
 
 The *aphA1* experiment remains the orthogonal depth-dosage application. A
 collapsed tandem array may have one graph context while its read depth supports
 many mean copies; this combination returns `DEPTH_TANDEM_COMPATIBLE` and keeps
 the continuous dosage. Regression tests freeze the retained seven-run result,
-evaluation and summary hashes so the new graph logic cannot silently replace
-the *aphA1* interpretation with a one-copy call.
+evaluation and summary hashes so the graph logic cannot silently replace the
+*aphA1* interpretation with a one-copy call.
 
 ## Known limitations
 
@@ -193,7 +198,9 @@ the *aphA1* interpretation with a one-copy call.
   sensitive at extreme depth; interpret effect size and read-level evidence as
   well as the p-value.
 - Base and mapping qualities are aligner/platform dependent. The bundled
-  thresholds were validated on a synthetic Illumina-like panel only.
+  thresholds were set on a synthetic Illumina-like panel and audited on real
+  reads from one *H. pylori* collection sequenced on one platform
+  ([`validation/tier-calibration/`](../validation/tier-calibration/README.md)).
 - Bait-derived boundary projection assumes the local HSP and target definition are homologous; remap support must cover the projected ends.
 - Reading-frame inference from allele fragments can be underdetermined. Start and stop codons are not required because many MLST definitions are internal gene fragments.
 - Length and GC distributions describe the supplied bait set and inherit its sampling bias.
