@@ -53,8 +53,10 @@ evidence links them.
 The repository includes a complete real-data example under
 [`validation/liba6656-gfa-rerun/`](../validation/liba6656-gfa-rerun/README.md).
 It shows the retained GFA, all exported terminal paths, portable provenance,
-candidate-to-path alignments and the distinction between a graph proposal and
-a competitively supported, polished candidate.
+candidate-to-path alignments, the report in which the standard workflow
+withholds the mixed, truncated consensus of the same locus, and the
+distinction between a graph proposal and a competitively supported, polished
+candidate.
 
 ## Recommended validation panel
 

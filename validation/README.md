@@ -109,7 +109,11 @@ toolchain. The complete compact deposit is under
 [`liba6656-gfa-rerun/`](liba6656-gfa-rerun/README.md). It contains the GFA,
 the exact ungapped bait FASTA, all 512 exported terminal paths, portable
 parameters and checksums, and the alignment of the two deposited reconstructed
-candidates against those paths.
+candidates against those paths. Rerun on the release code from the same
+checksummed inputs, the workflow returns the same graph up to segment numbering
+and the same 512 paths under the same numbers, and withholds the 1,955 bp mixed,
+truncated *tcdB* consensus at `SUSPECT`; the deposit records that comparison
+and the report of the rerun.
 
 The rerun restores an executable graph/path record, but it is not the graph
 file of the original exploratory analysis, which is not available. The 512

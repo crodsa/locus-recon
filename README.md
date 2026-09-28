@@ -1109,11 +1109,15 @@ preference.
 
 ### Biological application and non-identifiable dosage
 
-In LIBA-6656, the standard workflow rejected a 1,955 bp mixed and frame-anomalous
-*tcdB* sequence. Graph paths, sequence differences, competitive mapping and
-flanking context supported two complete 7,104 bp candidates that differ at 224
-nucleotides. Depth returned `SINGLE_COPY_COMPATIBLE` for its configured collapse
-test, but the discovery spans covered only 7,016 of 7,104 unique query bases and
+In LIBA-6656, the standard workflow withheld a 1,955 bp *tcdB* consensus at
+`SUSPECT`: 23 sites were mixed on both strands at a median alternative fraction
+of 0.40, and the sequence was truncated by 5,149 bp at its contig ends, which
+also accounts for a length that is not a multiple of three
+([record](validation/liba6656-gfa-rerun/README.md#verification-with-the-release-code)).
+Graph paths, sequence differences, competitive mapping and flanking context
+supported two complete 7,104 bp candidates that differ at 224 nucleotides.
+Depth returned `SINGLE_COPY_COMPATIBLE` for its configured collapse test, but
+the discovery spans covered only 7,016 of 7,104 unique query bases and
 overlapped by 5,915 bp, or 83.3% of the query. The additive dosage returns 2.287
 there, and a control on single-copy sequence from the same assembly predicts
 2.211 [1.894, 2.528] at that overlap, so the value is reported under

@@ -1,0 +1,78 @@
+{
+  "complete": true,
+  "created_utc": "2026-09-28T21:17:59.342046+00:00",
+  "git_commit": "7cd0a7310316cb95943acea7dae8b226a9703f8a",
+  "inputs": [
+    {
+      "path": "LIBA6656_ST154.assembly.fasta",
+      "sha256": "645fe52979fdb1e45b592fc095ea88c10113720494eb9f8ef80fe3e3af662de1",
+      "size_bytes": 4340618
+    },
+    {
+      "path": "validation/manifests/liba6656_depth_regions.tsv",
+      "sha256": "9073ac1feb164630dc25450cd021cc96001bc02b915747bab1aabf700fa599be",
+      "size_bytes": 512
+    },
+    {
+      "path": "ERR467623_1.fastq.gz",
+      "sha256": "a40fd600fc724c413bafeeb27d2c018f6b9eb352895e7b92fdee799017b99595",
+      "size_bytes": 80763155
+    },
+    {
+      "path": "ERR467623_2.fastq.gz",
+      "sha256": "b72fe9e8640e693dcd33fc4e84918f6a801b71c4d6e6e233b46c88c0a6be030d",
+      "size_bytes": 79496842
+    },
+    {
+      "path": "LIBA6656_tcdB_depth_result.tsv",
+      "sha256": "7d0d9c866617f4893598d1daeab62a4d878b93523ccba76356e636039cc302c9",
+      "size_bytes": 2801
+    }
+  ],
+  "parameters": {
+    "call_threshold": 1.5,
+    "gene_length": 7104,
+    "max_backbone_bootstrap_blocks": 512,
+    "min_bq": 20,
+    "min_mq": 20,
+    "n_boot": 1000,
+    "run": "ERR467623",
+    "seed": 20260817,
+    "threads": 4
+  },
+  "schema_version": "1.0",
+  "software": {
+    "git_commit": "7cd0a7310316cb95943acea7dae8b226a9703f8a",
+    "git_tree_clean": true,
+    "name": "locus-recon",
+    "source_sha256": "3863abc32fb5446a72919c790cb2558217871410f441db1ecf17dde3de55cdcf",
+    "version": "1.0.0"
+  },
+  "tools": {
+    "aligner": {
+      "command": [
+        "bwa-mem2",
+        "version"
+      ],
+      "exit_code": 0,
+      "version": "2.2.1"
+    },
+    "python": {
+      "command": [
+        "python",
+        "--version"
+      ],
+      "exit_code": 0,
+      "version": "Python 3.11.13"
+    },
+    "samtools": {
+      "command": [
+        "samtools",
+        "--version"
+      ],
+      "exit_code": 0,
+      "version": "samtools 1.22.1"
+    }
+  },
+  "workflow": "LIBA6656-tcdB-depth"
+}

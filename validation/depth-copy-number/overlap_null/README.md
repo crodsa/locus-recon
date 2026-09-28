@@ -64,6 +64,11 @@ The fit is an ordinary least-squares regression of dosage on the overlapped
 fraction, and the interval is the 95% prediction interval from the t
 distribution with n − 2 degrees of freedom.
 
+With the draft assembly whose SHA-256 is
+`645fe52979fdb1e45b592fc095ea88c10113720494eb9f8ef80fe3e3af662de1` and the
+alignment the `liba6656-depth` workflow writes, two runs of this command on the
+release code wrote the deposited CSV and JSON byte for byte.
+
 ## Files
 
 - `run_overlap_null.py` — the control, the fit and the case comparison

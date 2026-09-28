@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import csv
 import hashlib
+import importlib.util
 import json
 import sys
 from pathlib import Path
@@ -172,6 +173,76 @@ def test_committed_liba_depth_result_reports_the_additive_dosage():
         "ZERO_RATIO_REGIONS",
     ]
     assert "profile_call" not in evaluation
+
+
+def _liba6656_verifier():
+    path = (Path(__file__).resolve().parents[1]
+            / "validation/liba6656-gfa-rerun/verify_release_rerun.py")
+    spec = importlib.util.spec_from_file_location("verify_release_rerun", path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def test_graph_comparison_ignores_numbering_and_strand_but_not_links(tmp_path: Path):
+    verifier = _liba6656_verifier()
+    deposited = tmp_path / "deposited.gfa"
+    deposited.write_text(
+        "H\tVN:Z:1.0\n"
+        "S\t1\tAACCGGTTA\tDP:f:10\n"
+        "S\t2\tGGGATTTC\tDP:f:12\n"
+        "S\t3\tCATCATCAT\tDP:f:9\n"
+        "L\t1\t+\t2\t+\t0M\n"
+        "L\t2\t+\t3\t-\t0M\n"
+    )
+    # The same graph renumbered, with segment 2 stored on the other strand.
+    renumbered = tmp_path / "renumbered.gfa"
+    renumbered.write_text(
+        "S\t7\tCATCATCAT\tDP:f:9\n"
+        "S\t8\tGAAATCCC\tDP:f:12.5\n"
+        "S\t9\tAACCGGTTA\tDP:f:10\n"
+        "L\t9\t+\t8\t-\t0M\n"
+        "L\t8\t-\t7\t-\t0M\n"
+    )
+    result = verifier.compare_graphs(deposited, renumbered)
+    assert result["same_segment_sequences"] is True
+    assert result["same_links_with_segments_matched_by_sequence"] is True
+    assert [entry["segment_length_bp"] for entry in result["coverage_tag_differences"]] == [8]
+
+    rewired = tmp_path / "rewired.gfa"
+    rewired.write_text(renumbered.read_text().replace("L\t8\t-\t7\t-", "L\t8\t-\t7\t+"))
+    result = verifier.compare_graphs(deposited, rewired)
+    assert result["same_links_with_segments_matched_by_sequence"] is False
+
+
+def test_liba6656_release_rerun_reproduces_the_deposited_graph_and_paths():
+    """The release code rebuilds the deposited graph and withholds the consensus.
+
+    The graph matches up to segment numbering, the 512 terminal paths match
+    under the same names, and the standard workflow withholds the 1,955 bp
+    mixed, truncated tcdB consensus that the README describes.
+    """
+    deposit = Path(__file__).resolve().parents[1] / "validation/liba6656-gfa-rerun"
+    record = json.loads((deposit / "RELEASE_VERIFICATION.json").read_text())
+
+    assert record["software"]["version"] == VERSION
+    assert record["runs_agree"] is True
+    assert all(entry["matches_deposit"]
+               for run in record["runs"] for entry in run["inputs"].values())
+    assert record["graph"]["same_segment_sequences"] is True
+    assert record["graph"]["same_links_with_segments_matched_by_sequence"] is True
+    assert record["terminal_paths"]["same_sequence_under_same_name"] is True
+
+    with (deposit / "standard_workflow_report_tcdB.tsv").open(newline="") as handle:
+        (row,) = list(csv.DictReader(handle, delimiter="\t"))
+    report = record["runs"][0]["report"]
+    assert {field: row[field] for field in report} == report
+    assert (row["allele_length"], row["sequence_confidence"],
+            row["result_disposition"]) == ("1955", "SUSPECT", "HOLD")
+    assert (row["mixture_detected"], row["mixed_site_count"]) == ("true", "23")
+    assert row["span_clipped_bp"] == "5149"
+    assert sha256_file(deposit / "standard_workflow_reconstructed_tcdB.fasta") == (
+        record["runs"][0]["reconstructed_sha256"])
 
 
 def test_committed_aphA1_panel_retains_full_class_and_qpcr_concordance():

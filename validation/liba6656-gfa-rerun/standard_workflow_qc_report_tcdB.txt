@@ -1,0 +1,75 @@
++--------------------------------------------------------------+
+|  ALLELE QC REPORT: LIBA6656_ST154 / tcdB
++--------------------------------------------------------------+
+|  Sequence confidence: [HOLD] SUSPECT
+|  Catalogue status   : NONEXACT_MATCH
++--------------------------------------------------------------+
+|  LENGTH
+|    Reconstructed :    1955 bp
+|    Expected (med):    7101 bp
+|    Expected (mod):    7101 bp
+|    Known range   :       7101-7104
+|    IQR band      :       7098-7104
+|    Delta         :   -5146 bp  (Z-score=-4050.74)
+|    Within IQR    : NO <<
++--------------------------------------------------------------+
+|  CATALOGUE RELATIONSHIP (does not set sequence confidence)
+|    Identity      :    99.9%
+|    Query coverage:   100.0%
+|    2nd-hit ident.:   100.0%
+|    Bitscore gap  :  1019.0
++--------------------------------------------------------------+
+|  REMAP SUPPORT TO FINAL ALLELE
+|    Mapped reads  :    3025
+|    Mean depth    :   134.6x
+|    Min depth     :       0x
+|    Max depth     :     181x
+|    Breadth       :    99.9%
+|    Bases <5x     :     0.2%
+|    Bases <10x    :     0.2%
+|    (coverage patchiness is descriptive only)
++--------------------------------------------------------------+
+|  PER-BASE CERTAINTY  (tier-affecting)
+|    Low-coverage   :       3 positions (<5x)
+|    Uncertain      :      24 positions (1.23%)
+|    Terminal margin:     100 bp (mean read length)
+|    Interior       :    1755 bp
+|    Interior uncert:      16 positions (0.91%)
+|    Interior gaps  :       0 positions (0x)
++--------------------------------------------------------------+
+|  QUALITY-FILTERED PER-BASE EVIDENCE
+|    Mean base Q   :    41.9
+|    Mean mapping Q:    60.0
+|    Strand balance:   99.4%  (100%=balanced)
+|    Candidate sites:    23
+|    Mixed sites   :      23  (both strands)
+|    Strand-biased :       0
+|    Max alt fract.:   0.477
+|    Median mixture:   0.404
+|    Mixture call  :  YES <<
++--------------------------------------------------------------+
+|  SEQUENCE COMPOSITION
+|    GC content    :    25.0%  (expected: 27.4% +/- 0.1%)
+|    GC deviation  :     2.4 pp
+|    N bases       :       0   (0.000%)
++--------------------------------------------------------------+
+|  CDS INTEGRITY (all six reading frames)
+|    Bait frame(s) : +1
+|    Frame used    :      +1   (fewest internal stops)
+|    Internal stops:       0   (in the frame used)
+|    Length % 3    :       2   (differs from bait mode) <<
+|    Bait mode % 3 :       0
+|    Note: typing definitions may be internal gene fragments;
+|          start/stop codons are therefore not required.
++--------------------------------------------------------------+
+|  FLAGS
+|    >> LENGTH_ANOMALOUS (delta=5146 bp, outside 3xIQR, profile n=111)
+|    >> FRAME_LENGTH_SHIFT_TRUNCATED (length % 3 = 2; bait mode = 0; expected because the projected span is clipped by 5149 bp at a contig boundary)
+|    >> ALLELE_MIXTURE (23 bidirectional sites, median alt fraction=0.404)
+|    >> ALLELE_SPAN_CLIPPED_AT_CONTIG_END (1345 bp at contig start, 3804 bp at contig end; allele is truncated by 5149 bp)
+|    >> LOCUS_SPLIT_ACROSS_CONTIGS (1345 of the 5149 lost bp align to NODE_1_length_2075_cov_45.910396, sharing 55 bp with the reported contig)
++--------------------------------------------------------------+
+|  INTERPRETATION
+|    Evidence suggests ambiguity, weak remap support, or misassembly.
+|    -> Do NOT submit without further investigation.
++--------------------------------------------------------------+
