@@ -80,6 +80,7 @@ Usage:
 import argparse
 import csv
 import gzip
+import hashlib
 import json
 import math
 import re
@@ -105,6 +106,9 @@ ENA_FILEREPORT = (
     "&result=read_run&fields=fastq_ftp,fastq_md5&format=tsv"
 )
 BAIT_ASSEMBLY = "GCF_000008525.1"          # H. pylori 26695, the fixed bait source
+# SPAdes memory cap in GB (-m) for drafts and local assemblies; --memory-gb
+# lowers it on machines with less RAM.  It bounds resources, not results.
+SPADES_MEMORY_GB = 32
 
 # Prespecified shortlist for the divergence arm: single-copy H. pylori genes
 # with no known paralogue family, spanning housekeeping conservation to the
@@ -279,15 +283,26 @@ def summarise(rows, stage):
 
 
 def _fetch(url, destination):
+    """Download once; a partial download is never mistaken for a complete one."""
     destination = Path(destination)
     if destination.is_file() and destination.stat().st_size:
         return str(destination)
     destination.parent.mkdir(parents=True, exist_ok=True)
+    partial = destination.with_name(destination.name + ".part")
     with urllib.request.urlopen(url, timeout=600) as response, open(
-        destination, "wb"
+        partial, "wb"
     ) as handle:
-        shutil.copyfileobj(response, handle)
+        shutil.copyfileobj(response, handle, length=1024 * 1024)
+    partial.replace(destination)
     return str(destination)
+
+
+def _md5(path):
+    digest = hashlib.md5()
+    with open(path, "rb") as handle:
+        for block in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(block)
+    return digest.hexdigest()
 
 
 def _refseq_directory(accession):
@@ -339,8 +354,15 @@ def _reads(run, cache):
             response.read().decode().splitlines(), delimiter="\t"
         ))[0]
     paths = []
-    for url in report["fastq_ftp"].split(";"):
-        paths.append(_fetch("https://" + url, Path(cache) / Path(url).name))
+    expected = report.get("fastq_md5", "").split(";")
+    for index, url in enumerate(report["fastq_ftp"].split(";")):
+        path = _fetch("https://" + url, Path(cache) / Path(url).name)
+        # ENA publishes an MD5 for every file; a mismatch means a corrupt or
+        # truncated download, which is removed so a rerun fetches it again.
+        if index < len(expected) and expected[index] and _md5(path) != expected[index]:
+            Path(path).unlink()
+            raise RuntimeError(f"MD5 mismatch for {Path(url).name}; file removed")
+        paths.append(path)
     if len(paths) != 2:
         raise RuntimeError(f"expected a read pair for {run}, got {len(paths)} file(s)")
     return paths
@@ -388,11 +410,14 @@ def _reconstruct(repo_root, sample_dir, strain, locus, bait, draft, r1, r2, thre
         "sample_id\tassembly_path\tr1_path\tr2_path\n"
         f"{strain}\t{draft}\t{r1}\t{r2}\n"
     )
+    # --cleanup: the calibration reads only the batch report and the
+    # reconstructed candidate, both of which cleanup keeps.
     command = [
         sys.executable, "-m", "locus_recon.cli",
         "--samplesheet", str(samplesheet), "--main-output-dir", str(out),
         "--bait", bait, "--locus", locus,
-        "--threads", str(threads), "--memory-per-sample", "32", "--no-progress",
+        "--threads", str(threads), "--memory-per-sample", str(SPADES_MEMORY_GB),
+        "--no-progress", "--cleanup",
     ]
     if locus in NONCODING_LOCI:
         command.append("--noncoding-locus")
@@ -461,7 +486,7 @@ def _draft(sample_dir, r1, r2, threads, name="spades", isolate=True):
             ["spades.py"] + (["--isolate"] if isolate else []) + [
                 "-1", str(r1), "-2", str(r2),
                 "-o", str(Path(sample_dir) / name),
-                "-t", str(threads), "-m", "32",
+                "-t", str(threads), "-m", str(SPADES_MEMORY_GB),
             ], stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)
     return str(draft)
 
@@ -1028,6 +1053,7 @@ def plot_calibration(rows, outdir):
 
 
 def main():
+    global SPADES_MEMORY_GB
     parser = argparse.ArgumentParser(
         description="Calibrate the confidence tiers against known truth.",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
@@ -1036,6 +1062,10 @@ def main():
     parser.add_argument("--manifest", help="Closed-genome manifest for stages B-D.")
     parser.add_argument("--workdir", default="tier_calibration_work")
     parser.add_argument("--threads", type=int, default=8)
+    parser.add_argument(
+        "--memory-gb", type=int, default=SPADES_MEMORY_GB,
+        help="SPAdes memory cap (-m) for drafts and local assemblies.",
+    )
     parser.add_argument(
         "--divergent-loci", type=int, default=0, metavar="N",
         help="Stage C: add the N eligible single-copy loci furthest from the bait.",
@@ -1051,6 +1081,7 @@ def main():
         help="Stage D: target depths for the subsampled arm, e.g. 15,8.",
     )
     args = parser.parse_args()
+    SPADES_MEMORY_GB = args.memory_gb
 
     outdir = Path(args.outdir)
     outdir.mkdir(parents=True, exist_ok=True)
@@ -1076,6 +1107,7 @@ def main():
         "mock_case_classes": MOCK_CLASSES,
         "noncoding_loci": sorted(NONCODING_LOCI),
         "threads": args.threads,
+        "spades_memory_gb": args.memory_gb,
     }
 
     summary["stage_a_benchmarks"] = stage_a(REPO_ROOT, outdir)
