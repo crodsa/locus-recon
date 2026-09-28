@@ -87,6 +87,8 @@ import re
 import shutil
 import subprocess
 import sys
+import time
+import urllib.error
 import urllib.request
 from pathlib import Path
 
@@ -282,6 +284,33 @@ def summarise(rows, stage):
     }
 
 
+def _with_retries(action, url, attempts=4):
+    """Run a network action, retrying transient failures with backoff.
+
+    A reset or dropped connection is retried after 2, 4 and 8 s.  An HTTP
+    error status, or a proxy that refuses the destination (403, 407), is a
+    decision rather than a fault and is raised at once.
+    """
+    for attempt in range(attempts):
+        try:
+            return action()
+        except urllib.error.HTTPError:
+            raise
+        except (urllib.error.URLError, ConnectionError, TimeoutError) as error:
+            reason = str(getattr(error, "reason", error))
+            if "403" in reason or "407" in reason or attempt == attempts - 1:
+                raise
+            print(f"  network error on {url} ({reason}); retrying", flush=True)
+            time.sleep(2 ** (attempt + 1))
+
+
+def _read_url(url, timeout=300):
+    def action():
+        with urllib.request.urlopen(url, timeout=timeout) as response:
+            return response.read()
+    return _with_retries(action, url)
+
+
 def _fetch(url, destination):
     """Download once; a partial download is never mistaken for a complete one."""
     destination = Path(destination)
@@ -289,10 +318,14 @@ def _fetch(url, destination):
         return str(destination)
     destination.parent.mkdir(parents=True, exist_ok=True)
     partial = destination.with_name(destination.name + ".part")
-    with urllib.request.urlopen(url, timeout=600) as response, open(
-        partial, "wb"
-    ) as handle:
-        shutil.copyfileobj(response, handle, length=1024 * 1024)
+
+    def action():
+        with urllib.request.urlopen(url, timeout=600) as response, open(
+            partial, "wb"
+        ) as handle:
+            shutil.copyfileobj(response, handle, length=1024 * 1024)
+
+    _with_retries(action, url)
     partial.replace(destination)
     return str(destination)
 
@@ -310,8 +343,7 @@ def _refseq_directory(accession):
     prefix, digits = accession.split("_")
     body = digits.split(".")[0]
     parent = f"{NCBI_GENOMES}/{prefix}/{body[0:3]}/{body[3:6]}/{body[6:9]}/"
-    with urllib.request.urlopen(parent, timeout=300) as response:
-        listing = response.read().decode("utf-8", "replace")
+    listing = _read_url(parent).decode("utf-8", "replace")
     matches = sorted(set(re.findall(rf'href="({re.escape(accession)}_[^"/]+)/"', listing)))
     if not matches:
         raise RuntimeError(f"no RefSeq directory found for {accession}")
@@ -319,10 +351,21 @@ def _refseq_directory(accession):
 
 
 def _annotated_records(accession, cache, kind):
-    """Download and read one RefSeq annotation FASTA (``cds`` or ``rna``)."""
-    directory, name = _refseq_directory(accession)
-    filename = f"{name}_{kind}_from_genomic.fna.gz"
-    archive = _fetch(directory + filename, Path(cache) / filename)
+    """Download and read one RefSeq annotation FASTA (``cds`` or ``rna``).
+
+    A file already in the cache is read without resolving the RefSeq directory
+    again, so a resumed run needs the network only for what it lacks.
+    """
+    cached = [
+        path for path in Path(cache).glob(f"{accession}_*_{kind}_from_genomic.fna.gz")
+        if path.stat().st_size
+    ]
+    if len(cached) == 1:
+        archive = str(cached[0])
+    else:
+        directory, name = _refseq_directory(accession)
+        filename = f"{name}_{kind}_from_genomic.fna.gz"
+        archive = _fetch(directory + filename, Path(cache) / filename)
     records, header, sequence = [], None, []
     with gzip.open(archive, "rt") as handle:
         for line in handle:
@@ -349,10 +392,10 @@ def _select(records, gene=None, product=None):
 
 
 def _reads(run, cache):
-    with urllib.request.urlopen(ENA_FILEREPORT.format(run=run), timeout=300) as response:
-        report = list(csv.DictReader(
-            response.read().decode().splitlines(), delimiter="\t"
-        ))[0]
+    report = list(csv.DictReader(
+        _read_url(ENA_FILEREPORT.format(run=run)).decode().splitlines(),
+        delimiter="\t",
+    ))[0]
     paths = []
     expected = report.get("fastq_md5", "").split(";")
     for index, url in enumerate(report["fastq_ftp"].split(";")):
