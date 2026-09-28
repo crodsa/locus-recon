@@ -12,7 +12,7 @@ cannot be mistaken for a value, and this script finds every one.
 ``--values`` reads ``validation/tier-calibration/`` after the four-stage run
 and prints, slot by slot, the quantity to write in. It prints; it never edits
 the documentation, because a sentence may need rewording once its number is
-known. See ``release/SLOTS.md`` for what closes each slot.
+known. The note inside each token names the quantity that closes it.
 """
 
 from __future__ import annotations

@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.0.0 — 2026-09-25
+## 1.0.0 — 2026-09-28
 
 Initial public release. Locus-Recon reconstructs a target locus from short
 reads when the assembly has broken it across contigs or collapsed
@@ -212,9 +212,13 @@ reports the geometry and leaves the join to the analyst.
   chosen by measured distance to that bait, and a depth series that subsamples
   the accepted locus to ~15x and ~8x. On the 27 deterministic cases all six
   supported cases were accepted and exact, with no false accepts; across all
-  four stages, [[CALIB-05]] supported cases were accepted, with
-  [[CALIB-07]] false accepts and [[CALIB-08]] withheld cases exact over the
-  span they reported.
+  four stages, all 21 supported cases were accepted and all 25 accepted
+  results were exact (precision 1.00, exact 95% interval 0.86-1.00), with no
+  false accepts in 62 cases and 28 of 37 withheld cases exact over the span
+  they reported. Four exact two-copy 23S consensus sequences were accepted
+  where the design expected multi-copy loci to be withheld: the tier describes
+  the support for the reported bases, and copy number is reported by the depth
+  and graph modules.
 - A deposit reusing the curated `tcdB` alleles and local assembly graph already
   in the repository to validate orientation-independent frame metrics, the bait
   database errors, length-profile reporting, the three placeholder junction

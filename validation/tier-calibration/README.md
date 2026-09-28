@@ -35,30 +35,62 @@ housekeeping locus does, so they are counted as `supported`.
 
 62 cases with known truth, from four stages, 35 of them on real reads. The
 per-class tables of every stage are rendered from `TIER_CALIBRATION.json` into
-`tier_calibration_tables.md` by the run itself.
+`tier_calibration_tables.md` by the run itself, and `tier_calibration.pdf`
+(also `.svg`) shows the tier by case class, the top-tier rate with its exact
+interval, and the depth series.
 
 ### All four stages
 
-[[CALIB-13 per-class table for all four stages, pasted from tier_calibration_tables.md]]
+| case class | reached the top tier | top-tier precision (95% CI) | false accepts | withheld but exact |
+|---|---|---|---|---|
+| `supported` | 21 / 21 | 1.00 (0.84-1.00) | 0 | 0 |
+| `divergent` | 0 / 5 | — | 0 | 0 |
+| `low-depth` | 0 / 10 | — | 0 | 9 |
+| `truncated` | 0 / 11 | — | 0 | 11 |
+| `multi-copy` | 4 / 5 | 1.00 (0.40-1.00) | 0 | 0 |
+| `degraded` | 0 / 10 | — | 0 | 8 |
+| **all** | 25 / 62 | 1.00 (0.86-1.00) | 0 | 28 |
 
-Four statements answer the question the deposit asks. The first three are
-settled on the deterministic stage below and are tested again on real reads
-here; the fourth needs the real-read stages.
+The stages on real reads were run twice from the same inputs, and the 35
+per-case results of stages B to D were identical between the runs.
 
-1. **Is the top tier reachable, and is it precise?** Supported cases that
-   reached `HIGH`: [[CALIB-05]]. Precision of `HIGH`: [[CALIB-06]]. False
-   accepts: [[CALIB-07]].
+Four statements answer the question the deposit asks, and one prespecified
+expectation was not met.
+
+1. **Is the top tier reachable, and is it precise?** All 21 supported cases
+   reached `HIGH` and every one matched truth exactly. All 25 results reported
+   at `HIGH` were exact (precision 1.00, exact 95% interval 0.86-1.00), and
+   there were no false accepts in 62 cases.
 2. **An overall acceptance rate is not a performance measure.** Most cases
    were built or subsampled to be refused, so the rate is a property of the
    case mix. On a dataset of fragmented or hypervariable targets it is expected
    to approach zero, and that is the designed behaviour rather than a failure.
-3. **A withheld result is not a wrong result.** Withheld cases that
-   reconstructed truth exactly over the span they reported: [[CALIB-08]]. The
-   tier states what the reads establish, not what the sequence happens to be,
-   so a withheld result means "not established", never "incorrect".
+3. **A withheld result is not a wrong result.** 28 of the 37 withheld cases
+   reconstructed truth exactly over the span they reported. The tier states
+   what the reads establish, not what the sequence happens to be, so a
+   withheld result means "not established", never "incorrect".
 4. **Where the reported bases disagree with truth, what tier did they get?**
-   [[CALIB-09]]. For every disagreement, `relation_to_annotation` in the
-   per-case tables separates a base difference from a boundary difference.
+   Two reported sequences disagree with truth in their bases, and both were
+   withheld: the mock paralogue control (5 of 507 bases, at the positions that
+   tell the paralogue apart; `SUSPECT`) and *gyrB* of Hpfe0002 at ~8x (99.96%
+   over 2,322 bp, one substitution; `LOW`, with
+   `REDUCED_REMAP_DEPTH (mean=5.6x)`, `PATCHY_REMAP_SUPPORT (33.2% <5x)` and
+   `ELEVATED_UNCERTAIN_BASES (6.66% interior)`). Every other reported
+   sequence that is not exact (Hpfe0006 23S and the five *cagA* alleles)
+   differs from truth only at its boundary, as `relation_to_annotation` in the
+   per-case tables records.
+
+**The prespecified expectation for `multi-copy` was not met.** The class table
+above expected multi-copy loci to be withheld even when the consensus is exact.
+Four of the five two-copy 23S loci reached `HIGH` instead, each identical to
+the annotated copy. The two copies are identical, so every read supports every
+reported base, and the tier states that support: it is not a copy-number
+statement. Checked as a coding sequence, the 23S gene would be withheld by frame
+flags that have nothing to do with copy number; reconstructed with
+`--noncoding-locus`, as a non-coding locus must be, it is not withheld. Copy
+number is the question of the depth and graph modules, which on these genomes
+return a depth excess over one copy and two graph contexts
+(`../low-copy-23S/`).
 
 ## Stage A: deposited benchmarks (27 cases, deterministic)
 
@@ -101,10 +133,13 @@ so reading-frame checks are not applied to it. Accessions:
 
 | Quantity | Result |
 |---|---|
-| *gyrB* loci at `HIGH` that match the annotated gene exactly | [[CALIB-02]] of 5 |
-| Identity of the *gyrB* reconstructions to the nearest catalogue allele | [[CALIB-03]] |
-| Two-copy 23S loci: tiers, and consensus exact to the annotation | [[CALIB-12]] |
-| Reconstructions that were not exact, and how they were reported | [[CALIB-04]] |
+| *gyrB* loci at `HIGH` that match the annotated gene exactly | 5 of 5 |
+| Identity of the *gyrB* reconstructions to the nearest catalogue allele | 96.2-96.7% |
+| Two-copy 23S loci: tiers, and consensus exact to the annotation | `HIGH` x 4, all exact; `SUSPECT` x 1 (Hpfe0006, below) |
+| Reconstructions that were not exact, and how they were reported | Hpfe0006 23S: identical to the annotated copy over 2,570 bp but truncated by 317 bp at a contig end; `SUSPECT` and `HOLD`, with `LOCUS_SPLIT_ACROSS_CONTIGS` naming `NODE_2_length_784_cov_947.458274` as carrying all 317 missing bases |
+
+Catalogue distance does not by itself suppress the tier: every *gyrB* allele is
+exact at `HIGH` while its nearest catalogue allele sits 3-4 points away.
 
 ## Stage C: divergent single-copy loci (15 cases)
 
@@ -117,7 +152,21 @@ furthest from the bait allele are used. Every candidate and its per-genome copy
 count is deposited in `locus_selection.tsv`; per-case results in
 `tier_calibration_divergent_loci.tsv`.
 
-[[CALIB-11 per-locus table: mean identity to the bait, bait length, cases at HIGH, relation to truth]]
+| locus | mean identity to the bait | bait length | reached `HIGH` | truth |
+|---|---|---|---|---|
+| *ureB* | 97.2% | 1,710 bp | 5 / 5 | exact |
+| *glmM* | 96.0% | 1,338 bp | 5 / 5 | exact |
+| *cagA* | **88.7%** | 3,561 bp | 0 / 5 | identical over the overlap; boundary differs by -12 to +33 bp |
+
+*cagA* is the informative case. At 88.7% identity to the one-allele bait the
+tier falls to `MEDIUM` in three genomes and `SUSPECT` in two, and in all five
+the reported sequence is identical to the annotated allele over the whole
+overlap while ending somewhere else than the annotation does. The two
+candidates that run past the annotated boundary also carry internal stop
+codons in their best frame and are held at `SUSPECT`; the three that end short
+of it carry only a length deviation from a one-allele profile and are reported
+at `MEDIUM`. The withholding is a response to an uncertain boundary in a locus
+whose 3' end carries a variable repeat, not to wrong bases.
 
 A locus is counted as `divergent` only when its measured identity to the bait
 is below 95%; a selected locus that sits as close to the bait as the
@@ -125,9 +174,11 @@ housekeeping locus is counted as `supported`. Where a divergent locus is
 withheld, `relation_to_annotation` separates a response to wrong bases from a
 response to an uncertain boundary.
 
-Loci in the shortlist that the bait assembly or the closed genomes do not
-annotate under the same gene name are dropped for lack of a comparable
-annotation, not for biology; the counts are in `locus_selection.tsv`.
+Three shortlisted loci are shorter than the 1,200 bp minimum in the bait
+(*recA*, *ftsZ*, *rocF*), and three have no comparable annotation: *katA* and
+*flaA* appear under that gene name in no annotation, and *vacA* in the bait
+assembly but in none of the five closed genomes. They are excluded for those
+reasons, not for biology; the counts are in `locus_selection.tsv`.
 
 ## Stage D: depth series (10 cases)
 
@@ -137,11 +188,19 @@ deterministic and preserves the pairing, and the draft is reassembled at each
 depth so the loss is felt by the assembly as well as by the reconstruction.
 Per-case results: `tier_calibration_depth_series.tsv`.
 
-[[CALIB-10 per-depth table: tiers and exact sequences at full depth, ~15x and ~8x]]
+| depth | tiers | truth |
+|---|---|---|
+| full (stage B) | `HIGH` x 5 | 5 exact |
+| ~15x | `MEDIUM` x 5 | 5 exact |
+| ~8x | `LOW` x 4, `SUSPECT` x 1 | 4 exact, 1 with one wrong base |
 
-The question is whether the response is graded and monotone: whether a library
-that lost depth kept its tier or was accepted, and whether a reported sequence
-with a wrong base, if any, was withheld.
+The response is graded and monotone in every genome: no library that lost depth
+kept its tier, and none was accepted. The reported sequence stays exact down to
+~8x in four of five genomes; the tool withholds sequence that happens to be
+right, because at 5-7x remapped depth the reads do not establish it. The fifth
+genome, Hpfe0002, carries one substitution at ~8x and was withheld at `LOW`.
+Hpfe0001 at ~8x is held at `SUSPECT` although exact, because one interior
+position had no read support (`INTERNAL_ZERO_DEPTH_GAP`).
 
 **The arms differ in assembler mode.** The full-depth drafts use SPAdes
 `--isolate`; the subsampled drafts use SPAdes' default mode, because `--isolate`
@@ -167,8 +226,9 @@ python validation/run_tier_calibration.py \
 
 The same subsampled libraries are reassembled with `--isolate` at every depth
 and `gyrB` reconstructed again (`tier_calibration_depth_series_isolate.tsv`).
-Tier agreement with the primary series:
-[[CALIB-14 tier agreement of the --isolate control with the primary depth series]].
+The reported tier is identical to the primary series in 10 of 10 cases, and the
+agreement with truth is identical in 10 of 10, so the tier response follows
+depth rather than the assembler setting.
 The control reuses the same libraries and is therefore reported separately
 rather than counted as further calibration cases; the calibration remains 62
 cases.
