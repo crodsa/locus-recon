@@ -103,3 +103,32 @@ cannot substitute for the external two-copy panel.
   doi:10.1128/spectrum.04522-22 (hybrid-assembly methods and biological copy
   context).
 - The five RefSeq GBFF records in the frozen manifest (direct feature truth).
+
+## Editorial note on the deposited run (added 2026-09-28)
+
+This note follows the run archived in this directory, made with Locus-Recon
+1.0.0. The frozen text above is unchanged, and no criterion was relaxed after
+the result was seen.
+
+- Primary criteria 1 to 3 are met. All five 23S loci were `MULTICOPY_DEPTH`,
+  no `gyrB` control was, and every estimate, interval, error, ambiguity metric,
+  geometry, dosage status and flag is reported in `results.tsv`.
+- Graph criterion 1 is met in four of five loci. Hpfe0001, Hpfe0002, Hpfe0003
+  and Hpfe0006 returned two matched contexts and `copy_number_call=2`. At
+  Hpfe0004 both locus ends also yielded two contexts, but the traversal met a
+  cycle (`CYCLE_ENCOUNTERED`). Locus-Recon treats a traversal pruned by a cycle
+  or a safety limit as incomplete and reports its count as a lower bound, so
+  this locus is `TRAVERSAL_LIMIT_REACHED` with a lower bound of two and no exact
+  call (`copy_number_kind=LOWER_BOUND`). The bound agrees with the two deposited
+  copies but is not the exact call the criterion requires.
+- Graph criterion 2 is met: all five `gyrB` controls returned one context and
+  `copy_number_call=1`.
+- Graph criterion 3 names 23 columns. Two of them, the dosage-profile columns
+  `profile_call` and `profile_calibrated`, are not reported by the released
+  estimator; the other 21 retain identical serialized values.
+- Graph criterion 4 is met by `results.tsv`, `closed_truth_audit.json` and
+  `workflow_provenance.json`.
+
+`evaluation.json` combines primary criteria 1 and 2 with graph criteria 1 to 3
+in `all_primary_criteria_passed`, which is therefore `false`, and the workflow
+exits with status 1 when it reproduces this result.

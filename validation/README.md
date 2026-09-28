@@ -190,10 +190,16 @@ The runner downloads and verifies the five frozen paired Illumina datasets and
 closed truth records, generates SPAdes drafts from Illumina only, maps the reads
 back to those drafts, discovers 23S rRNA and `gyrB` from a fixed external
 `NC_000915.1` bait, evaluates the released depth rule unchanged, and counts bait-
-anchored contexts in the corresponding SPAdes GFA. The archived run reports
-two contexts for every 23S locus and one for every `gyrB` control while the
-workflow verifies that all 23 fields of the depth-only table, archived before
-the graph analysis, remain unchanged. Closed
+anchored contexts in the corresponding SPAdes GFA. The archived run reports one
+context for every `gyrB` control, two for four of the five 23S loci, and a lower
+bound of two at Hpfe0004, where the traversal met a cycle; the workflow
+verifies that the 21 depth fields it reports equal the depth-only table
+archived before the graph analysis. Because the prespecified graph criterion
+asks for an exact two-copy call at every 23S locus, `evaluation.json` records
+`all_primary_criteria_passed: false` and the workflow exits with status 1 when
+it reproduces this result; the depth criteria are met, and
+[`low-copy-23S/PRESPECIFICATION.md`](low-copy-23S/PRESPECIFICATION.md) ends
+with a note on each criterion. Closed
 sample-specific chromosomes are read only by the truth-audit stage. Circular
 plasmid replicons are recorded separately and do not count as chromosomes or
 contribute to chromosome feature truth. Compact completed outputs are archived

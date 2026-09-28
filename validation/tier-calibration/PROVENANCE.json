@@ -2,8 +2,8 @@
   "schema_version": "1.0",
   "stages": {
     "stage_a_benchmarks": {
-      "created_utc": "2026-09-25T23:21:24.656906+00:00",
-      "git_commit": "f7a3e1dca6ce85b83d75c67ddfdea6834829fd02",
+      "created_utc": "2026-09-28T18:35:51.744420+00:00",
+      "git_commit": "bfb4dcf334f704d2df0d30f91598ac90fcdca8b5",
       "inputs": [
         {
           "path": "validation/reference_results/validation_results.tsv",
@@ -34,13 +34,14 @@
         "noncoding_loci": [
           "23S"
         ],
-        "threads": 8,
+        "spades_memory_gb": 14,
+        "threads": 4,
         "top_disposition": "PASS",
         "top_tier": "HIGH"
       },
       "schema_version": "1.0",
       "software": {
-        "git_commit": "f7a3e1dca6ce85b83d75c67ddfdea6834829fd02",
+        "git_commit": "bfb4dcf334f704d2df0d30f91598ac90fcdca8b5",
         "git_tree_clean": false,
         "name": "locus-recon",
         "source_sha256": "3863abc32fb5446a72919c790cb2558217871410f441db1ecf17dde3de55cdcf",
@@ -57,6 +58,628 @@
         }
       },
       "workflow": "tier_calibration/stage_a"
+    },
+    "stage_b_closed_genomes": {
+      "created_utc": "2026-09-28T19:09:06.148826+00:00",
+      "git_commit": "b15eedae0377bc0a433c6b4a72f6a2903665b31b",
+      "inputs": [
+        {
+          "path": "validation/tier-calibration/closed_genome_manifest.tsv",
+          "sha256": "c4b58f88fafdbb283d5d4865675bee52bccc60a4f20bc11dde0e5fa918346f7a",
+          "size_bytes": 390
+        },
+        {
+          "path": "validation/tier-calibration/tier_calibration_closed_genomes.tsv",
+          "sha256": "f2695648db55a5b8830f06a55a32367dc2a4f21b69fb4faa8be290cf809de4d9",
+          "size_bytes": 2655
+        },
+        {
+          "path": "validation/tier-calibration/bait_23S_26695.fasta",
+          "sha256": "9d047a4bc76f4850d6191b6fb23979d5d7be104c7e2e4d443825488cea34564f",
+          "size_bytes": 2965
+        },
+        {
+          "path": "validation/tier-calibration/bait_cagA_26695.fasta",
+          "sha256": "dbe3e8125520d3b1f6bb953c070565ded955f5a5ea59008c7de35f46ca699261",
+          "size_bytes": 3652
+        },
+        {
+          "path": "validation/tier-calibration/bait_glmM_26695.fasta",
+          "sha256": "fde132015160c6fcd495bb6f31b3362ab862ee68282a6e0e5bd5d55c4343b349",
+          "size_bytes": 1397
+        },
+        {
+          "path": "validation/tier-calibration/bait_gyrB_26695.fasta",
+          "sha256": "142e0f3d46b427bf94f4b23dee0602155b69777f6071daf14803253f05535c11",
+          "size_bytes": 2396
+        },
+        {
+          "path": "validation/tier-calibration/bait_ureB_26695.fasta",
+          "sha256": "9293648af311076547d51c6d028aeee825a86538869251e46813295683c76bb5",
+          "size_bytes": 1774
+        },
+        {
+          "path": "GCF_000008525.1_ASM852v1_cds_from_genomic.fna.gz",
+          "sha256": "de8129e22419ed9747360f29df84505d514da1ea4a168c7f96c109e100f2828f",
+          "size_bytes": 532314
+        },
+        {
+          "path": "GCF_000008525.1_ASM852v1_rna_from_genomic.fna.gz",
+          "sha256": "280b389c2b03011c9d0624718229c9d758dd8100c83d409b9dd9a7f275121231",
+          "size_bytes": 4493
+        },
+        {
+          "path": "GCF_022925855.1_ASM2292585v1_cds_from_genomic.fna.gz",
+          "sha256": "86856fa75dff26531dec9cb367de6e7c58385cd03be2f80b823c7c2529e38909",
+          "size_bytes": 500594
+        },
+        {
+          "path": "GCF_022925855.1_ASM2292585v1_rna_from_genomic.fna.gz",
+          "sha256": "e4f212d28c46f564e8be9c4d4b4ba2a739c7120178cb1100ff444fa11db19035",
+          "size_bytes": 4354
+        },
+        {
+          "path": "GCF_022925875.1_ASM2292587v1_cds_from_genomic.fna.gz",
+          "sha256": "0f5fa98c8aa355f8464d68c6ea30f67d86b22c46f394460cee47af8dd7d250bc",
+          "size_bytes": 499957
+        },
+        {
+          "path": "GCF_022925875.1_ASM2292587v1_rna_from_genomic.fna.gz",
+          "sha256": "9e23bb0fea953eca68eadaedf9f2be07cfe60175175d952ab5ef70b436db2d0a",
+          "size_bytes": 4365
+        },
+        {
+          "path": "GCF_022925905.1_ASM2292590v1_cds_from_genomic.fna.gz",
+          "sha256": "9cebd2bab0703e0177961ce922f2636d18436b192d20c704d8b7085b04de04a7",
+          "size_bytes": 501839
+        },
+        {
+          "path": "GCF_022925905.1_ASM2292590v1_rna_from_genomic.fna.gz",
+          "sha256": "03a6e75d89911e15a89cc29c4669e833a4a3f4ba3b2134c2a7a69b0972df1167",
+          "size_bytes": 4382
+        },
+        {
+          "path": "GCF_022925925.1_ASM2292592v1_cds_from_genomic.fna.gz",
+          "sha256": "9699505376d0a5c8254a9872c8890bece08dc60fa8a51707e90ed05c431012b2",
+          "size_bytes": 517681
+        },
+        {
+          "path": "GCF_022925925.1_ASM2292592v1_rna_from_genomic.fna.gz",
+          "sha256": "476c8ed1b909cbf0d0ddacd25c8851da08367cd73eb0072069a43812238cc8d5",
+          "size_bytes": 4368
+        },
+        {
+          "path": "GCF_022925945.1_ASM2292594v1_cds_from_genomic.fna.gz",
+          "sha256": "c281e023f8b50ec283d8522e5275cc826fc97cb3acf4ca55faff0b00d3f6d324",
+          "size_bytes": 528705
+        },
+        {
+          "path": "GCF_022925945.1_ASM2292594v1_rna_from_genomic.fna.gz",
+          "sha256": "3e990d0327efd8ab2931bac8d68d98079d135b5e2a2d8ed7f12e03e66696534f",
+          "size_bytes": 4358
+        },
+        {
+          "path": "SRR18335501_1.fastq.gz",
+          "sha256": "594b71656a9f52c31d07bdb571c2bc65b23e113dbb424160534d96c7f3557c8a",
+          "size_bytes": 357096969
+        },
+        {
+          "path": "SRR18335501_2.fastq.gz",
+          "sha256": "02cfcc4b1e7040a0758e48223fcaf622c8c9c657de4e7a56a83a36facb1efe86",
+          "size_bytes": 362009113
+        },
+        {
+          "path": "SRR18335507_1.fastq.gz",
+          "sha256": "1c46a23cd54a2dca317a59945efdcf308acc0457519397bc773f775653f8e39f",
+          "size_bytes": 299735241
+        },
+        {
+          "path": "SRR18335507_2.fastq.gz",
+          "sha256": "986c30a9663a09a6e880635f7571332456d43555b09fa18110ad884cbccfbc75",
+          "size_bytes": 305002260
+        },
+        {
+          "path": "SRR18335523_1.fastq.gz",
+          "sha256": "5c10bc32333427a51495566e063dfea97d17eb58d6dd64de00b848c1c9e8eb94",
+          "size_bytes": 358139896
+        },
+        {
+          "path": "SRR18335523_2.fastq.gz",
+          "sha256": "c60394cb328113c2f5fe251a2d528e8e434e6ad6a2ce5e92962d06ae5e610d54",
+          "size_bytes": 364937796
+        },
+        {
+          "path": "SRR18335539_1.fastq.gz",
+          "sha256": "8190bd9856e2331c4c187cbfa8b62e1a35f24cda022fa9ae0933d21d49027bcc",
+          "size_bytes": 230619171
+        },
+        {
+          "path": "SRR18335539_2.fastq.gz",
+          "sha256": "c9e95f1d2d2c1d552f5a0d0af5e58d1ebbd73dcf3231be50ad53e5cba2a58668",
+          "size_bytes": 235048313
+        },
+        {
+          "path": "SRR18335541_1.fastq.gz",
+          "sha256": "b02778e3299009d0940602bf27ed72c4ff03386abb1c64db133fea2c141856bc",
+          "size_bytes": 221449904
+        },
+        {
+          "path": "SRR18335541_2.fastq.gz",
+          "sha256": "b35445299cdb10ba5898ce7ec6a803320fd2ff4b1ecd100df732c32854aeac0d",
+          "size_bytes": 223984990
+        }
+      ],
+      "parameters": {
+        "bait_assembly": "GCF_000008525.1",
+        "mock_case_classes": {
+          "baseline": "supported",
+          "depth_series": "degraded",
+          "fragmented": "supported",
+          "mixture": "degraded",
+          "negative": "degraded",
+          "paralog": "degraded"
+        },
+        "noncoding_loci": [
+          "23S"
+        ],
+        "spades_memory_gb": 14,
+        "threads": 4,
+        "top_disposition": "PASS",
+        "top_tier": "HIGH"
+      },
+      "schema_version": "1.0",
+      "software": {
+        "git_commit": "b15eedae0377bc0a433c6b4a72f6a2903665b31b",
+        "git_tree_clean": true,
+        "name": "locus-recon",
+        "source_sha256": "3863abc32fb5446a72919c790cb2558217871410f441db1ecf17dde3de55cdcf",
+        "version": "1.0.0"
+      },
+      "tools": {
+        "blastn": {
+          "command": [
+            "blastn",
+            "-version"
+          ],
+          "exit_code": 0,
+          "version": "blastn: 2.16.0+"
+        },
+        "python": {
+          "command": [
+            "python",
+            "--version"
+          ],
+          "exit_code": 0,
+          "version": "Python 3.11.13"
+        },
+        "spades": {
+          "command": [
+            "spades.py",
+            "--version"
+          ],
+          "exit_code": 0,
+          "version": "SPAdes genome assembler v4.2.0"
+        }
+      },
+      "workflow": "tier_calibration/stage_b"
+    },
+    "stage_c_divergent_loci": {
+      "created_utc": "2026-09-28T19:57:52.931144+00:00",
+      "git_commit": "b15eedae0377bc0a433c6b4a72f6a2903665b31b",
+      "inputs": [
+        {
+          "path": "validation/tier-calibration/closed_genome_manifest.tsv",
+          "sha256": "c4b58f88fafdbb283d5d4865675bee52bccc60a4f20bc11dde0e5fa918346f7a",
+          "size_bytes": 390
+        },
+        {
+          "path": "validation/tier-calibration/tier_calibration_divergent_loci.tsv",
+          "sha256": "dfbe963c7c3c9385e869f56f0ddd12169f676f3c4ebc17c366b75d0dd650cc43",
+          "size_bytes": 5041
+        },
+        {
+          "path": "validation/tier-calibration/bait_23S_26695.fasta",
+          "sha256": "9d047a4bc76f4850d6191b6fb23979d5d7be104c7e2e4d443825488cea34564f",
+          "size_bytes": 2965
+        },
+        {
+          "path": "validation/tier-calibration/bait_cagA_26695.fasta",
+          "sha256": "dbe3e8125520d3b1f6bb953c070565ded955f5a5ea59008c7de35f46ca699261",
+          "size_bytes": 3652
+        },
+        {
+          "path": "validation/tier-calibration/bait_glmM_26695.fasta",
+          "sha256": "fde132015160c6fcd495bb6f31b3362ab862ee68282a6e0e5bd5d55c4343b349",
+          "size_bytes": 1397
+        },
+        {
+          "path": "validation/tier-calibration/bait_gyrB_26695.fasta",
+          "sha256": "142e0f3d46b427bf94f4b23dee0602155b69777f6071daf14803253f05535c11",
+          "size_bytes": 2396
+        },
+        {
+          "path": "validation/tier-calibration/bait_ureB_26695.fasta",
+          "sha256": "9293648af311076547d51c6d028aeee825a86538869251e46813295683c76bb5",
+          "size_bytes": 1774
+        },
+        {
+          "path": "GCF_000008525.1_ASM852v1_cds_from_genomic.fna.gz",
+          "sha256": "de8129e22419ed9747360f29df84505d514da1ea4a168c7f96c109e100f2828f",
+          "size_bytes": 532314
+        },
+        {
+          "path": "GCF_000008525.1_ASM852v1_rna_from_genomic.fna.gz",
+          "sha256": "280b389c2b03011c9d0624718229c9d758dd8100c83d409b9dd9a7f275121231",
+          "size_bytes": 4493
+        },
+        {
+          "path": "GCF_022925855.1_ASM2292585v1_cds_from_genomic.fna.gz",
+          "sha256": "86856fa75dff26531dec9cb367de6e7c58385cd03be2f80b823c7c2529e38909",
+          "size_bytes": 500594
+        },
+        {
+          "path": "GCF_022925855.1_ASM2292585v1_rna_from_genomic.fna.gz",
+          "sha256": "e4f212d28c46f564e8be9c4d4b4ba2a739c7120178cb1100ff444fa11db19035",
+          "size_bytes": 4354
+        },
+        {
+          "path": "GCF_022925875.1_ASM2292587v1_cds_from_genomic.fna.gz",
+          "sha256": "0f5fa98c8aa355f8464d68c6ea30f67d86b22c46f394460cee47af8dd7d250bc",
+          "size_bytes": 499957
+        },
+        {
+          "path": "GCF_022925875.1_ASM2292587v1_rna_from_genomic.fna.gz",
+          "sha256": "9e23bb0fea953eca68eadaedf9f2be07cfe60175175d952ab5ef70b436db2d0a",
+          "size_bytes": 4365
+        },
+        {
+          "path": "GCF_022925905.1_ASM2292590v1_cds_from_genomic.fna.gz",
+          "sha256": "9cebd2bab0703e0177961ce922f2636d18436b192d20c704d8b7085b04de04a7",
+          "size_bytes": 501839
+        },
+        {
+          "path": "GCF_022925905.1_ASM2292590v1_rna_from_genomic.fna.gz",
+          "sha256": "03a6e75d89911e15a89cc29c4669e833a4a3f4ba3b2134c2a7a69b0972df1167",
+          "size_bytes": 4382
+        },
+        {
+          "path": "GCF_022925925.1_ASM2292592v1_cds_from_genomic.fna.gz",
+          "sha256": "9699505376d0a5c8254a9872c8890bece08dc60fa8a51707e90ed05c431012b2",
+          "size_bytes": 517681
+        },
+        {
+          "path": "GCF_022925925.1_ASM2292592v1_rna_from_genomic.fna.gz",
+          "sha256": "476c8ed1b909cbf0d0ddacd25c8851da08367cd73eb0072069a43812238cc8d5",
+          "size_bytes": 4368
+        },
+        {
+          "path": "GCF_022925945.1_ASM2292594v1_cds_from_genomic.fna.gz",
+          "sha256": "c281e023f8b50ec283d8522e5275cc826fc97cb3acf4ca55faff0b00d3f6d324",
+          "size_bytes": 528705
+        },
+        {
+          "path": "GCF_022925945.1_ASM2292594v1_rna_from_genomic.fna.gz",
+          "sha256": "3e990d0327efd8ab2931bac8d68d98079d135b5e2a2d8ed7f12e03e66696534f",
+          "size_bytes": 4358
+        },
+        {
+          "path": "SRR18335501_1.fastq.gz",
+          "sha256": "594b71656a9f52c31d07bdb571c2bc65b23e113dbb424160534d96c7f3557c8a",
+          "size_bytes": 357096969
+        },
+        {
+          "path": "SRR18335501_2.fastq.gz",
+          "sha256": "02cfcc4b1e7040a0758e48223fcaf622c8c9c657de4e7a56a83a36facb1efe86",
+          "size_bytes": 362009113
+        },
+        {
+          "path": "SRR18335507_1.fastq.gz",
+          "sha256": "1c46a23cd54a2dca317a59945efdcf308acc0457519397bc773f775653f8e39f",
+          "size_bytes": 299735241
+        },
+        {
+          "path": "SRR18335507_2.fastq.gz",
+          "sha256": "986c30a9663a09a6e880635f7571332456d43555b09fa18110ad884cbccfbc75",
+          "size_bytes": 305002260
+        },
+        {
+          "path": "SRR18335523_1.fastq.gz",
+          "sha256": "5c10bc32333427a51495566e063dfea97d17eb58d6dd64de00b848c1c9e8eb94",
+          "size_bytes": 358139896
+        },
+        {
+          "path": "SRR18335523_2.fastq.gz",
+          "sha256": "c60394cb328113c2f5fe251a2d528e8e434e6ad6a2ce5e92962d06ae5e610d54",
+          "size_bytes": 364937796
+        },
+        {
+          "path": "SRR18335539_1.fastq.gz",
+          "sha256": "8190bd9856e2331c4c187cbfa8b62e1a35f24cda022fa9ae0933d21d49027bcc",
+          "size_bytes": 230619171
+        },
+        {
+          "path": "SRR18335539_2.fastq.gz",
+          "sha256": "c9e95f1d2d2c1d552f5a0d0af5e58d1ebbd73dcf3231be50ad53e5cba2a58668",
+          "size_bytes": 235048313
+        },
+        {
+          "path": "SRR18335541_1.fastq.gz",
+          "sha256": "b02778e3299009d0940602bf27ed72c4ff03386abb1c64db133fea2c141856bc",
+          "size_bytes": 221449904
+        },
+        {
+          "path": "SRR18335541_2.fastq.gz",
+          "sha256": "b35445299cdb10ba5898ce7ec6a803320fd2ff4b1ecd100df732c32854aeac0d",
+          "size_bytes": 223984990
+        },
+        {
+          "path": "validation/tier-calibration/locus_selection.tsv",
+          "sha256": "cca5672e60ff8140873890c7880aa3c5a07a42c9da649eeb862fe235f31ed0a1",
+          "size_bytes": 1145
+        }
+      ],
+      "parameters": {
+        "bait_assembly": "GCF_000008525.1",
+        "divergent_loci": 3,
+        "mock_case_classes": {
+          "baseline": "supported",
+          "depth_series": "degraded",
+          "fragmented": "supported",
+          "mixture": "degraded",
+          "negative": "degraded",
+          "paralog": "degraded"
+        },
+        "noncoding_loci": [
+          "23S"
+        ],
+        "spades_memory_gb": 14,
+        "threads": 4,
+        "top_disposition": "PASS",
+        "top_tier": "HIGH"
+      },
+      "schema_version": "1.0",
+      "software": {
+        "git_commit": "b15eedae0377bc0a433c6b4a72f6a2903665b31b",
+        "git_tree_clean": true,
+        "name": "locus-recon",
+        "source_sha256": "3863abc32fb5446a72919c790cb2558217871410f441db1ecf17dde3de55cdcf",
+        "version": "1.0.0"
+      },
+      "tools": {
+        "blastn": {
+          "command": [
+            "blastn",
+            "-version"
+          ],
+          "exit_code": 0,
+          "version": "blastn: 2.16.0+"
+        },
+        "python": {
+          "command": [
+            "python",
+            "--version"
+          ],
+          "exit_code": 0,
+          "version": "Python 3.11.13"
+        },
+        "spades": {
+          "command": [
+            "spades.py",
+            "--version"
+          ],
+          "exit_code": 0,
+          "version": "SPAdes genome assembler v4.2.0"
+        }
+      },
+      "workflow": "tier_calibration/stage_c"
+    },
+    "stage_d_depth_series": {
+      "created_utc": "2026-09-28T20:00:55.021871+00:00",
+      "git_commit": "b15eedae0377bc0a433c6b4a72f6a2903665b31b",
+      "inputs": [
+        {
+          "path": "validation/tier-calibration/closed_genome_manifest.tsv",
+          "sha256": "c4b58f88fafdbb283d5d4865675bee52bccc60a4f20bc11dde0e5fa918346f7a",
+          "size_bytes": 390
+        },
+        {
+          "path": "validation/tier-calibration/tier_calibration_depth_series.tsv",
+          "sha256": "5888dfae32966fb6db577b1c83b1333b2609ccb77c927b2107fe51cf0048443c",
+          "size_bytes": 4005
+        },
+        {
+          "path": "validation/tier-calibration/bait_23S_26695.fasta",
+          "sha256": "9d047a4bc76f4850d6191b6fb23979d5d7be104c7e2e4d443825488cea34564f",
+          "size_bytes": 2965
+        },
+        {
+          "path": "validation/tier-calibration/bait_cagA_26695.fasta",
+          "sha256": "dbe3e8125520d3b1f6bb953c070565ded955f5a5ea59008c7de35f46ca699261",
+          "size_bytes": 3652
+        },
+        {
+          "path": "validation/tier-calibration/bait_glmM_26695.fasta",
+          "sha256": "fde132015160c6fcd495bb6f31b3362ab862ee68282a6e0e5bd5d55c4343b349",
+          "size_bytes": 1397
+        },
+        {
+          "path": "validation/tier-calibration/bait_gyrB_26695.fasta",
+          "sha256": "142e0f3d46b427bf94f4b23dee0602155b69777f6071daf14803253f05535c11",
+          "size_bytes": 2396
+        },
+        {
+          "path": "validation/tier-calibration/bait_ureB_26695.fasta",
+          "sha256": "9293648af311076547d51c6d028aeee825a86538869251e46813295683c76bb5",
+          "size_bytes": 1774
+        },
+        {
+          "path": "GCF_000008525.1_ASM852v1_cds_from_genomic.fna.gz",
+          "sha256": "de8129e22419ed9747360f29df84505d514da1ea4a168c7f96c109e100f2828f",
+          "size_bytes": 532314
+        },
+        {
+          "path": "GCF_000008525.1_ASM852v1_rna_from_genomic.fna.gz",
+          "sha256": "280b389c2b03011c9d0624718229c9d758dd8100c83d409b9dd9a7f275121231",
+          "size_bytes": 4493
+        },
+        {
+          "path": "GCF_022925855.1_ASM2292585v1_cds_from_genomic.fna.gz",
+          "sha256": "86856fa75dff26531dec9cb367de6e7c58385cd03be2f80b823c7c2529e38909",
+          "size_bytes": 500594
+        },
+        {
+          "path": "GCF_022925855.1_ASM2292585v1_rna_from_genomic.fna.gz",
+          "sha256": "e4f212d28c46f564e8be9c4d4b4ba2a739c7120178cb1100ff444fa11db19035",
+          "size_bytes": 4354
+        },
+        {
+          "path": "GCF_022925875.1_ASM2292587v1_cds_from_genomic.fna.gz",
+          "sha256": "0f5fa98c8aa355f8464d68c6ea30f67d86b22c46f394460cee47af8dd7d250bc",
+          "size_bytes": 499957
+        },
+        {
+          "path": "GCF_022925875.1_ASM2292587v1_rna_from_genomic.fna.gz",
+          "sha256": "9e23bb0fea953eca68eadaedf9f2be07cfe60175175d952ab5ef70b436db2d0a",
+          "size_bytes": 4365
+        },
+        {
+          "path": "GCF_022925905.1_ASM2292590v1_cds_from_genomic.fna.gz",
+          "sha256": "9cebd2bab0703e0177961ce922f2636d18436b192d20c704d8b7085b04de04a7",
+          "size_bytes": 501839
+        },
+        {
+          "path": "GCF_022925905.1_ASM2292590v1_rna_from_genomic.fna.gz",
+          "sha256": "03a6e75d89911e15a89cc29c4669e833a4a3f4ba3b2134c2a7a69b0972df1167",
+          "size_bytes": 4382
+        },
+        {
+          "path": "GCF_022925925.1_ASM2292592v1_cds_from_genomic.fna.gz",
+          "sha256": "9699505376d0a5c8254a9872c8890bece08dc60fa8a51707e90ed05c431012b2",
+          "size_bytes": 517681
+        },
+        {
+          "path": "GCF_022925925.1_ASM2292592v1_rna_from_genomic.fna.gz",
+          "sha256": "476c8ed1b909cbf0d0ddacd25c8851da08367cd73eb0072069a43812238cc8d5",
+          "size_bytes": 4368
+        },
+        {
+          "path": "GCF_022925945.1_ASM2292594v1_cds_from_genomic.fna.gz",
+          "sha256": "c281e023f8b50ec283d8522e5275cc826fc97cb3acf4ca55faff0b00d3f6d324",
+          "size_bytes": 528705
+        },
+        {
+          "path": "GCF_022925945.1_ASM2292594v1_rna_from_genomic.fna.gz",
+          "sha256": "3e990d0327efd8ab2931bac8d68d98079d135b5e2a2d8ed7f12e03e66696534f",
+          "size_bytes": 4358
+        },
+        {
+          "path": "SRR18335501_1.fastq.gz",
+          "sha256": "594b71656a9f52c31d07bdb571c2bc65b23e113dbb424160534d96c7f3557c8a",
+          "size_bytes": 357096969
+        },
+        {
+          "path": "SRR18335501_2.fastq.gz",
+          "sha256": "02cfcc4b1e7040a0758e48223fcaf622c8c9c657de4e7a56a83a36facb1efe86",
+          "size_bytes": 362009113
+        },
+        {
+          "path": "SRR18335507_1.fastq.gz",
+          "sha256": "1c46a23cd54a2dca317a59945efdcf308acc0457519397bc773f775653f8e39f",
+          "size_bytes": 299735241
+        },
+        {
+          "path": "SRR18335507_2.fastq.gz",
+          "sha256": "986c30a9663a09a6e880635f7571332456d43555b09fa18110ad884cbccfbc75",
+          "size_bytes": 305002260
+        },
+        {
+          "path": "SRR18335523_1.fastq.gz",
+          "sha256": "5c10bc32333427a51495566e063dfea97d17eb58d6dd64de00b848c1c9e8eb94",
+          "size_bytes": 358139896
+        },
+        {
+          "path": "SRR18335523_2.fastq.gz",
+          "sha256": "c60394cb328113c2f5fe251a2d528e8e434e6ad6a2ce5e92962d06ae5e610d54",
+          "size_bytes": 364937796
+        },
+        {
+          "path": "SRR18335539_1.fastq.gz",
+          "sha256": "8190bd9856e2331c4c187cbfa8b62e1a35f24cda022fa9ae0933d21d49027bcc",
+          "size_bytes": 230619171
+        },
+        {
+          "path": "SRR18335539_2.fastq.gz",
+          "sha256": "c9e95f1d2d2c1d552f5a0d0af5e58d1ebbd73dcf3231be50ad53e5cba2a58668",
+          "size_bytes": 235048313
+        },
+        {
+          "path": "SRR18335541_1.fastq.gz",
+          "sha256": "b02778e3299009d0940602bf27ed72c4ff03386abb1c64db133fea2c141856bc",
+          "size_bytes": 221449904
+        },
+        {
+          "path": "SRR18335541_2.fastq.gz",
+          "sha256": "b35445299cdb10ba5898ce7ec6a803320fd2ff4b1ecd100df732c32854aeac0d",
+          "size_bytes": 223984990
+        }
+      ],
+      "parameters": {
+        "bait_assembly": "GCF_000008525.1",
+        "depth_series": [
+          15,
+          8
+        ],
+        "mock_case_classes": {
+          "baseline": "supported",
+          "depth_series": "degraded",
+          "fragmented": "supported",
+          "mixture": "degraded",
+          "negative": "degraded",
+          "paralog": "degraded"
+        },
+        "noncoding_loci": [
+          "23S"
+        ],
+        "spades_memory_gb": 14,
+        "threads": 4,
+        "top_disposition": "PASS",
+        "top_tier": "HIGH"
+      },
+      "schema_version": "1.0",
+      "software": {
+        "git_commit": "b15eedae0377bc0a433c6b4a72f6a2903665b31b",
+        "git_tree_clean": true,
+        "name": "locus-recon",
+        "source_sha256": "3863abc32fb5446a72919c790cb2558217871410f441db1ecf17dde3de55cdcf",
+        "version": "1.0.0"
+      },
+      "tools": {
+        "blastn": {
+          "command": [
+            "blastn",
+            "-version"
+          ],
+          "exit_code": 0,
+          "version": "blastn: 2.16.0+"
+        },
+        "python": {
+          "command": [
+            "python",
+            "--version"
+          ],
+          "exit_code": 0,
+          "version": "Python 3.11.13"
+        },
+        "spades": {
+          "command": [
+            "spades.py",
+            "--version"
+          ],
+          "exit_code": 0,
+          "version": "SPAdes genome assembler v4.2.0"
+        }
+      },
+      "workflow": "tier_calibration/stage_d"
     }
   },
   "workflow": "tier_calibration"

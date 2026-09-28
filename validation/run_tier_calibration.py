@@ -80,12 +80,15 @@ Usage:
 import argparse
 import csv
 import gzip
+import hashlib
 import json
 import math
 import re
 import shutil
 import subprocess
 import sys
+import time
+import urllib.error
 import urllib.request
 from pathlib import Path
 
@@ -105,6 +108,9 @@ ENA_FILEREPORT = (
     "&result=read_run&fields=fastq_ftp,fastq_md5&format=tsv"
 )
 BAIT_ASSEMBLY = "GCF_000008525.1"          # H. pylori 26695, the fixed bait source
+# SPAdes memory cap in GB (-m) for drafts and local assemblies; --memory-gb
+# lowers it on machines with less RAM.  It bounds resources, not results.
+SPADES_MEMORY_GB = 32
 
 # Prespecified shortlist for the divergence arm: single-copy H. pylori genes
 # with no known paralogue family, spanning housekeeping conservation to the
@@ -278,16 +284,58 @@ def summarise(rows, stage):
     }
 
 
+def _with_retries(action, url, attempts=4):
+    """Run a network action, retrying transient failures with backoff.
+
+    A reset or dropped connection is retried after 2, 4 and 8 s.  An HTTP
+    error status, or a proxy that refuses the destination (403, 407), is a
+    decision rather than a fault and is raised at once.
+    """
+    for attempt in range(attempts):
+        try:
+            return action()
+        except urllib.error.HTTPError:
+            raise
+        except (urllib.error.URLError, ConnectionError, TimeoutError) as error:
+            reason = str(getattr(error, "reason", error))
+            if "403" in reason or "407" in reason or attempt == attempts - 1:
+                raise
+            print(f"  network error on {url} ({reason}); retrying", flush=True)
+            time.sleep(2 ** (attempt + 1))
+
+
+def _read_url(url, timeout=300):
+    def action():
+        with urllib.request.urlopen(url, timeout=timeout) as response:
+            return response.read()
+    return _with_retries(action, url)
+
+
 def _fetch(url, destination):
+    """Download once; a partial download is never mistaken for a complete one."""
     destination = Path(destination)
     if destination.is_file() and destination.stat().st_size:
         return str(destination)
     destination.parent.mkdir(parents=True, exist_ok=True)
-    with urllib.request.urlopen(url, timeout=600) as response, open(
-        destination, "wb"
-    ) as handle:
-        shutil.copyfileobj(response, handle)
+    partial = destination.with_name(destination.name + ".part")
+
+    def action():
+        with urllib.request.urlopen(url, timeout=600) as response, open(
+            partial, "wb"
+        ) as handle:
+            shutil.copyfileobj(response, handle, length=1024 * 1024)
+
+    _with_retries(action, url)
+    partial.replace(destination)
     return str(destination)
+
+
+def _md5(path):
+    digest = hashlib.md5()
+    with open(path, "rb") as handle:
+        for block in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(block)
+    return digest.hexdigest()
 
 
 def _refseq_directory(accession):
@@ -295,8 +343,7 @@ def _refseq_directory(accession):
     prefix, digits = accession.split("_")
     body = digits.split(".")[0]
     parent = f"{NCBI_GENOMES}/{prefix}/{body[0:3]}/{body[3:6]}/{body[6:9]}/"
-    with urllib.request.urlopen(parent, timeout=300) as response:
-        listing = response.read().decode("utf-8", "replace")
+    listing = _read_url(parent).decode("utf-8", "replace")
     matches = sorted(set(re.findall(rf'href="({re.escape(accession)}_[^"/]+)/"', listing)))
     if not matches:
         raise RuntimeError(f"no RefSeq directory found for {accession}")
@@ -304,10 +351,21 @@ def _refseq_directory(accession):
 
 
 def _annotated_records(accession, cache, kind):
-    """Download and read one RefSeq annotation FASTA (``cds`` or ``rna``)."""
-    directory, name = _refseq_directory(accession)
-    filename = f"{name}_{kind}_from_genomic.fna.gz"
-    archive = _fetch(directory + filename, Path(cache) / filename)
+    """Download and read one RefSeq annotation FASTA (``cds`` or ``rna``).
+
+    A file already in the cache is read without resolving the RefSeq directory
+    again, so a resumed run needs the network only for what it lacks.
+    """
+    cached = [
+        path for path in Path(cache).glob(f"{accession}_*_{kind}_from_genomic.fna.gz")
+        if path.stat().st_size
+    ]
+    if len(cached) == 1:
+        archive = str(cached[0])
+    else:
+        directory, name = _refseq_directory(accession)
+        filename = f"{name}_{kind}_from_genomic.fna.gz"
+        archive = _fetch(directory + filename, Path(cache) / filename)
     records, header, sequence = [], None, []
     with gzip.open(archive, "rt") as handle:
         for line in handle:
@@ -334,13 +392,20 @@ def _select(records, gene=None, product=None):
 
 
 def _reads(run, cache):
-    with urllib.request.urlopen(ENA_FILEREPORT.format(run=run), timeout=300) as response:
-        report = list(csv.DictReader(
-            response.read().decode().splitlines(), delimiter="\t"
-        ))[0]
+    report = list(csv.DictReader(
+        _read_url(ENA_FILEREPORT.format(run=run)).decode().splitlines(),
+        delimiter="\t",
+    ))[0]
     paths = []
-    for url in report["fastq_ftp"].split(";"):
-        paths.append(_fetch("https://" + url, Path(cache) / Path(url).name))
+    expected = report.get("fastq_md5", "").split(";")
+    for index, url in enumerate(report["fastq_ftp"].split(";")):
+        path = _fetch("https://" + url, Path(cache) / Path(url).name)
+        # ENA publishes an MD5 for every file; a mismatch means a corrupt or
+        # truncated download, which is removed so a rerun fetches it again.
+        if index < len(expected) and expected[index] and _md5(path) != expected[index]:
+            Path(path).unlink()
+            raise RuntimeError(f"MD5 mismatch for {Path(url).name}; file removed")
+        paths.append(path)
     if len(paths) != 2:
         raise RuntimeError(f"expected a read pair for {run}, got {len(paths)} file(s)")
     return paths
@@ -388,11 +453,14 @@ def _reconstruct(repo_root, sample_dir, strain, locus, bait, draft, r1, r2, thre
         "sample_id\tassembly_path\tr1_path\tr2_path\n"
         f"{strain}\t{draft}\t{r1}\t{r2}\n"
     )
+    # --cleanup: the calibration reads only the batch report and the
+    # reconstructed candidate, both of which cleanup keeps.
     command = [
         sys.executable, "-m", "locus_recon.cli",
         "--samplesheet", str(samplesheet), "--main-output-dir", str(out),
         "--bait", bait, "--locus", locus,
-        "--threads", str(threads), "--memory-per-sample", "32", "--no-progress",
+        "--threads", str(threads), "--memory-per-sample", str(SPADES_MEMORY_GB),
+        "--no-progress", "--cleanup",
     ]
     if locus in NONCODING_LOCI:
         command.append("--noncoding-locus")
@@ -461,7 +529,7 @@ def _draft(sample_dir, r1, r2, threads, name="spades", isolate=True):
             ["spades.py"] + (["--isolate"] if isolate else []) + [
                 "-1", str(r1), "-2", str(r2),
                 "-o", str(Path(sample_dir) / name),
-                "-t", str(threads), "-m", "32",
+                "-t", str(threads), "-m", str(SPADES_MEMORY_GB),
             ], stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)
     return str(draft)
 
@@ -1028,6 +1096,7 @@ def plot_calibration(rows, outdir):
 
 
 def main():
+    global SPADES_MEMORY_GB
     parser = argparse.ArgumentParser(
         description="Calibrate the confidence tiers against known truth.",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
@@ -1036,6 +1105,10 @@ def main():
     parser.add_argument("--manifest", help="Closed-genome manifest for stages B-D.")
     parser.add_argument("--workdir", default="tier_calibration_work")
     parser.add_argument("--threads", type=int, default=8)
+    parser.add_argument(
+        "--memory-gb", type=int, default=SPADES_MEMORY_GB,
+        help="SPAdes memory cap (-m) for drafts and local assemblies.",
+    )
     parser.add_argument(
         "--divergent-loci", type=int, default=0, metavar="N",
         help="Stage C: add the N eligible single-copy loci furthest from the bait.",
@@ -1051,6 +1124,7 @@ def main():
         help="Stage D: target depths for the subsampled arm, e.g. 15,8.",
     )
     args = parser.parse_args()
+    SPADES_MEMORY_GB = args.memory_gb
 
     outdir = Path(args.outdir)
     outdir.mkdir(parents=True, exist_ok=True)
@@ -1076,6 +1150,7 @@ def main():
         "mock_case_classes": MOCK_CLASSES,
         "noncoding_loci": sorted(NONCODING_LOCI),
         "threads": args.threads,
+        "spades_memory_gb": args.memory_gb,
     }
 
     summary["stage_a_benchmarks"] = stage_a(REPO_ROOT, outdir)
