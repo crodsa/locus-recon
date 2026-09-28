@@ -51,10 +51,13 @@ The validation datasets have different purposes.
   evidence. Estimates of 10.451 and 77.672 fell within qPCR intervals of 10 ± 2
   and 75 ± 14 copies.
 - Five hybrid-closed *Helicobacter pylori* genomes test the low-copy boundary
-  on real reads. Each has two 23S rRNA copies and one *gyrB* copy, and graph
-  evidence recovered two and one contexts respectively while the 23S depth
-  ratios remained above the two-copy expectation. This panel informed the
-  design of the graph method and is not claimed as held-out validation.
+  on real reads. Each has two 23S rRNA copies and one *gyrB* copy. Depth
+  rejected one copy at every 23S locus and at no *gyrB* locus, with 23S ratios
+  above the two-copy expectation. Graph evidence returned one context at every
+  *gyrB* locus and two at four of the five 23S loci; at the fifth the traversal
+  met a cycle, and the count was reported as a lower bound of two. This panel
+  informed the design of the graph method and is not claimed as held-out
+  validation.
 - The same five genomes, whose closed sequences are known, audit the
   reconstruction and its confidence tiers against truth on real reads, with a
   catalogue allele from a different strain as the only bait. Nine of ten
@@ -778,7 +781,8 @@ the SPAdes run that produced the draft assembly, whose contigs the BAM and
 covers only the recruited reads and cannot count genomic contexts. The bait
 used to define the locus is aligned directly to embedded GFA segments; both
 bait ends must recover the same positive number of contexts before an integer
-context count is reported.
+context count is reported, and the traversal must be exhausted: a walk pruned
+by a cycle or by the node, path or length limit yields only a lower bound.
 
 ```bash
 locus-recon-copy-number \
@@ -798,7 +802,7 @@ Interpret `copy_number_call` together with `copy_number_kind`:
 | `INTEGER_CONTEXT_COUNT` / `GRAPH_COUNT_OVER_DISCORDANT_DEPTH` | As above, but the count falls outside the depth interval (`DEPTH_GRAPH_NUMERIC_DISCORDANCE`). The graph count is returned as the better-resolved observation, and the method name records that the two lines of evidence disagree on the number. |
 | `MEAN_DEPTH_DOSAGE` / `DEPTH_TANDEM_COMPATIBLE` | The graph retains one flanking context but depth supports a collapsed tandem amplification; the continuous dosage remains authoritative. This is the expected geometry for the amplified *aphA1* example. |
 | `MEAN_DEPTH_DOSAGE` / `DEPTH_ONLY` | No exact graph count was usable; the command retains the depth estimate and flags unresolved graph evidence when a graph was supplied. |
-| `LOWER_BOUND` / `GRAPH_LOWER_BOUND` | Depth rejects one copy and the graph resolves only a lower bound on the contexts (one-sided, asymmetric, or at a traversal limit). |
+| `LOWER_BOUND` / `GRAPH_LOWER_BOUND` | Depth rejects one copy and the graph resolves only a lower bound on the contexts (one-sided, asymmetric, or from a traversal pruned by a cycle or a limit). |
 | `LOWER_BOUND` with `DEPTH_LOWER_BOUND` | Depth rejects one copy but `ambiguity_index` is below 0.70, so the dosage is only a floor; the larger of the depth floor and any graph floor is reported in `copy_number_lower_bound`. |
 | `NOT_ESTIMATED` | The evidence does not identify a count: `EVIDENCE_CONFLICT` when the graph resolves several contexts but depth is single-copy compatible, `INDETERMINATE` otherwise. Inspect status, bounds, and flags rather than coercing a number. |
 
@@ -909,7 +913,7 @@ nine complementary stages and states the role of each one.
 | Constructed 27-case dosage series | Does normalised depth separate one, two and three known copies across 20×, 50× and 100× and three GC strata? | Correct aggregate class in all cases and median absolute error of 0.04 copies | Deterministic error-free reads do not model library-specific GC bias |
 | Constructed 14-case completeness series | Does the measured shortfall equal the sequence actually missing, across one- and two-sided truncations, a reverse-orientation suffix loss and three split geometries? | Exact agreement with constructed truth in all fourteen cases, with every reported sequence identical to truth over the span its contig carries | Constructed geometries on error-free reads isolate the measurement; they do not model discovery failure on real assemblies |
 | Seven-run *aphA1* panel | Can the depth module recover a clinically relevant aminoglycoside-resistance amplification from real *A. baumannii* reads? | Concordance for four single-copy and three amplified runs, with both available qPCR values reproduced within their published intervals | Several runs belong to one clinical and selection series |
-| Five-genome 23S and *gyrB* panel | Can graph context help at the low-copy boundary when 23S depth rejects one copy but overshoots the known two-copy state? | Two 23S contexts and one *gyrB* context in every genome, with the depth measurement unchanged by the graph observation | The panel informed the design of the graph method and is not held-out performance validation |
+| Five-genome 23S and *gyrB* panel | Can graph context help at the low-copy boundary when 23S depth rejects one copy but overshoots the known two-copy state? | Depth rejected one copy at all five 23S loci and at no *gyrB* locus; the graph returned two 23S contexts in four genomes, a lower bound of two where the traversal met a cycle in the fifth, and one *gyrB* context in all five, without altering the depth measurement | The panel informed the design of the graph method and is not held-out performance validation |
 | Real-read audit of the same five genomes against their closed sequences | Does the confidence layer separate correct from incorrect reconstructions when truth is known and the catalogue is distant? | Nine of ten reconstructions exact; all five *gyrB* alleles exact at `HIGH` at 96.2-96.7% catalogue identity; the tenth, a 23S consensus truncated by 317 bp at a contig end, withheld at `SUSPECT` with the contig carrying the missing bases named | Five genomes at two loci in one species; not an estimate of exact-reconstruction sensitivity across taxa |
 | Tier calibration over every case with known truth | When the tool reports a tier, what does that tier buy the reader: is the top tier reachable, is it right when reached, and does it degrade as evidence degrades? | Deterministic stage: all six supported cases at `HIGH` and exact, no false accepts in 27 cases, and 19 of the 21 withheld cases exact over the span they reported. All four stages: all 21 supported cases at `HIGH` and exact, 25 of 25 results at `HIGH` exact (precision 1.00, exact 95% interval 0.86-1.00), no false accepts in 62 cases, and 28 of the 37 withheld cases exact; four exact two-copy 23S consensus sequences reached `HIGH` where the design expected multi-copy loci to be withheld | 62 cases, 35 on real reads; a calibration of what the tiers mean on these cases, not an estimate of sensitivity across taxa |
 | Frame, input-validation and graph-evidence checks on the deposited *tcdB* material | Do the reporting behaviours hold independently of bait orientation, are bad inputs named rather than passed on, does the graph answer for a scaffold placeholder, and can competitive scoring rank graph paths? | Identical internal-stop counts in all four orientation combinations where a forward-only scan reports 103 stops, three input errors named at the record, three of three placeholder verdicts, and a constructed positive control in which the source path is the only candidate with uniquely anchored coverage | Constructed placeholders and simulated control reads isolate the logic; on the published read pair the 512 paths cannot be separated at all, which bounds what the ranking can do with 100 bp reads |
@@ -974,8 +978,9 @@ sequences would have been downgraded and sent to review. The four exact 23S
 consensus sequences reached `HIGH` because the two copies are identical: every
 read supports every reported base, and the tier states that support. It is not
 a copy-number statement. The copy number of the same loci is what the depth and
-graph modules measure, and below they return a depth excess over one copy and
-two graph contexts in all five genomes. A `HIGH` call on a multi-copy locus
+graph modules measure, and below they return a depth excess over one copy in
+all five genomes, two graph contexts in four and a lower bound of two in the
+fifth. A `HIGH` call on a multi-copy locus
 therefore says that the reads show no second sequence state at the reported
 bases, not that the locus is single copy.
 
@@ -1000,9 +1005,15 @@ The 23S panel tested a smaller integer state. All five two-copy loci were
 `MULTICOPY_DEPTH` and all five one-copy *gyrB* controls were
 `SINGLE_COPY_COMPATIBLE`. The 23S ratios ranged from 2.546 to 3.221, above the
 two-copy expectation, and the graph observation did not alter them.
-Two-ended graph traversal recovered the deposited two-context state for 23S and
-one context for *gyrB*. Because the panel guided the design of the graph
-method, this is a demonstration rather than held-out validation.
+Two-ended graph traversal returned one context at every *gyrB* locus and two
+at four of the five 23S loci, each reported as two copies under
+`GRAPH_COUNT_OVER_DISCORDANT_DEPTH` because the depth interval lay above two.
+At Hpfe0004 both ends also yielded two contexts, but the traversal met a cycle,
+so the count was reported as a lower bound of two rather than as an exact
+call. The expectation of an exact two-copy call at every 23S locus was
+therefore met in four of five; the bound agrees with truth, and no integer
+call was wrong. Because the panel guided the design of the graph method, this
+is a demonstration rather than held-out validation.
 
 ### What a tier is worth
 
@@ -1046,7 +1057,8 @@ two-copy 23S loci reached `HIGH` instead, exact, because the tier describes
 the support for the reported bases and the two copies are identical. No false
 accept follows from it, but a `HIGH` 23S call is not a copy-number statement;
 the depth and graph modules answer that question, and on these genomes they
-report a depth excess and two graph contexts.
+report a depth excess at every 23S locus and two graph contexts at four of the
+five, with a lower bound of two at the fifth.
 
 **An overall acceptance rate is not a performance measure.** Most of the cases
 were built or subsampled to be refused: truncated by construction, mixed,

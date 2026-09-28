@@ -199,6 +199,12 @@ def test_committed_aphA1_panel_retains_full_class_and_qpcr_concordance():
 
 
 def test_committed_low_copy_panel_meets_prespecified_two_copy_boundary():
+    """The depth criteria hold; one 23S graph count is only a lower bound.
+
+    At Hpfe0004 both ends yield two contexts, but the traversal meets a cycle,
+    so the count is reported as a lower bound and the exact-call criterion is
+    met in four of five loci. No reported integer or bound contradicts truth.
+    """
     root = Path(__file__).resolve().parents[1]
     with (root / "validation/low-copy-23S/results.tsv").open(newline="") as handle:
         rows = list(csv.DictReader(handle, delimiter="\t"))
@@ -212,14 +218,30 @@ def test_committed_low_copy_panel_meets_prespecified_two_copy_boundary():
     assert len(rrna) == len(controls) == 5
     assert sum(row["depth_call"] == "MULTICOPY_DEPTH" for row in rrna) >= 4
     assert not any(row["depth_call"] == "MULTICOPY_DEPTH" for row in controls)
-    assert all(row["graph_context_count"] == "2" for row in rrna)
-    assert all(row["copy_number_call"] == "2" for row in rrna)
     assert all(row["graph_context_count"] == "1" for row in controls)
     assert all(row["copy_number_call"] == "1" for row in controls)
+
+    exact = [row for row in rrna if row["copy_number_call"] == "2"]
+    assert {row["strain"] for row in exact} == {
+        "Hpfe0001", "Hpfe0002", "Hpfe0003", "Hpfe0006"}
+    assert all(row["graph_context_count"] == "2" for row in exact)
+    assert all(row["copy_number_method"] == "GRAPH_COUNT_OVER_DISCORDANT_DEPTH"
+               for row in exact)
+    (bound,) = [row for row in rrna if row["copy_number_call"] == ""]
+    assert bound["strain"] == "Hpfe0004"
+    assert bound["graph_context_status"] == "TRAVERSAL_LIMIT_REACHED"
+    assert "CYCLE_ENCOUNTERED" in bound["graph_context_flags"].split(";")
+    assert (bound["left_context_count"], bound["right_context_count"]) == ("2", "2")
+    assert bound["copy_number_kind"] == "LOWER_BOUND"
+    assert int(bound["copy_number_lower_bound"]) <= int(bound["truth_copies"])
+
+    assert evaluation["criterion_two_copy_sensitivity_ge_0_80"] is True
+    assert evaluation["criterion_zero_control_false_positives"] is True
     assert evaluation["criterion_legacy_depth_fields_unchanged"] is True
-    assert evaluation["criterion_all_two_copy_consensus_calls_correct"] is True
+    assert evaluation["exact_two_copy_consensus_calls"] == 4
+    assert evaluation["criterion_all_two_copy_consensus_calls_correct"] is False
     assert evaluation["criterion_all_single_copy_control_consensus_calls_correct"] is True
-    assert evaluation["all_primary_criteria_passed"] is True
+    assert evaluation["all_primary_criteria_passed"] is False
 
 
 def test_low_copy_legacy_compatibility_audit_names_changed_field(tmp_path: Path):

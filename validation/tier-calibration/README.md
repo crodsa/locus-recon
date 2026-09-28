@@ -89,8 +89,9 @@ statement. Checked as a coding sequence, the 23S gene would be withheld by frame
 flags that have nothing to do with copy number; reconstructed with
 `--noncoding-locus`, as a non-coding locus must be, it is not withheld. Copy
 number is the question of the depth and graph modules, which on these genomes
-return a depth excess over one copy and two graph contexts
-(`../low-copy-23S/`).
+return a depth excess over one copy at every 23S locus and two graph contexts
+at four of the five, with a lower bound of two at the fifth, where the
+traversal met a cycle (`../low-copy-23S/`).
 
 ## Stage A: deposited benchmarks (27 cases, deterministic)
 

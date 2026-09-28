@@ -165,20 +165,30 @@ thresholds.
 The graph step aligns a selected bait to embedded SPAdes GFA segments, requires
 at least 90% union coverage of the bait, and traverses both query-oriented ends
 under explicit 5,000 bp, eight-node and 64-path limits. An exact integer is
-eligible only when both ends yield the same positive context count. One-sided
-or asymmetric results become lower bounds or indeterminate states; cycles and
-safety limits remain visible as flags. The context count does not establish
+eligible only when both ends yield the same positive context count from an
+exhausted traversal. One-sided or asymmetric results become lower bounds or
+indeterminate states, and a traversal pruned by a cycle or a safety limit
+reports its count as a lower bound, with the cause named in the flags. The
+context count does not establish
 allele-to-copy phasing, replicon closure, physical chromosome location or
 expression.
 
-The five-isolate *H. pylori* 23S panel was rerun from the frozen Illumina inputs
-and retained SPAdes graphs. All five 23S loci returned two matched contexts and
-`copy_number_call=2`; all five single-copy `gyrB` controls returned one. The raw
-23S depth ratios remained 2.546–3.221, and the workflow verified byte-equivalent
-values for all 23 columns of the depth-only table archived before the graph
-analysis. Because these examples informed the graph/depth design, they are a
-biological demonstration rather than an independent estimate of exact-copy
-sensitivity.
+The five-isolate *H. pylori* 23S panel was run from the frozen Illumina inputs
+and the SPAdes graphs of their Illumina-only drafts. Depth classified all five
+23S loci as `MULTICOPY_DEPTH` and no `gyrB` control, meeting the prespecified
+primary criteria. Four 23S loci returned two matched contexts and
+`copy_number_call=2`, under `GRAPH_COUNT_OVER_DISCORDANT_DEPTH` because the
+depth interval lay above two; at Hpfe0004 both ends also yielded two contexts,
+but the traversal met a cycle, and the count was reported as a lower bound of
+two. All five single-copy `gyrB` controls returned one. The raw 23S depth
+ratios were 2.546–3.221, and the workflow verified that the 21 depth columns
+it reports are identical to the depth-only table archived before the graph
+analysis. The graph acceptance criterion for 23S was therefore met in four of
+five loci, and the combined `all_primary_criteria_passed` flag in
+`evaluation.json` is `false`; the editorial note in
+`validation/low-copy-23S/PRESPECIFICATION.md` sets out each criterion. Because
+these examples informed the graph/depth design, they are a biological
+demonstration rather than an independent estimate of exact-copy sensitivity.
 
 The *aphA1* experiment remains the orthogonal depth-dosage application. A
 collapsed tandem array may have one graph context while its read depth supports

@@ -122,9 +122,10 @@ reports the geometry and leaves the join to the analyst.
   integer context counts, continuous mean-depth dosage, lower bounds, evidence
   conflicts and indeterminate states, with deterministic graph/depth
   reconciliation and provenance-rich JSON and TSV output. An integer count
-  outside the depth interval is returned as `GRAPH_COUNT_OVER_DISCORDANT_DEPTH`,
-  and a multicopy call with `ambiguity_index` below 0.70 is returned as a
-  `LOWER_BOUND` flagged `DEPTH_LOWER_BOUND`, since its dosage is only a floor.
+  outside the depth interval is returned as `GRAPH_COUNT_OVER_DISCORDANT_DEPTH`;
+  a count from a traversal pruned by a cycle or a safety limit is only a lower
+  bound; and a multicopy call with `ambiguity_index` below 0.70 is returned as
+  a `LOWER_BOUND` flagged `DEPTH_LOWER_BOUND`, since its dosage is only a floor.
 
 ### Structural evidence
 

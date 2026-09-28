@@ -1,19 +1,26 @@
 {
   "schema_version": "1.0",
   "workflow": "external-two-copy-23S",
-  "completed_utc": "2026-08-28T17:51:24.506711+00:00",
+  "completed_utc": "2026-09-28T20:22:55.746665+00:00",
+  "software": {
+    "name": "locus-recon",
+    "version": "1.0.0",
+    "source_sha256": "3863abc32fb5446a72919c790cb2558217871410f441db1ecf17dde3de55cdcf"
+  },
   "panel": {
     "samples": 5,
-    "two_copy_23S_calls": 5,
+    "two_copy_23S_multicopy_depth_calls": 5,
     "two_copy_sensitivity": 1.0,
     "single_copy_gyrB_false_positive_calls": 0,
-    "exact_two_copy_23S_consensus_calls": 5,
-    "exact_single_copy_gyrB_consensus_calls": 5,
     "legacy_depth_fields_unchanged": true,
-    "primary_criteria_passed": true
+    "prespecified_depth_criteria_passed": true,
+    "exact_two_copy_23S_consensus_calls": 4,
+    "two_copy_23S_graph_lower_bounds": 1,
+    "exact_single_copy_gyrB_consensus_calls": 5,
+    "all_primary_criteria_passed": false
   },
-  "interpretation": "The unchanged aggregate-depth rule separated all five two-copy 23S loci from their matched single-copy gyrB controls. The additive graph/depth consensus recovered two graph-supported contexts for all five 23S loci and one for all five gyrB controls while preserving all 23 archived depth fields. Observed 23S depth ratios remained 2.546-3.221; the panel is a development and biological demonstration, not an independent performance estimate or proof of universal exact rRNA copy-number recovery.",
-  "execution_note": "Hpfe0006 was assembled in a clean SPAdes 4.2.0 directory after an interrupted checkpoint was quarantined; only the completed clean assembly contributed to the archived result.",
+  "interpretation": "The aggregate-depth rule, fixed before this panel was analysed, classified all five two-copy 23S loci as MULTICOPY_DEPTH and all five single-copy gyrB controls as SINGLE_COPY_COMPATIBLE, meeting the prespecified primary criteria; the 21 depth fields it reports are identical to the archived depth-only values. Graph traversal returned one context for every gyrB control and two matched contexts for four of the five 23S loci, each returned as copy number 2 under GRAPH_COUNT_OVER_DISCORDANT_DEPTH because the depth interval lies above two. At Hpfe0004 both locus ends also yielded two contexts, but the traversal met a cycle, so the count is reported as a lower bound of two rather than as an exact count. The graph acceptance criterion for 23S is therefore met in four of five loci, and all_primary_criteria_passed, which requires it, is false. Observed 23S depth ratios were 2.546-3.221. The panel informed the design of the graph method; it is a biological demonstration, not an independent performance estimate or proof of universal exact rRNA copy-number recovery.",
+  "execution_note": "The five SPAdes 4.2.0 --isolate drafts (4 threads, 14 GB memory cap) were assembled from the same checksum-verified read files by the closed-genome stage of the tier calibration and reused here, since the workflow keeps an existing draft; memory_gb below therefore applied to no assembly in this run. The GFA checksums are recorded in workflow_provenance.json.",
   "parameters": {
     "call_threshold": 1.5,
     "draft_assembler": "SPAdes 4.2.0 --isolate",
@@ -32,7 +39,8 @@
     "graph_max_context_paths": 64,
     "graph_max_context_bp": 5000
   },
-  "result_sha256": "0e28c8f99ddabc9bdf7bfc0ee65ed761031a5c3045ba68ce38fa7c510fb76c29",
-  "evaluation_sha256": "1a1ce02434f88325b2e65208db6008da459e18fdb894b41c13e230989304867a",
-  "truth_audit_sha256": "33f588e487ac9a1971188eff3e7e2f3d128e08bdc7afd1e3b1b9e5a168da5f2a"
+  "result_sha256": "ce21adb778585ad81a98ec889e5bcf42591856347b6f7143e893c56b732716c7",
+  "evaluation_sha256": "108623910172f1468f2590fd3f1426dbcec41117a940b18fd38ce52fe276acd6",
+  "truth_audit_sha256": "33f588e487ac9a1971188eff3e7e2f3d128e08bdc7afd1e3b1b9e5a168da5f2a",
+  "provenance_sha256": "cd5f0e4e055fd3da821ca7455eae298d30d0a7d33b6e021084f54ff375981b75"
 }
