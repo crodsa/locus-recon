@@ -1,0 +1,14 @@
+sample_id	category	truth_allele	secondary_allele	nominal_depth	mixture_fraction	expected_outcome	read_pairs
+baseline_intact_A	baseline	mockLocus_A		40.0	0.0	exact reconstruction	401
+fragmented_mid_A	fragmented	mockLocus_A		40.0	0.0	exact reconstruction	401
+fragmented_terminal_A	fragmented	mockLocus_A		40.0	0.0	exact reconstruction	401
+depth_03x_A	depth_series	mockLocus_A		3.0	0.0	sensitivity series	31
+depth_05x_A	depth_series	mockLocus_A		5.0	0.0	sensitivity series	51
+depth_10x_A	depth_series	mockLocus_A		10.0	0.0	sensitivity series	101
+depth_20x_A	depth_series	mockLocus_A		20.0	0.0	sensitivity series	201
+mixture_05pct_B	mixture	mockLocus_A	mockLocus_B	60.0	0.05	mixture detected	603
+mixture_10pct_B	mixture	mockLocus_A	mockLocus_B	60.0	0.1	mixture detected	603
+mixture_20pct_B	mixture	mockLocus_A	mockLocus_B	60.0	0.2	mixture detected	603
+mixture_50pct_B	mixture	mockLocus_A	mockLocus_B	60.0	0.5	mixture detected	602
+paralog_control	paralog	mockLocus_A		60.0	0.0	ambiguity flagged	873
+negative_control	negative			40.0	0.0	no reconstruction	401

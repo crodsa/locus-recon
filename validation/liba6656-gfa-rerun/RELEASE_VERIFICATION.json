@@ -1,0 +1,196 @@
+{
+  "comparison": "fresh runs of the standard workflow and the terminal-path export against this deposit",
+  "graph": {
+    "coverage_tag_differences": [
+      {
+        "deposited": [
+          "DP:f:31.6478",
+          "KC:i:27945"
+        ],
+        "rerun": [
+          "DP:f:31.6501",
+          "KC:i:27947"
+        ],
+        "segment_length_bp": 938
+      },
+      {
+        "deposited": [
+          "DP:f:69.5252",
+          "KC:i:69108"
+        ],
+        "rerun": [
+          "DP:f:69.5171",
+          "KC:i:69100"
+        ],
+        "segment_length_bp": 1049
+      }
+    ],
+    "links": {
+      "deposited": 32,
+      "rerun": 32
+    },
+    "same_links_with_segments_matched_by_sequence": true,
+    "same_segment_sequences": true,
+    "segments": {
+      "deposited": 26,
+      "rerun": 26
+    }
+  },
+  "runs": [
+    {
+      "graph_sha256": "352a605be83b4d1185d3a8dc0fef586cff43be4627151aa72d169d05ad0f3504",
+      "inputs": {
+        "draft_assembly": {
+          "matches_deposit": true,
+          "sha256": "645fe52979fdb1e45b592fc095ea88c10113720494eb9f8ef80fe3e3af662de1"
+        },
+        "read_1": {
+          "matches_deposit": true,
+          "sha256": "a40fd600fc724c413bafeeb27d2c018f6b9eb352895e7b92fdee799017b99595"
+        },
+        "read_2": {
+          "matches_deposit": true,
+          "sha256": "b72fe9e8640e693dcd33fc4e84918f6a801b71c4d6e6e233b46c88c0a6be030d"
+        },
+        "ungapped_baits": {
+          "matches_deposit": true,
+          "sha256": "62662d9b6a8fc4f7f7a93a2336e2e3770156d72f6dbeb9f4d1454a11b4b22270"
+        }
+      },
+      "locus_recon_version": "1.0.0",
+      "parameters": {
+        "cleanup": false,
+        "memory_per_sample": 12,
+        "min_discovery_identity": 80.0,
+        "min_hsp_length": 50,
+        "region_padding": 300,
+        "threads": 4
+      },
+      "qc_flags": [
+        "LENGTH_ANOMALOUS (delta=5146 bp, outside 3xIQR, profile n=111)",
+        "FRAME_LENGTH_SHIFT_TRUNCATED (length % 3 = 2; bait mode = 0; expected because the projected span is clipped by 5149 bp at a contig boundary)",
+        "ALLELE_MIXTURE (23 bidirectional sites, median alt fraction=0.404)",
+        "ALLELE_SPAN_CLIPPED_AT_CONTIG_END (1345 bp at contig start, 3804 bp at contig end; allele is truncated by 5149 bp)",
+        "LOCUS_SPLIT_ACROSS_CONTIGS (1345 of the 5149 lost bp align to NODE_1_length_2075_cov_45.910396, sharing 55 bp with the reported contig)"
+      ],
+      "reconstructed_sha256": "9e48cceebc23c96429dae0dc5014335446fa9c025ce7e60906a198699eec614d",
+      "report": {
+        "allele_length": "1955",
+        "extracted_read_names": "6195",
+        "max_alt_fraction": "0.4775",
+        "median_mixed_fraction": "0.4044",
+        "mixed_site_count": "23",
+        "nearest_allele": "B7.9",
+        "nearest_allele_identity_pct": "99.9",
+        "qc_length_mod3": "2",
+        "remap_mean_depth": "134.6",
+        "result_disposition": "HOLD",
+        "sequence_confidence": "SUSPECT",
+        "span_clipped_bp": "5149",
+        "span_clipped_end_bp": "3804",
+        "span_clipped_start_bp": "1345",
+        "span_continuation_bp": "1345",
+        "span_continuation_contig": "NODE_1_length_2075_cov_45.910396",
+        "strand_biased_sites": "0"
+      },
+      "tools": {
+        "blastn": "blastn: 2.16.0+",
+        "bwa-mem2": "2.2.1",
+        "makeblastdb": "makeblastdb: 2.16.0+",
+        "samtools": "samtools 1.22.1",
+        "spades.py": "SPAdes genome assembler v4.2.0"
+      }
+    },
+    {
+      "graph_sha256": "352a605be83b4d1185d3a8dc0fef586cff43be4627151aa72d169d05ad0f3504",
+      "inputs": {
+        "draft_assembly": {
+          "matches_deposit": true,
+          "sha256": "645fe52979fdb1e45b592fc095ea88c10113720494eb9f8ef80fe3e3af662de1"
+        },
+        "read_1": {
+          "matches_deposit": true,
+          "sha256": "a40fd600fc724c413bafeeb27d2c018f6b9eb352895e7b92fdee799017b99595"
+        },
+        "read_2": {
+          "matches_deposit": true,
+          "sha256": "b72fe9e8640e693dcd33fc4e84918f6a801b71c4d6e6e233b46c88c0a6be030d"
+        },
+        "ungapped_baits": {
+          "matches_deposit": true,
+          "sha256": "62662d9b6a8fc4f7f7a93a2336e2e3770156d72f6dbeb9f4d1454a11b4b22270"
+        }
+      },
+      "locus_recon_version": "1.0.0",
+      "parameters": {
+        "cleanup": false,
+        "memory_per_sample": 12,
+        "min_discovery_identity": 80.0,
+        "min_hsp_length": 50,
+        "region_padding": 300,
+        "threads": 8
+      },
+      "qc_flags": [
+        "LENGTH_ANOMALOUS (delta=5146 bp, outside 3xIQR, profile n=111)",
+        "FRAME_LENGTH_SHIFT_TRUNCATED (length % 3 = 2; bait mode = 0; expected because the projected span is clipped by 5149 bp at a contig boundary)",
+        "ALLELE_MIXTURE (23 bidirectional sites, median alt fraction=0.404)",
+        "ALLELE_SPAN_CLIPPED_AT_CONTIG_END (1345 bp at contig start, 3804 bp at contig end; allele is truncated by 5149 bp)",
+        "LOCUS_SPLIT_ACROSS_CONTIGS (1345 of the 5149 lost bp align to NODE_1_length_2075_cov_45.910396, sharing 55 bp with the reported contig)"
+      ],
+      "reconstructed_sha256": "9e48cceebc23c96429dae0dc5014335446fa9c025ce7e60906a198699eec614d",
+      "report": {
+        "allele_length": "1955",
+        "extracted_read_names": "6195",
+        "max_alt_fraction": "0.4775",
+        "median_mixed_fraction": "0.4044",
+        "mixed_site_count": "23",
+        "nearest_allele": "B7.9",
+        "nearest_allele_identity_pct": "99.9",
+        "qc_length_mod3": "2",
+        "remap_mean_depth": "134.6",
+        "result_disposition": "HOLD",
+        "sequence_confidence": "SUSPECT",
+        "span_clipped_bp": "5149",
+        "span_clipped_end_bp": "3804",
+        "span_clipped_start_bp": "1345",
+        "span_continuation_bp": "1345",
+        "span_continuation_contig": "NODE_1_length_2075_cov_45.910396",
+        "strand_biased_sites": "0"
+      },
+      "tools": {
+        "blastn": "blastn: 2.16.0+",
+        "bwa-mem2": "2.2.1",
+        "makeblastdb": "makeblastdb: 2.16.0+",
+        "samtools": "samtools 1.22.1",
+        "spades.py": "SPAdes genome assembler v4.2.0"
+      }
+    }
+  ],
+  "runs_agree": true,
+  "schema_version": "1.0",
+  "software": {
+    "git_commit": "7cd0a7310316cb95943acea7dae8b226a9703f8a",
+    "git_tree_clean": true,
+    "name": "locus-recon",
+    "source_sha256": "3863abc32fb5446a72919c790cb2558217871410f441db1ecf17dde3de55cdcf",
+    "version": "1.0.0"
+  },
+  "terminal_paths": {
+    "length_range_bp": {
+      "deposited": [
+        8456,
+        8538
+      ],
+      "rerun": [
+        8456,
+        8538
+      ]
+    },
+    "names_differing": [],
+    "paths": {
+      "deposited": 512,
+      "rerun": 512
+    },
+    "same_sequence_under_same_name": true
+  }
+}

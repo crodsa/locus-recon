@@ -1,0 +1,3 @@
+profile	bait_alleles	profile_underpowered	reported_n	length_flag	underpowered_flag
+three alleles	3	True	3	LENGTH_ANOMALOUS (delta=3551 bp, outside 3xIQR, profile n=3)	yes
+110 alleles	110	False	110	LENGTH_ANOMALOUS (delta=3551 bp, outside 3xIQR, profile n=110)	no

@@ -1,0 +1,35 @@
+{
+  "all_prespecified_criteria_passed": true,
+  "locus_region": "CP080452.1:250422-251237",
+  "parameters": {
+    "bootstrap_block_size": 500,
+    "bootstrap_resamples": 1000,
+    "call_threshold": 1.5,
+    "max_backbone_bootstrap_blocks": 512,
+    "min_bq": 20,
+    "min_mq": 20,
+    "seed": 20260817,
+    "threads": 4
+  },
+  "reference": "GCA_019458485.1",
+  "runs": [
+    "SRR14998418",
+    "SRR15115349",
+    "SRR15734211",
+    "SRR15734212",
+    "SRR15734215",
+    "SRR17023755",
+    "SRR17023784"
+  ],
+  "schema_version": "1.0",
+  "software": {
+    "name": "locus-recon",
+    "version": "1.0.0"
+  },
+  "tools": {
+    "bwa-mem2": "2.2.1",
+    "python": "3.12.10",
+    "samtools": "1.22.1"
+  },
+  "workflow": "aphA1-seven-run-copy-number"
+}

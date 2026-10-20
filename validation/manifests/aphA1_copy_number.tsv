@@ -1,0 +1,8 @@
+sample	illumina_run	longread_run	locus	truth_qpcr_copies	truth_wgs_coverage_fold	tobramycin_mic_ug_ml	truth_source	expected_ratio_class	notes
+MRSN3361	SRR15734215	-	aphA1	1	1	0.5	McGann 2014 mBio Table 1	~1x	day 3 susceptible control
+MRSN3363	SRR15734212	-	aphA1	1	1	0.5	McGann 2014 mBio Table 1	~1x	day 3 susceptible control
+MRSN3364	SRR15734211	-	aphA1	1	1	0.5	McGann 2014 mBio Table 1	~1x	day 8 susceptible control
+MRSN56	SRR14998418	SRR14998417	aphA1	1	1	0.5	McGann 2014 Table 1 and closed GCA_019458485	~1x	reference strain; long-read-resolved IS26 context
+MRSN57	SRR17023755	SRR17023754	aphA1	10 (+/-2)	~6	8	McGann 2014 qPCR/WGS and Harmer 2022 closed genome	>>1x	15.2 kb amplified region
+MRSN58	SRR17023784	SRR17023783	aphA1	75 (+/-14)	~65	16	McGann 2014 qPCR/WGS and Harmer 2022 closed genome	>>1x	approximately 65 tandem Tn6020 copies
+MRSN56_day10	SRR15115349	SRR15115348	aphA1	elevated (no published point value for day 10)	-	-	McGann 2014 in-vitro induction	>1x	exploratory biological positive without a day-10 point truth

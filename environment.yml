@@ -1,0 +1,16 @@
+name: locus-recon
+channels:
+  - conda-forge
+  - bioconda
+  - nodefaults
+dependencies:
+  # Version-pinned top-level dependencies for the publication release.
+  - python=3.11.13
+  - pip=25.2
+  - tqdm=4.67.1
+  - biopython=1.87
+  - numpy=1.26.4
+  - blast=2.16.0
+  - bwa-mem2=2.2.1
+  - samtools=1.22.1
+  - spades=4.2.0

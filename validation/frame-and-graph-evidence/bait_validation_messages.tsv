@@ -1,0 +1,4 @@
+derived_input	outcome	message
+identifier past the parse_seqids limit	rejected	Bait FASTA record 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX' has a 64-character identifier. makeblastdb -parse_seqids rejects local identifiers longer than 50 characters, so the bait database cannot be built. Shorten the identifier (the text before the first space in the header) and rerun.
+alignment gaps restored	rejected	Bait FASTA record 'B1.1' contains invalid DNA symbols: -. The file looks like a gapped alignment rather than a set of alleles; remove the alignment gaps before using it as a bait database.
+unrelated fragment among the alleles	accepted with warning	1 record(s) share no 25-mer with the full-length records: unrelated_fragment

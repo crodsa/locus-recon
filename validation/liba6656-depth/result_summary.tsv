@@ -1,0 +1,2 @@
+ratio	ratio_ci_low	ratio_ci_high	depth_call	dosage_estimate	dosage_ci_low	dosage_ci_high	dosage_status	dosage_flags	geometry_expected_dosage	query_coverage_fraction	gene_length	gene_total_aligned_bp	gene_union_covered_bp	gene_overlap_bp	gene_overlap_fraction	bootstrap_backbone_blocks_total	bootstrap_backbone_blocks_used
+1.21	1.111	1.349	SINGLE_COPY_COMPATIBLE	2.287	2.069	2.702	REVIEW_OVERLAPPING_SPANS	INCOMPLETE_QUERY_COVERAGE;OVERLAPPING_QUERY_SPANS;ZERO_RATIO_REGIONS	1.843	0.9876	7104	12931	7016	5915	0.83263	8439	512
