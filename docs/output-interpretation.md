@@ -215,6 +215,7 @@ are empty for `SKIP` and `FAIL` rows.
 | `qc_gc_deviation` | Absolute percentage-point difference between candidate GC and bait-set mean GC. |
 | `qc_n_count` | Number of `N` bases in the candidate. |
 | `qc_internal_stops` | Minimum internal-stop count across all six reading frames; zero when coding checks are disabled. Evaluating both strands keeps an antisense bait catalogue from producing stop codons the candidate does not have. |
+| `qc_internal_stops_placeholder_closed` | The same count after interior runs of N are removed. A lower value than `qc_internal_stops` means that the stops come from a frameshift at a scaffolding placeholder. |
 | `qc_coding_frame_used` | The frame that achieved that minimum (`+1`..`+3`, `-1`..`-3`), and the frame in which the start and stop codon checks were read. |
 | `qc_length_mod3` | Candidate length modulo three for coding-locus checks. |
 | `qc_length_profile_n` | Number of bait alleles the length median and IQR were computed from. Below five, length flags are accompanied by `CATALOGUE_LENGTH_PROFILE_UNDERPOWERED` and should be read as weakly determined. |
@@ -232,7 +233,7 @@ are empty for `SKIP` and `FAIL` rows.
 | `uncertain_base_count`, `uncertain_base_fraction` | Positions across the full candidate length at which the reported base is not adequately supported. |
 | `interior_uncertain_base_count`, `interior_uncertain_base_fraction` | The same count restricted to positions more than `terminal_margin_bp` from either end. This fraction is the tier-affecting statistic. |
 | `internal_zero_depth_positions` | Interior positions with no quality-filtered observations. |
-| `terminal_margin_bp` | Mean aligned read length measured from the remap BAM, used as the interior/edge boundary. Measured per sample, not configured. |
+| `terminal_margin_bp` | Mean read length (rounded), measured on the first 20,000 records with a sequence in the remap BAM, used as the interior/edge boundary. Measured per sample, not configured. |
 | `span_clipped_bp` | Bases the projected locus span lost to a contig boundary; the amount by which the reported allele is truncated. Split per end as `span_clipped_start_bp` and `span_clipped_end_bp`. |
 | `span_continuation_contig`, `span_continuation_bp`, `span_continuation_overlap_bp` | If another candidate contig carries the lost sequence: its name, how many of the lost bases it carries, and the query sequence it shares with the reported contig. Empty when no continuation was found. |
 | `mean_base_quality` | Mean Phred base quality across included pileup observations. |
@@ -308,16 +309,16 @@ are internal gene fragments.
 Fixed flag boundaries are summarized below. These confidence thresholds
 are distinct from the configurable minimum `SUCCESS` gates.
 
-| Evidence | No high-tier flag | Medium boundary | Low boundary; worse is severe |
+| Evidence | No high-tier flag | Medium boundary | Low boundary; worse is severe unless noted |
 |---|---:|---:|---:|
-| Identity to nearest bait | ≥97% | ≥93% | ≥85% |
+| Identity to nearest bait (descriptive; never changes the tier) | ≥97% | ≥93% | ≥85% |
 | Validation query coverage | ≥95% | ≥90% | ≥80% |
 | Fraction of `N` bases | ≤0.1% | ≤0.5% | ≤1.0% |
 | GC deviation from bait mean | ≤3 percentage points | ≤5 pp | ≤8 pp |
 | Remap mean depth | ≥20× | ≥10× | ≥5× |
 | Remap breadth | ≥99% | ≥97% | ≥90% |
 | Positions below 5× (descriptive; see below) | ≤1% | ≤5% | ≤15% |
-| Interior uncertain bases | ≤1% | ≤5% | ≤15% |
+| Interior uncertain bases (worse than 15% is still one moderate flag, not severe) | ≤1% | ≤5% | ≤15% |
 | Mean base quality | ≥Q30 | ≥Q25 | ≥Q20 |
 | Mean mapping quality | ≥Q40 | ≥Q30 | ≥Q20 |
 | Overall strand balance | ≥40% | ≥25% | ≥10% |
@@ -466,7 +467,7 @@ despite ample coverage. The certainty model is therefore not a depth cutoff.
 |---|---|
 | `ZERO_DEPTH` | No quality-filtered observations. |
 | `INSUFFICIENT_FILTERED_DEPTH` | Fewer than two quality-filtered observations, so no observation can be corroborated. |
-| `NO_BIDIRECTIONAL_SUPPORT` | Below the bidirectional-support depth threshold, the dominant base was seen on one strand only. |
+| `NO_BIDIRECTIONAL_SUPPORT` | Below the bidirectional-support depth threshold, the reported base was seen on one strand only. |
 | `EXCESS_ALTERNATIVE_SUPPORT` | Alternative fraction is at or above the maximum compatible with a single resolved base. |
 | `CREDIBLE_MIXED_SITE` | The position is a credible bidirectional mixed site, so a single base cannot be asserted. |
 | `LOW_BASE_QUALITY` | Mean base quality at the position is below `--min-base-quality`. |

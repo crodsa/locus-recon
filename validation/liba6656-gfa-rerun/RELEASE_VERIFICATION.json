@@ -67,7 +67,6 @@
         "threads": 4
       },
       "qc_flags": [
-        "LENGTH_ANOMALOUS (delta=5146 bp, outside 3xIQR, profile n=111)",
         "FRAME_LENGTH_SHIFT_TRUNCATED (length % 3 = 2; bait mode = 0; expected because the projected span is clipped by 5149 bp at a contig boundary)",
         "ALLELE_MIXTURE (23 bidirectional sites, median alt fraction=0.404)",
         "ALLELE_SPAN_CLIPPED_AT_CONTIG_END (1345 bp at contig start, 3804 bp at contig end; allele is truncated by 5149 bp)",
@@ -131,7 +130,6 @@
         "threads": 8
       },
       "qc_flags": [
-        "LENGTH_ANOMALOUS (delta=5146 bp, outside 3xIQR, profile n=111)",
         "FRAME_LENGTH_SHIFT_TRUNCATED (length % 3 = 2; bait mode = 0; expected because the projected span is clipped by 5149 bp at a contig boundary)",
         "ALLELE_MIXTURE (23 bidirectional sites, median alt fraction=0.404)",
         "ALLELE_SPAN_CLIPPED_AT_CONTIG_END (1345 bp at contig start, 3804 bp at contig end; allele is truncated by 5149 bp)",

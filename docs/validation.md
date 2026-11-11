@@ -19,9 +19,11 @@ quality, forward/reverse depth, reference and alternative observations,
 alternative fraction, and a two-sided Fisher strand bias test. Minimum identity, query coverage, mean depth, and breadth gates are
 applied before the result receives `SUCCESS` status.
 
-A candidate mixed site must exceed the configured alternative fraction and
-depth and have alternative observations on both strands. The locus-level
-mixture call requires multiple such sites. One-strand alternatives are reported
+A candidate mixed site has at least the configured number of alternative
+observations at a fraction inside the configured range. It is credible when
+the alternative allele is seen on both strands and the strand-bias test gives
+P of at least 0.01. The locus-level mixture call requires the configured
+number of credible sites. One-strand alternatives are reported
 separately. Quality confidence additionally considers length relative to the
 bait distribution, GC deviation, ambiguous bases, reading-frame consistency,
 internal stops (the minimum over all six frames), completeness of the projected

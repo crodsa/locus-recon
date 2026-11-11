@@ -21,8 +21,8 @@ complete genome + spanning long-read truth
                  +-- intact draft + 40x short reads
                  +-- central split + 40x short reads
                  +-- near-terminal split + 40x short reads
-                 +-- intact draft + 3x / 5x / 10x / 20x reads
-                 +-- allele A:B mixtures at 95:5 / 90:10 / 80:20 / 50:50
+                 +-- central split + 3x / 5x / 10x / 20x reads
+                 +-- central split + allele A:B mixtures at 95:5 / 90:10 / 80:20 / 50:50
                  +-- target plus close paralog
                  `-- target-negative genome
 ```

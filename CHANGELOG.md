@@ -1,5 +1,45 @@
 # Changelog
 
+## Unreleased: documentation and validation records (11 November 2026)
+
+The package code is unchanged: the SHA-256 digest of `locus_recon/*.py` is that of
+release 1.0.0 (`3863abc32fb5446a72919c790cb2558217871410f441db1ecf17dde3de55cdcf`).
+The tag `v1.0.0` is unchanged.
+
+### Documentation
+
+- `README.md` is now a short entry page: suitability, installation, a first run,
+  how to read the results, the copy-number commands, what was tested and the
+  limits. The detailed walk-through that it used to contain is in
+  `docs/user-guide.md`, and the validation results are in
+  `docs/validation-results.md`.
+- `docs/output-interpretation.md`: identity to the nearest bait is marked as
+  descriptive in the table of thresholds; an interior uncertain fraction above
+  15% is one moderate flag and not a severe one; `NO_BIDIRECTIONAL_SUPPORT`
+  refers to the reported base; `terminal_margin_bp` is the mean read length of
+  the first 20,000 records; the column `qc_internal_stops_placeholder_closed`
+  is described.
+- `docs/validation.md`: a candidate mixed site does not need both strands;
+  both-strand support and the strand-bias test define a credible mixed site.
+- `validation/README.md`: the depth series and the mixtures use the centrally
+  split draft, not the intact one.
+- The span flag is raised by a loss of 10 bp or more summed over the two contig
+  ends (user guide).
+- Statements that the 1.5 depth threshold was fixed before amplified loci were
+  analysed were replaced: the threshold was set by the author and was not
+  fitted.
+- `CITATION.cff`: preferred citation, affiliation and message.
+
+### Validation records
+
+- `validation/liba6656-gfa-rerun/`: `standard_workflow_report_tcdB.tsv`,
+  `standard_workflow_qc_report_tcdB.txt`, `INPUT_CHECKSUMS.tsv` and
+  `RELEASE_VERIFICATION.json` were replaced by the output of the released code.
+  The copies in the tag came from a run made before the length test restored
+  the bases clipped at a contig end, and showed a `LENGTH_ANOMALOUS` flag that
+  release 1.0.0 does not raise for this sample. The reported sequence, the
+  graph and the paths are unchanged.
+
 ## 1.0.0 — 2026-09-28
 
 Initial public release. Locus-Recon reconstructs a target locus from short
@@ -114,7 +154,8 @@ reports the geometry and leaves the join to the analyst.
 - `MULTICOPY_DEPTH` requires the lower bootstrap bound to clear 1.5, a value
   asserted rather than fitted: over 300 single-copy 7,104 bp backbone segments
   from two real alignments the rule rejected single copy 0 times, with a largest
-  observed lower bound of 1.365. Runs record which threshold was used and
+  observed lower bound of 1.365. This analysis is recorded here and in a source
+  comment only; no script in the repository reproduces it. Runs record which threshold was used and
   whether it was asserted or calibrated, and a calibration can only make
   rejection harder.
 - `locus-recon-copy-number` preserves every depth field and optionally combines

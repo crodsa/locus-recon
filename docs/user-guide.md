@@ -1,0 +1,826 @@
+# Locus-Recon user guide
+
+This guide explains the method in plain language and walks through installation, inputs, a run, the
+results and the three companion commands. For a short overview start with the [README](../README.md).
+Reference pages: [command-line options](cli-reference.md), [outputs, columns and flags](output-interpretation.md),
+[troubleshooting](troubleshooting.md), [methods](validation.md) and [validation results](validation-results.md).
+
+## The idea in plain language
+
+### Six terms used throughout this guide
+
+| Term | Meaning here |
+|---|---|
+| **Locus** | The particular gene or defined DNA region you want to recover. Multilocus sequence typing (MLST) and core-genome MLST (cgMLST) schemes type isolates using predefined loci. |
+| **Allele** | One observed sequence version of that locus. |
+| **Draft assembly** | A FASTA file containing reconstructed genome fragments, usually called contigs. |
+| **Contig break** | A place where the assembler could not join the genome sequence. A locus can be split across this break. |
+| **Paired-end reads** | The original Illumina R1 and R2 sequences. The two reads in a pair come from opposite ends of the same DNA fragment and can help bridge a break. |
+| **Bait alleles** | A FASTA file of known sequences for the requested locus. Locus-Recon uses them as search references and as an expected-length/composition profile. |
+
+### What a split locus looks like
+
+```text
+Expected locus:       |================ full locus ================|
+
+Draft contig A:   -----------|====================
+Draft contig B:                               ================|----------
+                                       contig break ^
+
+Matched read pairs:      >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+Mate rescue:        <<<<<<<<                          >>>>>>>>>
+Local assembly:         |================ full locus ================|
+```
+
+The known alleles first identify plausible locus fragments on contig A, contig
+B, or both. Reads overlapping those regions are selected. Their paired mates are
+also recovered, including mates that extend across the missing join. SPAdes then
+assembles only this reduced read set. Locus-Recon extracts the best-supported
+locus candidate and checks it by similarity, read remapping, per-base depth,
+read quality, strand balance, sequence structure, mixture evidence, and
+competition from other distinct local regions.
+
+```mermaid
+flowchart LR
+    A["Draft assembly with a broken locus"] --> B["Find plausible locus fragments"]
+    R["Original paired Illumina reads"] --> C["Find reads near those fragments"]
+    B --> C
+    C --> D["Recover their read-pair partners"]
+    D --> E["Assemble the selected reads locally"]
+    E --> F["Extract the best complete candidate"]
+    F --> G["Compare with known alleles"]
+    F --> H["Remap reads and inspect every base"]
+    G --> I["Sequence, report, QC tier, and evidence"]
+    H --> I
+```
+
+## Is Locus-Recon appropriate for my data?
+
+Use Locus-Recon when all of the following are true:
+
+- you have a bacterial draft assembly in FASTA format;
+- you have both R1 and R2 Illumina reads for the same isolate, ideally the exact
+  reads used to create that assembly;
+- one defined MLST, cgMLST, or comparable locus is incomplete or missing from
+  the assembly;
+- you have a curated FASTA of known alleles for that one locus; and
+- assembly fragmentation is a plausible explanation for the missing call.
+
+The program can process many isolates in one batch, but it reconstructs only the
+one locus named with `--locus` during that invocation. Run independent commands
+for additional loci.
+
+Locus-Recon does not currently use:
+
+- long reads as reconstruction input;
+- metagenomic samples;
+- samples for which only unpaired reads are available; or
+- a whole-genome contamination or mixed-isolate model.
+
+A `SKIP` or no-detection result does not by itself prove that the locus is
+biologically absent. Other explanations include a divergent target, very low
+read depth, an unresolved repeat, unsuitable bait alleles, or a sample/assembly
+mismatch.
+
+### Where it sits among related tools
+
+Locus-Recon is not an allele caller and does not replace one. Read-based
+callers such as SRST2, stringMLST and KMA return the best-matching allele of a
+catalogue together with its support. ARIBA assembles reads locally against
+clustered references and reports genes and variants relative to them. Kaptive
+types a curated locus from an assembly. Each of these answers which known entry
+a sample matches, and none of them reports the copy number of the locus.
+
+Locus-Recon answers a different question. It takes the assembly and the reads
+together, returns the locus sequence itself with resolved boundaries, a
+per-base decision ledger and a confidence tier, and reports the depth of the
+locus against a single-copy backbone with a bootstrap interval and a
+length-weighted copy estimate. The cost of that scope is curation. Every locus
+needs curated baits, a boundary definition and its own validation set, and
+Locus-Recon ships neither a locus catalogue nor an automated curation
+pipeline.
+
+## What the tool produces
+
+For a batch, Locus-Recon creates:
+
+- one tab-separated report with a row for every sample;
+- one combined FASTA containing every reconstruction that passed the minimum
+  `SUCCESS` gates;
+- a human-readable QC report and retained evidence for each successful sample;
+- per-base read support for every successful reconstructed sequence;
+- the completeness of each reported allele, meaning the shortfall in bases
+  where the projected locus runs past the end of its contig, and the
+  neighbouring contig carrying the missing part when the local assembly
+  contains it;
+- logs that distinguish expected no-result conditions from execution failures;
+  and
+- a JSON manifest recording parameters, input metadata, checksums, software
+  paths, and detected versions.
+
+The output is designed for scientific review, prioritization, and downstream
+curation. It is not an automatic allele-submission system.
+
+## Installation with Conda
+
+The commands below are entered in a **terminal**. Linux, macOS, or a Linux
+environment such as WSL is recommended because the workflow depends on standard
+command-line bioinformatics software. The project's tests run on Linux, and the
+bundled reference benchmark was generated on Linux x86_64.
+
+### 1. Install Conda if needed
+
+If `conda --version` already works, continue to the next step. Otherwise install
+[Miniforge](https://github.com/conda-forge/miniforge), which provides both Conda
+and the faster Mamba solver. Reopen the terminal after installation and confirm
+that Conda is available:
+
+```bash
+conda --version
+```
+
+### 2. Download and install Locus-Recon
+
+If `git --version` works, clone the repository:
+
+```bash
+git clone https://github.com/crodsa/locus-recon.git
+cd locus-recon
+```
+
+If you do not use Git, download GitHub's **Code → Download ZIP**, extract it,
+and open a terminal in the extracted `locus-recon-main` directory.
+
+From the repository root, create the pinned environment, activate it, and
+install the Locus-Recon Python package:
+
+```bash
+conda env create --file environment.yml
+conda activate locus-recon
+python -m pip install .
+```
+
+The environment name is `locus-recon`. The first command reads the
+[`environment.yml`](../environment.yml) file in the repository root and installs
+the exact Python, BLAST+, BWA-MEM2, samtools, SPAdes, pip, and `tqdm` versions
+recorded there. Installing the local Python package is a separate final step so
+that the same environment file can be used from a source checkout or a release
+archive.
+
+Mamba can perform the environment-resolution step faster. If it is available,
+the equivalent installation is:
+
+```bash
+mamba env create --file environment.yml
+conda activate locus-recon
+python -m pip install .
+```
+
+### 3. Verify the installation
+
+Keep the environment active and run:
+
+```bash
+locus-recon --version
+blastn -version
+bwa-mem2 version
+samtools --version
+spades.py --version
+```
+
+The first command should report `locus-recon 1.0.0`; the remaining commands
+confirm that all external programs are available inside the active environment.
+The package supports Python 3.9 or newer, although the supplied environment pins
+Python 3.11.13. See the
+[installation and dependency reference](cli-reference.md#installation-and-dependencies)
+for the complete dependency list and platform notes.
+
+Every new terminal session must reactivate the environment before using the
+tool:
+
+```bash
+conda activate locus-recon
+```
+
+## Quick start
+
+Complete the [Conda installation](#installation-with-conda) first and keep the
+`locus-recon` environment active.
+
+### Confirm the installation without reconstructing reads
+
+The repository includes a deterministic mock dataset. This command checks the
+input files, executables, bait database, and provenance manifest, but does not
+map or assemble reads:
+
+```bash
+locus-recon \
+  --samplesheet validation/mock_dataset/samples.tsv \
+  --main-output-dir validation/mock_dry_run \
+  --bait validation/mock_dataset/mock_locus_alleles.fasta \
+  --locus mockLocus \
+  --threads 2 \
+  --dry-run
+```
+
+A successful check ends with `Dry run passed`. You can remove
+`validation/mock_dry_run` after reviewing its log and manifest, or keep it as an
+installation record.
+
+## Prepare your own inputs
+
+You need four kinds of information.
+
+| Input | Typical extension | What it contains |
+|---|---|---|
+| Draft assembly | `.fasta`, `.fa`, or `.fna` | One or more assembled contigs for one isolate. |
+| Forward reads | `_R1.fastq.gz` or `_R1.fq.gz` | The first read from each Illumina pair. |
+| Reverse reads | `_R2.fastq.gz` or `_R2.fq.gz` | The matching second reads for the same isolate. |
+| Bait allele set | `.fasta` or `.fa` | Curated known alleles for one locus, all in a consistent orientation. |
+
+### Bait allele FASTA
+
+Obtain the allele sequences from the authoritative provider of the exact typing
+scheme you are using. For example, a [PubMLST](https://pubmlst.org/) scheme
+normally provides a sequence definition for each locus. Record the scheme name
+and database release or download date in your study metadata.
+
+The file must contain only one locus, although it should normally contain many
+known alleles for that locus. All records must use the same biological start
+and end boundaries and the same orientation:
+
+```text
+>target_locus_1
+ATG...GCT
+>target_locus_2
+ATG...GTT
+>target_locus_3
+ATG...GCC
+```
+
+The dots above abbreviate the example. Real FASTA records must contain the full,
+uninterrupted DNA sequence; do not include `...` in the file.
+
+Locus-Recon treats the first whitespace-delimited token after `>` as the record
+ID. That token must be unique, non-empty, contain valid IUPAC DNA symbols, and
+be at most 50 characters long, which is the limit `makeblastdb -parse_seqids`
+imposes on a local identifier. Each of those four conditions is checked before
+any external program runs, and each failure names the offending record and what
+to change:
+
+| Input problem | What you are told |
+| --- | --- |
+| Alignment gaps (`-`, `.`) in a record | The symbols found, plus that the file looks like a gapped alignment rather than an allele set and the gaps must be removed |
+| An identifier longer than 50 characters | Its length, the `-parse_seqids` limit, and that the text before the first space must be shortened |
+| A duplicated or empty record | The record ID |
+| Records that share no 25-mer with the full-length records of the set | A warning naming them as probable paralogues or unrelated fragments; the run continues |
+
+The last check is a warning rather than an error because a short, genuinely
+divergent allele is possible, but in practice a record with no k-mer in common
+with the rest of the set is a fragment of a different gene family member. It is
+compared against the records at least half the length of the longest one, so
+two paralogous fragments cannot vouch for each other.
+
+Consistent orientation remains good practice, but a reversed catalogue is not
+a silent trap: reading-frame metrics are computed over all six frames (see
+[reading frame](#reading-frame-metrics-are-computed-over-six-frames)), and a
+bait set that reads as coding only on the reverse strand is reported as such.
+Whether the file contains the correct biological locus and shared biological
+boundaries cannot be determined by the tool; those remain scheme-curation
+responsibilities.
+
+Do not mix different loci or known paralogs in one bait file.
+
+If the target is not protein-coding, an rRNA gene or an intergenic definition
+for instance, add `--noncoding-locus` to the run. Locus-Recon then stops
+checking the candidate for internal stop codons and for a length consistent
+with the bait reading frame, checks that would otherwise flag a perfectly good
+non-coding reconstruction as suspect.
+
+### Reading frame metrics are computed over six frames
+
+A reconstruction inherits the orientation of the bait that recruited it. When a
+bait catalogue is supplied antisense to the coding strand, which is common for
+records cut from a genome in the orientation the assembly happened to use, a
+forward-only stop-codon count describes the wrong strand and reports stop
+codons the reconstruction does not have.
+
+`internal_stops` is therefore the minimum over all six reading frames, and
+`qc_coding_frame_used` names the frame that achieved it (`+1`..`+3`, `-1`..`-3`).
+The start and stop codon checks read the sequence in that same frame. A bait set
+whose plausible frames are all on the reverse strand is reported at the start of
+the run as a warning, not an error, because the six-frame scan has already made
+it harmless.
+
+An interior run of N is a second source of stop codons that say nothing about
+the reported bases. The local assembler writes that run when it scaffolds
+across a gap it cannot spell, and when its length is not a multiple of three
+every codon downstream of it is shifted. `internal_stops` is therefore also
+recomputed with the interior placeholders excised and reported as
+`qc_internal_stops_placeholder_closed`. When the count falls, the descriptive
+flag `PLACEHOLDER_FRAMESHIFT_EXPLAINS_STOPS` gives both numbers.
+`INTERNAL_STOPS` is still raised, because the sequence as delivered does
+contain them, and the report distinguishes a frameshifted scaffold from a
+damaged reconstruction. Read it with `placeholder_junction_support`: a
+graph-supported junction whose excision removes every stop describes a
+scaffolding artefact, not a pseudogene.
+
+`FRAME_LENGTH_SHIFT` compares the candidate length modulo three with the bait's
+modal value. A reconstruction that a contig boundary has truncated has no reason
+to be a multiple of three, and that truncation is already reported by
+`ALLELE_SPAN_CLIPPED_AT_CONTIG_END` and measured by `span_clipped_bp`. When the
+projected span is clipped, the flag is therefore issued as
+`FRAME_LENGTH_SHIFT_TRUNCATED` and treated as descriptive, so the same fact is
+not scored twice as evidence about sequence integrity.
+
+### Samplesheet
+
+Create a tab-separated text file with four columns. The header is optional, but
+including it makes the file easier to inspect:
+
+```tsv
+sample_id	assembly_path	r1_path	r2_path
+isolate_001	data/isolate_001.fasta	reads/isolate_001_R1.fastq.gz	reads/isolate_001_R2.fastq.gz
+isolate_002	data/isolate_002.fasta	reads/isolate_002_R1.fastq.gz	reads/isolate_002_R2.fastq.gz
+```
+
+Important details:
+
+- columns must be separated by tabs, not spaces or commas;
+- sample IDs must be unique, begin with a letter or number, and contain only
+  letters, numbers, dots, underscores, or hyphens;
+- blank lines and lines beginning with `#` are ignored; and
+- relative paths are resolved from the directory containing the samplesheet,
+  not from the terminal's current directory.
+
+One simple study layout is:
+
+```text
+study/
+├── target_locus_alleles.fasta
+├── samples.tsv
+├── data/
+│   ├── isolate_001.fasta
+│   └── isolate_002.fasta
+└── reads/
+    ├── isolate_001_R1.fastq.gz
+    ├── isolate_001_R2.fastq.gz
+    ├── isolate_002_R1.fastq.gz
+    └── isolate_002_R2.fastq.gz
+```
+
+An editable template is available at
+[`examples/samplesheet.tsv`](../examples/samplesheet.tsv).
+
+## Run your reconstruction
+
+### 1. Validate the setup
+
+Replace `target_locus` with the exact safe name you want in output filenames.
+Run from the repository directory, or use absolute paths:
+
+```bash
+locus-recon \
+  --samplesheet study/samples.tsv \
+  --main-output-dir results/target_locus \
+  --bait study/target_locus_alleles.fasta \
+  --locus target_locus \
+  --dry-run
+```
+
+The dry run still creates the output directory, shared bait BLAST database,
+batch log, and `run_manifest.json`. It does not process sample reads.
+
+### 2. Run the batch
+
+For a first real run, keep the default of one sample at a time and retain all
+intermediate evidence:
+
+```bash
+locus-recon \
+  --samplesheet study/samples.tsv \
+  --main-output-dir results/target_locus \
+  --bait study/target_locus_alleles.fasta \
+  --locus target_locus \
+  --threads 8 \
+  --parallel-samples 1 \
+  --memory-per-sample 16
+```
+
+After you have validated the workflow for your study, `--cleanup` can remove
+bulky per-sample BAM, FASTQ, index, and SPAdes files after each successful
+sample while preserving the final sequence and principal evidence summaries.
+Those files include the inputs of the three companion commands:
+`full_map.sorted.bam` for `locus-recon-depth-ratio` and
+`locus-recon-copy-number`, and the local graph in `spades_local/` with the
+recruited reads `target_R1.fq.gz` and `target_R2.fq.gz` for
+`locus-recon-graph-paths`. Leave `--cleanup` off for any sample you may analyse
+with them. The [CLI reference](cli-reference.md#cleanup-and-reruns) lists
+the exact behavior.
+
+### Run samples in parallel
+
+```bash
+locus-recon \
+  --samplesheet study/samples.tsv \
+  --main-output-dir results/target_locus \
+  --bait study/target_locus_alleles.fasta \
+  --locus target_locus \
+  --threads 8 \
+  --parallel-samples 2 \
+  --memory-per-sample 16 \
+  --cleanup
+```
+
+Resource planning is multiplicative:
+
+- maximum logical CPUs ≈ `--threads × --parallel-samples`;
+- maximum SPAdes memory allowance ≈ `--memory-per-sample × --parallel-samples`;
+  and
+- additional operating-system and mapping overhead is still required.
+
+The example therefore permits approximately 16 logical CPUs and 32 GB of
+SPAdes memory. Full-read mapping and BAM sorting usually account for most disk
+I/O. See [resource planning](cli-reference.md#resource-planning) before
+running a large batch or submitting an HPC job.
+
+## How Locus-Recon works
+
+For each sample, the implemented workflow performs seven stages.
+
+1. **Describe the known allele set.** The bait FASTA is summarized by length,
+   GC content, length modulo three, and plausible coding frames. These
+   distributions provide context for later QC.
+2. **Find plausible fragments.** BLASTN aligns the known alleles to the draft
+   assembly. Discovery accepts sufficiently similar, sufficiently long partial
+   alignments; it does not require one contig to cover most of an allele. Each
+   passing region is padded and clipped to its contig boundaries. The full bait
+   span is also projected onto the contig, so sequence that falls outside the
+   contig is measured as a shortfall rather than silently absent from the
+   result.
+3. **Retrieve the relevant read pairs.** BWA-MEM2, or BWA as a fallback, maps
+   all paired reads to the draft. Reads overlapping target regions seed a set of
+   names, and all alignments sharing those names are recovered to rescue their
+   partners. Paired reads and surviving singletons are retained.
+4. **Assemble locally.** SPAdes assembles only the selected reads, in its
+   default mode (without `--careful`). If standard SPAdes reports the specific
+   low/non-uniform k-mer histogram failure handled by the workflow, Locus-Recon
+   retries that sample in single-cell mode and records the strategy in
+   `spades_mode`.
+5. **Select and extract a candidate.** Known alleles are aligned to the local
+   scaffolds. Redundant hits from different bait alleles that overlap the same
+   local region are collapsed before distinct regions compete. The best region
+   is ranked by bitscore, query coverage, identity, and aligned length. Unaligned
+   bait ends are projected onto the local scaffold to estimate full locus
+   boundaries, and reverse-strand candidates are reverse-complemented.
+6. **Validate independently.** The extracted candidate is searched against the
+   batch's known-allele BLAST database. The extracted paired and singleton reads
+   are then remapped to the candidate. A result reaches `SUCCESS` only if it
+   passes the configured final identity, query-coverage, mean-depth, and
+   breadth gates.
+7. **Explain the evidence.** A quality-filtered pileup records every candidate
+   position, including zero-depth positions. It is built with `samtools mpileup`
+   with base alignment quality (BAQ) recalibration and with `-A`, so read pairs
+   the aligner could not mark as properly paired on a short candidate still
+   count on both strands. Locus-Recon evaluates depth, patchiness, base and
+   mapping quality, forward/reverse balance, alternative alleles, strand bias,
+   possible mixtures, length, composition, coding-frame behavior, and
+   competition from another distinct local region. These checks
+   assign `HIGH`, `MEDIUM`, `LOW`, or `SUSPECT` sequence confidence and provide
+   explicit flags. A shortfall measured in stage 2 is carried here as its own
+   evidence class. It blocks `HIGH` on its own, and where the missing interval
+   is found on another local contig the result is treated as severe, because
+   sequence the data demonstrably contains was left out. The length checks are
+   applied with the missing bases restored, so one loss is not scored twice.
+   The reconstruction's distance from the nearest curated allele is reported
+   separately as `catalogue_status`: once a candidate has cleared the discovery
+   similarity requirement, divergence from the catalogue annotates the result
+   for curation instead of reducing its confidence.
+
+The [methods and validation guide](validation.md) gives a methods-style
+description, limitations, manual review checklist, and recommended benchmark
+design.
+
+## Read the results
+
+Start with these files in this order:
+
+1. `locus_recon_report_<locus>.tsv`, one summary row per input sample;
+2. `<locus>_accepted_alleles.fasta`, only `PASS` candidates (`SUCCESS` +
+   `HIGH`), with separate `review_required`, `hold`, and all-candidate FASTAs;
+3. `<sample>/<sample>_<locus>_qc_report.txt`, the readable scorecard for one
+   successful reconstruction;
+4. `<sample>/allele_remap.support.tsv`, one evidence row per reconstructed
+   position; and
+5. `run_manifest.json`, holding parameters, checksums, paths, versions, and input
+   metadata for the run.
+
+### Seven fields that answer different questions
+
+| Field | Question it answers | Correct interpretation |
+|---|---|---|
+| `workflow_status` | Did the sample complete the minimum reconstruction workflow? | `SUCCESS` passed the final identity, coverage, mean-depth, and breadth gates. `SKIP` is an expected no-result condition. `FAIL` is an input, dependency, command, or unexpected execution failure. The `status` column carries the same value. |
+| `sequence_confidence` | Are the reported bases supported by the read evidence, internally coherent, and spanning the complete locus? | `HIGH`, `MEDIUM`, `LOW`, or `SUSPECT`; populated only after `SUCCESS`. It is stricter than `status`. `qc_confidence` carries the same value. Distance from the nearest catalogue allele does not enter this tier. |
+| `catalogue_status` | How does the sequence relate to the supplied catalogue? | `EXACT_MATCH`, `NONEXACT_MATCH` (≥97% but not exact), `DIVERGENT_FROM_REFERENCE` (85 to 97%), or `HIGHLY_DIVERGENT_FROM_REFERENCE` (<85%). Reported alongside `nearest_allele_identity_pct` and `catalogue_review_recommended`; independent of `sequence_confidence`. |
+| `result_disposition` | Is the candidate ready for routine downstream use? | `PASS` only for `SUCCESS` + `HIGH`; `REVIEW` for `MEDIUM`/`LOW`; `HOLD` for `SUSPECT`, `SKIP`, or `FAIL`. |
+| `exact_known_allele` | Is this exactly a sequence already present in the bait database? | `true` requires 100% identity, 100% query coverage, and equal aligned, query, and subject lengths. |
+| `mixture_detected` | Do the recruited locus reads support more than one sequence state? | `true` requires the configured number of quality-filtered, bidirectionally supported mixed positions. It is not a genome-wide mixture test. |
+| `qc_flags` | Why was confidence downgraded? | Semicolon-separated evidence labels; an empty value accompanies `HIGH` confidence. |
+
+### What action should I take?
+
+| Result | Meaning | Recommended action |
+|---|---|---|
+| `SUCCESS` + `HIGH` | Minimum gates and all strict QC checks passed. | Confirm provenance, upstream sample QC, locus boundaries, and scheme rules. Visually review any novel or submission-bound sequence. |
+| `SUCCESS` + `MEDIUM` | One moderate deviation in the read or sequence evidence, or a length difference from the bait profile as the only deviation, was detected. | Review the named flags and per-base evidence before using the sequence. |
+| `SUCCESS` + `LOW` | Two moderate deviations were detected, with the length within three times the bait-profile tolerance. | Treat as unresolved until the local assembly and read evidence have been inspected. |
+| `SUCCESS` + `SUSPECT` | Severe weakness, ambiguity, mixture, frame disruption, or anomalous evidence was detected, or more moderate deviations than `LOW` allows, including a length beyond three times the tolerance alongside another deviation. | Do not use as a definitive allele call without further investigation or independent confirmation. |
+| `SKIP` | The sample reached an expected no-result condition, such as no bait-supported contig, insufficient recruited reads, no local scaffold, or failure of a final evidence gate. | Read `message`, the per-sample log, and the evidence produced before the skip. Do not interpret it automatically as biological absence. |
+| `FAIL` | An input, external command, dependency, or unexpected software step failed. | Correct the execution problem before interpreting the sample biologically. |
+
+Only `PASS` reconstructions are written to `<locus>_accepted_alleles.fasta`.
+`REVIEW` and `HOLD` candidates remain recoverable in explicitly named FASTAs,
+and `<locus>_reconstructed_candidates.fasta` retains every successful
+reconstruction for audit.
+
+The [output and interpretation reference](output-interpretation.md)
+documents the complete directory tree, every report column, every QC flag
+family, and practical review paths for exact, novel-looking, ambiguous,
+low-support, and mixed results.
+
+## What the evidence can and cannot show
+
+Locus-Recon can provide:
+
+- a sample-derived candidate sequence for a targeted locus;
+- its nearest known bait allele and whether the match is exact;
+- read-remapping support at every reconstructed base;
+- explicit evidence of weak coverage, ambiguity, strand artifacts, or a
+  possible locus-level mixture; and
+- a reproducible record of inputs, parameters, versions, and outputs.
+
+Locus-Recon alone cannot:
+
+- prove that a locus is biologically absent after a negative result;
+- tell from the sequence tier whether a locus is present in one copy or in
+  several identical copies: a `HIGH` call on a multi-copy locus, such as an
+  rRNA operon, says that the reads agree on one sequence, and copy number comes
+  from `locus-recon-depth-ratio` and `locus-recon-copy-number`;
+- prove orthology solely from BLAST similarity;
+- resolve repeats longer than the informative library span;
+- perform whole-genome contamination or mixed-isolate detection;
+- phase or reconstruct the component alleles of a mixture;
+- replace long-read, hybrid-assembly, targeted-sequencing, or laboratory
+  confirmation when a result changes a scientific conclusion; or
+- decide whether a scheme provider will accept a new allele.
+
+## When every copy is identical, the depth ratio
+
+Locus-Recon adjudicates copy structure from *allelic* evidence, meaning
+bidirectionally
+supported mixed sites, frame anomalies, graph branches. That evidence is silent
+when the copies are identical to each other. A tandem amplification of a
+resistance gene produces no mixed site at all, yet it is emphatically not a
+single-copy locus, and the phenotype often depends on how many copies are
+present.
+
+The only signal short reads leave in that case is depth. `locus-recon-depth-ratio`
+compares depth over the locus with depth over a single-copy backbone, using the
+same Q20/MQ20 filters as the per-base evidence table:
+
+```bash
+locus-recon-depth-ratio --bam SAMPLE/full_map.sorted.bam --locus contig_7:250422-251237 --exclude plasmid_1 --tsv locus_depth.tsv
+```
+
+The BAM is `<sample>/full_map.sorted.bam`, the reads mapped to the draft
+assembly that the standard workflow writes during read recruitment, so no
+realignment is needed as long as the sample was not run with `--cleanup`. The
+command reports the ratio with a
+block-bootstrap confidence interval and an `ambiguity_index`. Passing the draft
+assembly with `--reference` adds the locus GC content as a descriptive field.
+
+Two questions are kept apart on purpose:
+
+- **Did this locus collapse?** That is what the ratio answers. Reads from every
+  physical copy pile onto the single representative the assembler kept, so the
+  ratio rises above one. A locus whose copies the assembler managed to separate
+  shows no pile-up, and a ratio near one is then the correct answer to the
+  question the ratio asks.
+- **What total dosage is supported?** That is `dosage_estimate`, which weights each
+  assembly fragment's ratio by the gene bases it actually resolves. Pass the
+  discovery BLAST query coordinates to obtain it:
+
+```bash
+locus-recon-depth-ratio --bam SAMPLE/full_map.sorted.bam --locus contig_56:1-4210 --gene-span 1-4210 --locus contig_8:900-3600 --gene-span 4380-7104 --gene-length 7104
+```
+
+The two answers routinely disagree, and on a fragmented locus the disagreement
+is the expected result rather than a conflict. If the assembler separated the
+copies, each fragment carries roughly one copy of depth, so the ratio sits near
+one while the dosage sums to the number of copies.
+
+Without query coordinates a multi-region locus returns `dosage_estimate` as
+`None`. With them, incomplete coverage of the query does not withhold the
+estimate; it qualifies it, and `dosage_status` reports
+`ESTIMATED_PARTIAL_COVERAGE` with `query_coverage_fraction` saying how much was
+covered.
+
+Overlap is stronger than a qualification. A single-copy query whose bases are
+resolved by several mutually overlapping intervals returns a dosage above one
+from the geometry alone, so any overlap sets `dosage_status` to
+`REVIEW_OVERLAPPING_SPANS`, in precedence over the states above, and
+`geometry_expected_dosage` reports what the same spans return with every region
+at unit ratio. Treat the estimate as a review item rather than a count, since on a control of
+87 single-copy pseudo-queries the returned dosage rose with the overlapped
+fraction at 1.54 per unit overlap
+(`validation/depth-copy-number/overlap_null/`). The flags
+`INCOMPLETE_QUERY_COVERAGE`, `OVERLAPPING_QUERY_SPANS` and `ZERO_RATIO_REGIONS`
+name the specific qualification. Multiplying the ratio by the number of regions
+is not a substitute, since it counts assembly breaks and not copies.
+
+The command prints one line per locus and, with `--tsv`, writes the same values
+as a table. Two of the deposited *Acinetobacter baumannii* validation runs show
+the two outcomes, a single-copy strain and one carrying a tandem amplification
+of the same gene
+([`validation/aphA1-copy-number/results.tsv`](../validation/aphA1-copy-number/results.tsv)):
+
+| Strain (run) | `dosage_estimate` | Bootstrap interval | `depth_call` | Published qPCR copies |
+|---|---|---|---|---|
+| MRSN 3361 (SRR15734215) | 0.952 | 0.945-0.968 | `SINGLE_COPY_COMPATIBLE` | 1 |
+| MRSN 57 (SRR17023755) | 10.451 | 10.211-10.869 | `MULTICOPY_DEPTH` | 10 ± 2 |
+
+The seven-run *aphA1* analysis is part of the main validation, where aggregate
+gene-depth ratios are compared against published qPCR copy numbers.
+
+Anything that qualifies the number is printed underneath as a note rather than
+folded into the call. A ratio may need to be read as a lower bound, a backbone
+may be too small to trust, and some regions may contribute zero depth to the
+dosage. The TSV adds the filtered and unfiltered locus depth, the backbone
+median and its MAD, the gene spans used, and the per-region ratios behind
+`dosage_estimate`, plus query-span union and overlap metrics, so any reported
+number can be traced back to the depths it came from.
+
+### What the verdict in the output means
+
+| Verdict | What it tells you |
+|---|---|
+| `SINGLE_COPY_COMPATIBLE` | The aggregate depth interval does not reject the configured single-copy threshold. This is compatibility, not proof of one biological copy. |
+| `MULTICOPY_DEPTH` | The lower bound of the bootstrap interval is above 1.5. The locus carries more depth than one copy can explain. |
+
+The 1.5 aggregate-depth threshold was set by the author and was not fitted to
+data. No windowed per-window criterion for local excess is reported, since the
+thresholds for one can be calibrated on backbone segments, but that calibrates
+the false-positive rate on unamplified sequence and says nothing about
+sensitivity to loci with known partial amplifications.
+
+Read the ratio as a lower bound whenever `ambiguity_index` falls below 0.70: the
+MAPQ filter can only remove depth, never add it. The criteria and the external validation against published qPCR copy numbers are in
+[`validation/depth-copy-number/`](../validation/depth-copy-number/PRESPECIFIED_CRITERIA.md).
+
+### Add graph context without changing the depth result
+
+When the assembly graph of the draft is available, `locus-recon-copy-number`
+places the unchanged depth fields beside a bounded count of distinct flanking
+contexts. The graph is the `assembly_graph_after_simplification.gfa` written by
+the SPAdes run that produced the draft assembly, whose contigs the BAM and
+`--locus` coordinates refer to; the local graph under `<sample>/spades_local/`
+covers only the recruited reads and cannot count genomic contexts. The bait
+used to define the locus is aligned directly to embedded GFA segments; both
+bait ends must recover the same positive number of contexts before an integer
+context count is reported, and the traversal must be exhausted: a walk pruned
+by a cycle or by the node, path or length limit yields only a lower bound.
+
+```bash
+locus-recon-copy-number \
+  --bam SAMPLE/full_map.sorted.bam \
+  --locus NODE_19:901-3789 \
+  --gfa draft_assembly/SAMPLE/assembly_graph_after_simplification.gfa \
+  --bait loci.fasta --bait-id 23S \
+  --output-json SAMPLE.23S.copy-number.json \
+  --output-tsv SAMPLE.23S.copy-number.tsv
+```
+
+Interpret `copy_number_call` together with `copy_number_kind`:
+
+| Kind/method | Meaning |
+|---|---|
+| `INTEGER_CONTEXT_COUNT` / `GRAPH_DEPTH_CONSENSUS` | Both graph ends support the same integer context count, depth agrees at the single- versus multicopy classification level, and the count lies inside the depth interval. |
+| `INTEGER_CONTEXT_COUNT` / `GRAPH_COUNT_OVER_DISCORDANT_DEPTH` | As above, but the count falls outside the depth interval (`DEPTH_GRAPH_NUMERIC_DISCORDANCE`). The graph count is returned as the better-resolved observation, and the method name records that the two lines of evidence disagree on the number. |
+| `MEAN_DEPTH_DOSAGE` / `DEPTH_TANDEM_COMPATIBLE` | The graph retains one flanking context but depth supports a collapsed tandem amplification; the continuous dosage remains authoritative. This is the expected geometry for the amplified *aphA1* example. |
+| `MEAN_DEPTH_DOSAGE` / `DEPTH_ONLY` | No exact graph count was usable; the command retains the depth estimate and flags unresolved graph evidence when a graph was supplied. |
+| `LOWER_BOUND` / `GRAPH_LOWER_BOUND` | Depth rejects one copy and the graph resolves only a lower bound on the contexts (one-sided, asymmetric, or from a traversal pruned by a cycle or a limit). |
+| `LOWER_BOUND` with `DEPTH_LOWER_BOUND` | Depth rejects one copy but `ambiguity_index` is below 0.70, so the dosage is only a floor; the larger of the depth floor and any graph floor is reported in `copy_number_lower_bound`. |
+| `NOT_ESTIMATED` | The evidence does not identify a count: `EVIDENCE_CONFLICT` when the graph resolves several contexts but depth is single-copy compatible, `INDETERMINATE` otherwise. Inspect status, bounds, and flags rather than coercing a number. |
+
+`DEPTH_GRAPH_NUMERIC_DISCORDANCE` means that an integer graph count falls
+outside the unchanged depth interval. It preserves both observations and is
+not a correction factor. Graph contexts do not phase alleles, close a replicon,
+or establish chromosomal versus extrachromosomal location.
+
+## When the locus runs off the end of a contig
+
+A locus found near a contig terminus can extend past it. Locus-Recon projects
+the full bait span onto the contig from the alignment, so the projection makes
+that visible. Whatever falls outside the contig is sequence the reconstruction
+cannot contain, and the allele is short by that much.
+
+This is checked separately from read support, and it has to be. Every per-base
+statistic describes the bases that were reported and none of them can describe
+bases that were never reported, so a truncated allele can otherwise pass with a
+perfect coverage and quality profile. An overhang of 10 bp or more, summed over the two contig ends, raises
+`ALLELE_SPAN_CLIPPED_AT_CONTIG_END`, reports the shortfall in
+`span_clipped_bp`, and blocks `HIGH`. The same bases are restored before the
+length checks, so a truncation is scored once rather than again as a length
+deviation.
+
+Locus-Recon then checks whether the missing sequence is present elsewhere in
+the local assembly. When another candidate contig aligns to the lost interval,
+the locus is split across contigs rather than absent from the data, and
+`LOCUS_SPLIT_ACROSS_CONTIGS` names that contig, the number of lost bases it
+carries, and the query sequence it shares with the reported contig, which is
+the overlap you would join on. That case is treated as severe, because sequence the
+data demonstrably contains was left out of the result.
+
+The tool stops there and does not join the contigs. Choosing one layout across
+an assembly gap is a scaffolding decision, and Locus-Recon reports assembly
+geometry rather than resolving it. You get the split, the continuation contig
+and the overlap, and you decide.
+
+## When the local assembly collapses a repeat
+
+A depth ratio above one says that copies were collapsed; it does not hand you
+their sequences. Where the copies differ at even a few positions, the local
+SPAdes graph often still holds both, side by side, as alternative paths through
+the same region even though the FASTA scaffold kept only one. A third command,
+`locus-recon-graph-paths`, reads that graph and writes out the paths:
+
+```bash
+locus-recon-graph-paths --gfa SAMPLE/spades_local/assembly_graph_after_simplification.gfa --output SAMPLE.graph_paths.fasta --summary SAMPLE.graph_paths.tsv --min-length 6000 --max-length 8000
+```
+
+The GFA file is the one the local assembly already produced in
+`<sample>/spades_local/`; the length bounds keep enumeration to paths the size
+of the locus you are after.
+
+Passing the reads makes the command do the competitive mapping itself:
+
+```bash
+locus-recon-graph-paths --gfa SAMPLE/spades_local/assembly_graph_after_simplification.gfa --output SAMPLE.graph_paths.fasta --summary SAMPLE.graph_paths_ranked.tsv --min-length 6000 --max-length 8000 --reads-r1 SAMPLE/target_R1.fq.gz --reads-r2 SAMPLE/target_R2.fq.gz --threads 12
+```
+
+All retained paths are indexed together, so every read is placed once, across
+the whole candidate set, and a read that fits several paths equally well is
+given a mapping quality of zero by the aligner. Depth is then counted only at
+or above `--min-mapping-quality` (20 by default), which means the score
+describes the sequence that *distinguishes* one path from the others rather
+than the sequence they share. The summary gains `mapped_reads`,
+`unique_mean_depth`, `unique_breadth_pct`, `unsupported_bp` and a `rank`,
+ordered by uniquely anchored breadth. The locus-recruited reads written by a
+reconstruction run (`target_R1.fq.gz`, `target_R2.fq.gz` in the sample
+directory) are the natural input.
+
+A rank is still not a call. Paths that share most of their sequence receive
+near-identical scores by construction, only the enumerated alternatives are
+compared, and `unsupported_bp` above zero means the path contains sequence that
+no uniquely placed read covers. The limiting case is reported explicitly: when
+no path has any uniquely anchored coverage, every read fits several paths
+equally well, the paths cannot be told apart at that read length, and the
+command says so instead of presenting an arbitrary order as a preference. That
+is the expected outcome for a tandem array whose repeat unit is shorter than
+the library insert, and it is the measurement that justifies moving to long
+reads. What the ranking adds to the unranked list is an ordering and a
+quantity: it separates a path the reads cover end to end from one that is
+carried by a pile-up over a few positions. If the
+aligner or samtools is unavailable the command keeps the unranked summary and
+says so, rather than failing.
+
+A real-data example is deposited under
+[`validation/liba6656-gfa-rerun/`](../validation/liba6656-gfa-rerun/README.md).
+Using the verified `ERR467623` read pair, the archived draft assembly, and the
+111 ungapped `tcdB` baits, the released toolchain generated a 26-segment,
+32-link GFA and exported all 512 terminal paths across nine variable graph
+regions. The deposit includes the GFA, every path, input and output checksums,
+portable provenance, and the alignment that connects the two analyst-built candidates
+to their nearest graph paths. The graph was regenerated from the archived reads
+and draft assembly; it is a reproducible rerun, not the graph file of the
+original exploratory analysis, which is not available.
+
+The [command-line reference](cli-reference.md#locus-recon-graph-paths)
+documents the safety bounds and the summary columns.
+
+## Reproducibility
+
+Every run that passes the checks of the baits, the sample sheet and the external tools writes
+`run_manifest.json`. It contains:
+
+- the Locus-Recon and Python versions;
+- the complete command and the parsed parameters;
+- the resolved input paths, sizes and modification times;
+- SHA-256 checksums of the sample sheet and of the bait FASTA;
+- the length, G+C and frame profile of the baits; and
+- the paths and versions of the external tools.
+
+For a publication or an auditable analysis, keep the manifest, the batch report, the bait FASTA, the name and
+release of the allele scheme, the exact command, the environment file and the evidence that you reviewed for
+every reported sequence. Validate the workflow on a panel that represents your organism, library protocol and
+locus. Do not treat the bundled thresholds as universal constants.

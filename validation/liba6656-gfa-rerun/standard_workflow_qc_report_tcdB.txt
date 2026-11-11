@@ -11,7 +11,8 @@
 |    Known range   :       7101-7104
 |    IQR band      :       7098-7104
 |    Delta         :   -5146 bp  (Z-score=-4050.74)
-|    Within IQR    : NO <<
+|    Clip restored : +      3 bp  (5149 bp clipped at a contig end)
+|    Within IQR    : YES
 +--------------------------------------------------------------+
 |  CATALOGUE RELATIONSHIP (does not set sequence confidence)
 |    Identity      :    99.9%
@@ -63,7 +64,6 @@
 |          start/stop codons are therefore not required.
 +--------------------------------------------------------------+
 |  FLAGS
-|    >> LENGTH_ANOMALOUS (delta=5146 bp, outside 3xIQR, profile n=111)
 |    >> FRAME_LENGTH_SHIFT_TRUNCATED (length % 3 = 2; bait mode = 0; expected because the projected span is clipped by 5149 bp at a contig boundary)
 |    >> ALLELE_MIXTURE (23 bidirectional sites, median alt fraction=0.404)
 |    >> ALLELE_SPAN_CLIPPED_AT_CONTIG_END (1345 bp at contig start, 3804 bp at contig end; allele is truncated by 5149 bp)
