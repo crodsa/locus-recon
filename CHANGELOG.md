@@ -6,6 +6,13 @@ The package code is unchanged: the SHA-256 digest of `locus_recon/*.py` is that 
 release 1.0.0 (`3863abc32fb5446a72919c790cb2558217871410f441db1ecf17dde3de55cdcf`).
 The tag `v1.0.0` is unchanged.
 
+### Continuous integration
+
+- `.github/workflows/tests.yml`: the unit tests run on `ubuntu-24.04` and the
+  matrix no longer stops at the first failure. The `ubuntu-latest` image moved
+  to Ubuntu 26.04, for which Python 3.9 is not built, so the job for 3.9 failed
+  during set-up and the other versions were cancelled before any test ran.
+
 ### Documentation
 
 - `README.md` is now a short entry page: suitability, installation, a first run,
