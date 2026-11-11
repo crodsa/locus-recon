@@ -237,5 +237,6 @@ name and version, this repository, and the name and release of the allele databa
 Software: [MIT licence](LICENSE). Synthetic data, validation records and figures: [CC BY 4.0](LICENSE-DATA.md).
 Public sequencing runs keep the terms of their sources.
 
-The package code of the `main` branch is that of release 1.0.0 (tag `v1.0.0`). Changes made to the documentation
-and to validation records after the tag are listed in the [changelog](CHANGELOG.md).
+Release 1.0.0 is the tag `v1.0.0`. Its package code is identified by the SHA-256 digest
+`3863abc32fb5446a72919c790cb2558217871410f441db1ecf17dde3de55cdcf` of `locus_recon/*.py`, and the
+[changelog](CHANGELOG.md) lists what the release contains.

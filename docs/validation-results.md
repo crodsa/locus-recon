@@ -73,5 +73,5 @@ overlap, and the fit predicts 2.21 (1.89 to 2.53) at the overlap of *tcdB*. The 
 The outputs were produced during development and their records name the commits at which they were run. The link
 to the release is the SHA-256 digest of the package sources (`locus_recon/*.py`),
 `3863abc32fb5446a72919c790cb2558217871410f441db1ecf17dde3de55cdcf`, which `validation/common.py` computes.
-Four files of `liba6656-gfa-rerun/` were replaced on the main branch after the tag; see the
-[changelog](../CHANGELOG.md).
+The report, the scorecard, the checksum list and the verification record of `liba6656-gfa-rerun/` are the
+output of the released code; see the [changelog](../CHANGELOG.md).

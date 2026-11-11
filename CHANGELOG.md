@@ -1,19 +1,28 @@
 # Changelog
 
-## Unreleased: documentation and validation records (11 November 2026)
+## 1.0.0 — 2026-09-28
 
-The package code is unchanged: the SHA-256 digest of `locus_recon/*.py` is that of
-release 1.0.0 (`3863abc32fb5446a72919c790cb2558217871410f441db1ecf17dde3de55cdcf`).
-The tag `v1.0.0` is unchanged.
+Initial public release. Locus-Recon reconstructs a target locus from short
+reads when the assembly has broken it across contigs or collapsed
+near-identical copies into one consensus, reports how much depth that locus
+carries relative to a single-copy backbone, and states how far each result is
+supported by the reads.
 
-### Continuous integration
+### Release files
 
-- `.github/workflows/tests.yml`: the unit tests run on `ubuntu-24.04` and the
-  matrix no longer stops at the first failure. The `ubuntu-latest` image moved
-  to Ubuntu 26.04, for which Python 3.9 is not built, so the job for 3.9 failed
-  during set-up and the other versions were cancelled before any test ran.
+The package code (`locus_recon/*.py`) dates from 28 September 2026 and is
+identified by the SHA-256 digest
+`3863abc32fb5446a72919c790cb2558217871410f441db1ecf17dde3de55cdcf`, which
+`validation/common.py` computes. The tag `v1.0.0` was first published on
+20 October 2026 on a tree that held the package, its documentation, its tests
+and the simulated benchmark. On 11 November 2026 the tag and the release files were set on the
+present tree. The package code is the same. The present tree adds the scripts
+and records of every validation analysis and carries the revisions listed
+below. A source distribution or wheel of 1.0.0 downloaded before
+11 November 2026 therefore differs from the current one outside the package
+code only.
 
-### Documentation
+Revisions of 11 November 2026:
 
 - `README.md` is now a short entry page: suitability, installation, a first run,
   how to read the results, the copy-number commands, what was tested and the
@@ -36,24 +45,17 @@ The tag `v1.0.0` is unchanged.
   analysed were replaced: the threshold was set by the author and was not
   fitted.
 - `CITATION.cff`: preferred citation, affiliation and message.
-
-### Validation records
-
 - `validation/liba6656-gfa-rerun/`: `standard_workflow_report_tcdB.tsv`,
   `standard_workflow_qc_report_tcdB.txt`, `INPUT_CHECKSUMS.tsv` and
   `RELEASE_VERIFICATION.json` were replaced by the output of the released code.
-  The copies in the tag came from a run made before the length test restored
+  The earlier copies came from a run made before the length test restored
   the bases clipped at a contig end, and showed a `LENGTH_ANOMALOUS` flag that
   release 1.0.0 does not raise for this sample. The reported sequence, the
   graph and the paths are unchanged.
-
-## 1.0.0 — 2026-09-28
-
-Initial public release. Locus-Recon reconstructs a target locus from short
-reads when the assembly has broken it across contigs or collapsed
-near-identical copies into one consensus, reports how much depth that locus
-carries relative to a single-copy backbone, and states how far each result is
-supported by the reads.
+- `.github/workflows/tests.yml`: the unit tests run on `ubuntu-24.04` and the
+  matrix no longer stops at the first failure. The `ubuntu-latest` image moved
+  to Ubuntu 26.04, for which Python 3.9 is not built, so the job for 3.9 failed
+  during set-up and the other versions were cancelled before any test ran.
 
 ### Locus reconstruction
 
