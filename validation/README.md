@@ -121,6 +121,24 @@ paths are combinatorial proposals through nine variable regions; they are not
 512 accepted alleles and still require the competitive-read, per-base,
 polishing and context evidence deposited with the publication package.
 
+## Comparison with ARIBA and KMA
+
+[`comparator-benchmark/`](comparator-benchmark/README.md) holds the sequences that ARIBA 2.14.7 and KMA 1.7.1
+return from the reads and reference sequences of the simulated benchmark, of the 25 *H. pylori* loci of the tier
+calibration and of LIBA-6656, scored against the same truth as Locus-Recon. The two tools are not dependencies
+of Locus-Recon and need their own Conda environment:
+
+```bash
+conda create --name lr-comparators --channel conda-forge --channel bioconda \
+    python=3.12 ariba=2.14.7 kma=1.7.1 blast=2.17.0 "setuptools<81"
+conda activate lr-comparators
+python -m pip install .
+python validation/run_comparator_benchmark.py --workdir work/comparators --threads 16
+```
+
+The run downloads about 3 GB of public reads. With `--score-only` it scores the tool outputs kept in
+`comparator-benchmark/raw_tool_outputs.tar.gz` without running the tools.
+
 ## Characteristic failure modes
 
 Two error modes are visible in the bundled record, and both are worth reading

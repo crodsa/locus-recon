@@ -1,0 +1,41 @@
+dataset	group	tool	configuration	cases	identical	uncalled bases, otherwise identical	incomplete, identical over its own length	truth contained, extra bases	identical over the overlap, different boundaries	differs	no alignment to the truth	sequence returned although the locus is absent	no sequence returned	every_truth_sequence_identical	seconds_min	seconds_max
+mock	one allele	Locus-Recon	1.0.0, deposited result	7	7	0	0	0	0	0	0	0	0	7		
+mock	one allele	ARIBA	default	7	7	0	0	0	0	0	0	0	0	7	1.7	1.9
+mock	one allele	ARIBA	nucmer_min_id_80	7	7	0	0	0	0	0	0	0	0	7	1.7	1.9
+mock	one allele	KMA	default	7	7	0	0	0	0	0	0	0	0	7	0.1	0.2
+mock	mixture of two alleles	Locus-Recon	1.0.0, deposited result	4	4	0	0	0	0	0	0	0	0	0		
+mock	mixture of two alleles	ARIBA	default	4	4	0	0	0	0	0	0	0	0	0	2.0	2.1
+mock	mixture of two alleles	ARIBA	nucmer_min_id_80	4	4	0	0	0	0	0	0	0	0	0	2.0	2.1
+mock	mixture of two alleles	KMA	default	4	4	0	0	0	0	0	0	0	0	4	0.1	0.2
+mock	paralogue control	Locus-Recon	1.0.0, deposited result	1	0	0	0	0	0	1	0	0	0	0		
+mock	paralogue control	ARIBA	default	1	1	0	0	0	0	0	0	0	0	1	2.1	2.1
+mock	paralogue control	ARIBA	nucmer_min_id_80	1	1	0	0	0	0	0	0	0	0	1	2.1	2.1
+mock	paralogue control	KMA	default	1	0	0	0	0	0	1	0	0	0	0	0.1	0.1
+mock	negative control	Locus-Recon	1.0.0, deposited result	1	0	0	0	0	0	0	0	0	1	0		
+mock	negative control	ARIBA	default	1	0	0	0	0	0	0	0	0	1	0	0.4	0.4
+mock	negative control	ARIBA	nucmer_min_id_80	1	0	0	0	0	0	0	0	0	1	0	0.5	0.5
+mock	negative control	KMA	default	1	0	0	0	0	0	0	0	0	1	0	0.1	0.1
+hpylori	gyrB	Locus-Recon	1.0.0, deposited result	5	5	0	0	0	0	0	0	0	0	5		
+hpylori	gyrB	ARIBA	default	5	5	0	0	0	0	0	0	0	0	5	17.4	26.8
+hpylori	gyrB	ARIBA	nucmer_min_id_80	5	5	0	0	0	0	0	0	0	0	5	17.4	26.8
+hpylori	gyrB	KMA	default	5	5	0	0	0	0	0	0	0	0	5	5.5	9.1
+hpylori	23S	Locus-Recon	1.0.0, deposited result	5	4	0	1	0	0	0	0	0	0	4		
+hpylori	23S	ARIBA	default	5	4	0	0	0	0	1	0	0	0	4	17.4	26.8
+hpylori	23S	ARIBA	nucmer_min_id_80	5	4	0	0	0	0	1	0	0	0	4	17.4	26.8
+hpylori	23S	KMA	default	5	5	0	0	0	0	0	0	0	0	5	5.5	9.1
+hpylori	cagA	Locus-Recon	1.0.0, deposited result	5	0	0	3	2	0	0	0	0	0	0		
+hpylori	cagA	ARIBA	default	5	0	0	4	0	0	0	0	0	1	0	17.4	26.8
+hpylori	cagA	ARIBA	nucmer_min_id_80	5	0	0	4	0	0	0	0	0	1	0	17.4	26.8
+hpylori	cagA	KMA	default	5	0	0	0	0	2	3	0	0	0	0	5.5	9.1
+hpylori	glmM	Locus-Recon	1.0.0, deposited result	5	5	0	0	0	0	0	0	0	0	5		
+hpylori	glmM	ARIBA	default	5	5	0	0	0	0	0	0	0	0	5	17.4	26.8
+hpylori	glmM	ARIBA	nucmer_min_id_80	5	5	0	0	0	0	0	0	0	0	5	17.4	26.8
+hpylori	glmM	KMA	default	5	5	0	0	0	0	0	0	0	0	5	5.5	9.1
+hpylori	ureB	Locus-Recon	1.0.0, deposited result	5	5	0	0	0	0	0	0	0	0	5		
+hpylori	ureB	ARIBA	default	5	5	0	0	0	0	0	0	0	0	5	17.4	26.8
+hpylori	ureB	ARIBA	nucmer_min_id_80	5	5	0	0	0	0	0	0	0	0	5	17.4	26.8
+hpylori	ureB	KMA	default	5	5	0	0	0	0	0	0	0	0	5	5.5	9.1
+liba6656	tcdB	Locus-Recon	1.0.0, deposited result	1	0	0	1	0	0	0	0	0	0	0		
+liba6656	tcdB	ARIBA	default	1	0	0	1	0	0	0	0	0	0	0	18.1	18.1
+liba6656	tcdB	ARIBA	nucmer_min_id_80	1	0	0	1	0	0	0	0	0	0	0	18.1	18.1
+liba6656	tcdB	KMA	default	1	1	0	0	0	0	0	0	0	0	0	1.9	1.9

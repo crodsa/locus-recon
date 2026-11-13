@@ -1,0 +1,133 @@
+{
+  "created_utc": "2026-11-13T13:21:52.792385+00:00",
+  "git_commit": "UNAVAILABLE (fatal: not a git repository (or any parent up to mount point /))",
+  "inputs": [
+    {
+      "path": "validation/tier-calibration/bait_gyrB_26695.fasta",
+      "sha256": "142e0f3d46b427bf94f4b23dee0602155b69777f6071daf14803253f05535c11",
+      "size_bytes": 2396
+    },
+    {
+      "path": "validation/tier-calibration/bait_23S_26695.fasta",
+      "sha256": "9d047a4bc76f4850d6191b6fb23979d5d7be104c7e2e4d443825488cea34564f",
+      "size_bytes": 2965
+    },
+    {
+      "path": "validation/tier-calibration/bait_ureB_26695.fasta",
+      "sha256": "9293648af311076547d51c6d028aeee825a86538869251e46813295683c76bb5",
+      "size_bytes": 1774
+    },
+    {
+      "path": "validation/tier-calibration/bait_glmM_26695.fasta",
+      "sha256": "fde132015160c6fcd495bb6f31b3362ab862ee68282a6e0e5bd5d55c4343b349",
+      "size_bytes": 1397
+    },
+    {
+      "path": "validation/tier-calibration/bait_cagA_26695.fasta",
+      "sha256": "dbe3e8125520d3b1f6bb953c070565ded955f5a5ea59008c7de35f46ca699261",
+      "size_bytes": 3652
+    },
+    {
+      "path": "validation/tier-calibration/closed_genome_manifest.tsv",
+      "sha256": "c4b58f88fafdbb283d5d4865675bee52bccc60a4f20bc11dde0e5fa918346f7a",
+      "size_bytes": 390
+    },
+    {
+      "path": "validation/mock_dataset/mock_locus_alleles.fasta",
+      "sha256": "d885913eca4dacfcdc0728dec5a7141a487ee0f60e36c6af2763509ec16bd1a8",
+      "size_bytes": 1581
+    },
+    {
+      "path": "validation/mock_dataset/dataset_manifest.json",
+      "sha256": "232ef1e2268c4fb52c154589a5df66e478718d92091b72fc382445108d3caaf2",
+      "size_bytes": 11039
+    },
+    {
+      "path": "validation/liba6656-gfa-rerun/tcdB_111_ungapped_baits.fasta",
+      "sha256": "62662d9b6a8fc4f7f7a93a2336e2e3770156d72f6dbeb9f4d1454a11b4b22270",
+      "size_bytes": 789118
+    },
+    {
+      "path": "validation/comparator-benchmark/liba6656_analyst_built_candidates.fasta",
+      "sha256": "a961f6843f4a3a3d3af9157995220ab82c1f6012dce68c956eb261740a1d5ef1",
+      "size_bytes": 14704
+    }
+  ],
+  "parameters": {
+    "catalogue_sequences_declared_noncoding_for_ariba": {
+      "hpylori": [],
+      "liba6656": [],
+      "mock": [
+        "mockLocus_A",
+        "mockLocus_B",
+        "mockLocus_C"
+      ]
+    },
+    "configurations": [
+      {
+        "configuration": "default",
+        "extra_arguments": [],
+        "tool": "ARIBA"
+      },
+      {
+        "configuration": "nucmer_min_id_80",
+        "extra_arguments": [
+          "--nucmer_min_id",
+          "80"
+        ],
+        "tool": "ARIBA"
+      },
+      {
+        "configuration": "default",
+        "extra_arguments": [],
+        "tool": "KMA"
+      }
+    ],
+    "datasets": [
+      "mock",
+      "hpylori",
+      "liba6656"
+    ],
+    "threads": 16
+  },
+  "schema_version": "1.0",
+  "software": {
+    "git_commit": "UNAVAILABLE (fatal: not a git repository (or any parent up to mount point /))",
+    "git_tree_clean": null,
+    "name": "locus-recon",
+    "source_sha256": "3863abc32fb5446a72919c790cb2558217871410f441db1ecf17dde3de55cdcf",
+    "version": "1.0.0"
+  },
+  "tool_versions_text": {
+    "ariba": "ARIBA version: 2.14.7\n\nExternal dependencies:\nbowtie2\t2.5.5\t/home/crodsa/conda/envs/lr-comparators/bin/bowtie2\ncdhit\t4.8.1\t/home/crodsa/conda/envs/lr-comparators/bin/cd-hit-est\nnucmer\t3.1\t/home/crodsa/conda/envs/lr-comparators/bin/nucmer\nspades\t4.3.0\t/home/crodsa/conda/envs/lr-comparators/bin/spades.py\n\nExternal dependencies OK: True\n\nPython version:\n3.12.16 (main, Oct 26 2026, 11:37:43) [GCC 15.3.0]\n\nPython packages:\nariba\t2.14.7\t/home/crodsa/conda/envs/lr-comparators/lib/python3.12/site-packages/ariba/__init__.py\nbs4\t4.15.0\t/home/crodsa/conda/envs/lr-comparators/lib/python3.12/site-packages/bs4/__init__.py\ndendropy\t5.1.3\t/home/crodsa/conda/envs/lr-comparators/lib/python3.12/site-packages/dendropy/__init__.py\npyfastaq\t3.18.0\t/home/crodsa/conda/envs/lr-comparators/lib/python3.12/site-packages/pyfastaq/__init__.py\npymummer\t0.12.0\t/home/crodsa/conda/envs/lr-comparators/lib/python3.12/site-packages/pymummer/__init__.py\npysam\t0.24.1\t/home/crodsa/conda/envs/lr-comparators/lib/python3.12/site-packages/pysam/__init__.py\n\nPython packages OK: True\n\nEverything looks OK: True\n/home/crodsa/conda/envs/lr-comparators/lib/python3.12/site-packages/ariba/__init__.py:1: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.\n  from pkg_resources import get_distribution",
+    "blastn": "blastn: 2.17.0+\n Package: blast 2.17.0, build Aug 22 2026 11:52:50",
+    "kma": "KMA-1.7.1"
+  },
+  "tools": {
+    "blastn": {
+      "command": [
+        "blastn",
+        "-version"
+      ],
+      "exit_code": 0,
+      "version": "blastn: 2.17.0+"
+    },
+    "kma": {
+      "command": [
+        "kma",
+        "-v"
+      ],
+      "exit_code": 0,
+      "version": "KMA-1.7.1"
+    },
+    "python": {
+      "command": [
+        "python",
+        "--version"
+      ],
+      "exit_code": 0,
+      "version": "Python 3.12.16"
+    }
+  },
+  "workflow": "comparator_benchmark"
+}

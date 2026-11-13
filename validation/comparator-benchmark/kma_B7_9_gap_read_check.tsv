@@ -1,0 +1,11 @@
+quantity	value
+alignment_file	Supplementary Data 1: data/LIBA6656_reconstruction/two_copy_competitive.sorted.bam
+reference_sequence	LIBA6656_tcdB_extrachromosomal
+bases_absent_from_the_KMA_consensus_on_template_B7.9	5616-5619 (AGGA, inside TAATGGAGGAGCTGCT)
+window_examined	5606-5629
+reads_overlapping_the_window	97
+reads_spanning_the_whole_window	67
+spanning_reads_with_a_deletion_in_the_window	0
+spanning_reads_with_an_insertion_in_the_window	0
+spanning_reads_with_mapping_quality_0	0
+tool	samtools 1.21 (samtools view; CIGAR strings parsed)

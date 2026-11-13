@@ -85,17 +85,28 @@ mismatch.
 ### Where it sits among related tools
 
 Locus-Recon is not an allele caller and does not replace one. Read-based
-callers such as SRST2, stringMLST and KMA return the best-matching allele of a
-catalogue together with its support. ARIBA assembles reads locally against
-clustered references and reports genes and variants relative to them. Kaptive
-types a curated locus from an assembly. Each of these answers which known entry
-a sample matches, and none of them reports the copy number of the locus.
+callers such as SRST2 and stringMLST return the best-matching allele of a
+catalogue together with its support. KMA aligns reads to a catalogue and
+returns a consensus sequence for each template that the reads support. ARIBA
+assembles reads locally against clustered references and reports genes and
+variants relative to them. Kaptive types a curated locus from an assembly.
+None of them reports the copy number of the locus.
 
-Locus-Recon answers a different question. It takes the assembly and the reads
-together, returns the locus sequence itself with resolved boundaries, a
-per-base decision ledger and a confidence tier, and reports the depth of the
-locus against a single-copy backbone with a bootstrap interval and a
-length-weighted copy estimate. The cost of that scope is curation. Every locus
+ARIBA and KMA were run on the same reads as Locus-Recon
+([`validation/comparator-benchmark/`](../validation/comparator-benchmark/README.md)).
+For a single-copy locus with a close reference the three tools returned the
+same sequence, and KMA did so in seconds and without an assembly. KMA also
+separated two divergent copies when the catalogue held a close allele of each.
+It gave no warning when its consensus was wrong: for a gene whose length
+varies, for a paralogue, and at a four-base gap that no read supports.
+
+Locus-Recon is the layer that says when a sequence can be trusted. It takes
+the assembly and the reads together, returns the locus sequence with resolved
+boundaries, a per-base decision ledger and a confidence tier, and reports the
+depth of the locus against a single-copy backbone with a bootstrap interval
+and a length-weighted copy estimate. A practical order is to screen a
+collection with a fast caller and to examine with Locus-Recon the loci on
+which a conclusion will rest. The cost of that scope is curation. Every locus
 needs curated baits, a boundary definition and its own validation set, and
 Locus-Recon ships neither a locus catalogue nor an automated curation
 pipeline.

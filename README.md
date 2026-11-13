@@ -45,6 +45,13 @@ You need, for each isolate:
 
 One run reconstructs one locus in one or many isolates. Run the command again for another locus.
 
+If you only need the sequence of a single-copy gene and your catalogue holds a close allele, a read-based
+consensus tool such as [KMA](https://bitbucket.org/genomicepidemiology/kma) gives it in seconds, without an
+assembly. In our [comparison](validation/comparator-benchmark/README.md), KMA, ARIBA and Locus-Recon returned the
+same sequence for such loci. Use Locus-Recon when you need to know whether that sequence can be trusted (weak or
+mixed read support, a gene cut at a contig end, a paralogue, a locus whose length varies) or how many copies
+the locus has.
+
 Locus-Recon does not use long reads, unpaired reads or metagenomes, and it does not test the whole genome for
 contamination. It ships no allele catalogue: you supply the baits, for example from [PubMLST](https://pubmlst.org/).
 A `SKIP` result does not prove that the locus is absent.
@@ -199,6 +206,7 @@ release 1.0.0; [docs/validation-results.md](docs/validation-results.md) gives th
 | Depth, real amplification | *aphA1* in seven *Acinetobacter baumannii* runs | 10.5 and 77.7 copies, against 10 ± 2 and 75 ± 14 by published quantitative PCR |
 | Low copy number | 23S rRNA gene (two copies) in five *H. pylori* isolates | Depth ratios of 2.55 to 3.22; the graph gave two copies in four isolates and a lower bound of two in the fifth |
 | Collapsed divergent copies | *tcdB* of *Clostridioides difficile* LIBA-6656 | The workflow held a well-covered 1,955-bp fragment with 23 mixed sites. A dosage of 2.29 was shown to arise from overlapping alignments |
+| Comparison with ARIBA 2.14.7 and KMA 1.7.1 | The same reads and reference sequences: 25 *H. pylori* loci, 13 simulated samples, LIBA-6656 | Exact sequences in 19 (Locus-Recon), 19 (ARIBA) and 20 (KMA) of the 25 *H. pylori* loci. KMA returned sequences that differ from the truth for *cagA* and for the paralogue control without a warning; Locus-Recon accepted none of these |
 
 ## Limits
 
@@ -208,8 +216,11 @@ release 1.0.0; [docs/validation-results.md](docs/validation-results.md) gives th
 - A locus whose length varies among strains needs baits that represent that variation, or its candidates will not
   be accepted.
 - The 1.5 threshold of the depth call was set by the author and was not fitted.
-- Locus-Recon was not benchmarked against ARIBA, KMA or SRST2. Those tools report which catalogue entry a sample
-  matches; Locus-Recon examines the loci that such a screen leaves in doubt.
+- Locus-Recon did not return better sequences than ARIBA or KMA when a close reference existed, and it is slower
+  and needs a draft assembly. KMA is the quick route to the sequence. Locus-Recon adds the evidence that says
+  when the sequence can be trusted and how many copies there are. SRST2 and stringMLST were not compared.
+- When the copies of a locus are divergent and the catalogue holds a close allele of each, KMA can separate them
+  and the standard Locus-Recon workflow cannot: for *tcdB* of LIBA-6656 it returned one held fragment.
 - Short reads cannot close a replicon, assign distant variants to a copy or replace long reads when a result
   changes a conclusion.
 

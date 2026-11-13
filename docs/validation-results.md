@@ -18,6 +18,7 @@ it does not.
 | *aphA1* in *Acinetobacter baumannii*, seven runs | `aphA1-copy-number/` | Depth dosage of a real amplification | 10.5 and 77.7 copies against 10 ± 2 and 75 ± 14 by published quantitative PCR | Six runs come from one patient |
 | 23S rRNA gene and *gyrB*, five *H. pylori* isolates | `low-copy-23S/` | A small copy number | Depth ratios of 2.55 to 3.22 for two copies; graph count of two in four isolates, lower bound in the fifth | These genomes also guided the design of the graph method |
 | *Clostridioides difficile* LIBA-6656, *tcdB* | `liba6656-gfa-rerun/`, `liba6656-depth/`, `depth-copy-number/overlap_null/` | A locus with two divergent copies that collapse in the draft | The workflow held a 1,955-bp fragment; the query-weighted dosage of 2.29 is explained by overlapping alignments | Two full-length sequences were built by hand from the graph. They are hypotheses that await long reads |
+| Comparison with ARIBA 2.14.7 and KMA 1.7.1, 39 cases | `comparator-benchmark/` | The sequences that three tools return from the same reads and reference sequences | Exact in 19, 19 and 20 of 25 *H. pylori* loci for Locus-Recon, ARIBA and KMA | Other species, tuned settings, SRST2 or stringMLST |
 
 ## Reconstruction
 
@@ -49,6 +50,35 @@ contained wrong bases and one sample had no candidate. One of the two sequences 
 is, in review (*gyrB* of Hpfe0002 at about 8×, one wrong base in 2,322). A tier below `HIGH` means that evidence
 is incomplete, not that the sequence is wrong, and a sequence in review can be wrong.
 
+## Comparison with ARIBA and KMA
+
+ARIBA 2.14.7 and KMA 1.7.1 were run with default settings on the reads and reference sequences of three analyses
+above. [`validation/comparator-benchmark/README.md`](../validation/comparator-benchmark/README.md) gives the
+settings, the scoring and every case.
+
+**_H. pylori_, 25 loci.** The three tools returned the exact sequence of every *gyrB*, *ureB* and *glmM* gene.
+For the 23S rRNA gene, KMA was exact in all five isolates, and ARIBA and Locus-Recon in four. ARIBA called T for C
+at position 1,639 of Hpfe0002, the site that Locus-Recon reports as mixed and that KMA writes in lower case.
+Locus-Recon returned 2,570 of the 2,887 bp of Hpfe0006 and held them. No tool returned an exact *cagA* gene.
+ARIBA returned fragments of 372 to 1,323 bp in four isolates and nothing in the fifth. KMA returned a consensus
+of 3,341 to 3,412 bp at an edit distance of 145 to 239 from the gene. The Locus-Recon candidates matched the
+genome at every aligned base, had ends wrong by 6 to 33 bp, and were not accepted.
+
+**Simulated samples.** All tools were exact for the seven samples with one allele. In the four mixtures KMA
+returned both alleles, ARIBA returned one, and Locus-Recon returned the major allele and held it as a mixture.
+In the paralogue control ARIBA returned the true allele and the paralogue as two sequences. KMA returned one
+sequence with three wrong bases and a gap and gave no warning. Locus-Recon returned a sequence with five wrong
+bases and held it as ambiguous.
+
+**LIBA-6656.** ARIBA returned 24 fragments of at most 1,421 bp. KMA returned two full-length sequences. The one
+on template B7.6 is identical to the chromosome-associated analyst-built candidate. The one on template B7.9 is
+the extrachromosomal candidate without four bases (positions 5,616 to 5,619); 67 reads span that site and none
+carries the deletion. The standard Locus-Recon workflow returned one held fragment of 1,955 bp.
+
+**Reading.** When a close reference exists, KMA is the quick route to the sequence, and Locus-Recon does not
+return a better one. Locus-Recon accepted no sequence that differed from the truth, states why a sequence was not
+accepted, and estimates copy number.
+
 ## Copy number
 
 **Synthetic series.** Dosage was 0.94 to 1.10 for one copy, 1.94 to 2.10 for two and 2.92 to 3.14 for three.
@@ -74,4 +104,5 @@ The outputs were produced during development and their records name the commits 
 to the release is the SHA-256 digest of the package sources (`locus_recon/*.py`),
 `3863abc32fb5446a72919c790cb2558217871410f441db1ecf17dde3de55cdcf`, which `validation/common.py` computes.
 The report, the scorecard, the checksum list and the verification record of `liba6656-gfa-rerun/` are the
-output of the released code; see the [changelog](../CHANGELOG.md).
+output of the released code; see the [changelog](../CHANGELOG.md). The comparison with ARIBA and KMA was run on
+13 November 2026 from the source distribution of release 1.0.0, and its record carries the same digest.

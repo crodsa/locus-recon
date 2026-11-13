@@ -2,5 +2,6 @@ include README.md CHANGELOG.md CITATION.cff LICENSE LICENSE-DATA.md environment.
 recursive-include docs *.md
 recursive-include examples *.md *.tsv
 recursive-include validation *.py *.md *.json *.tsv *.fasta *.fastq.gz *.gfa
+recursive-include validation/comparator-benchmark *.txt *.yml *.tar.gz
 prune validation/mock_results
 global-exclude __pycache__ *.py[cod] .DS_Store

@@ -15,12 +15,28 @@ identified by the SHA-256 digest
 `3863abc32fb5446a72919c790cb2558217871410f441db1ecf17dde3de55cdcf`, which
 `validation/common.py` computes. The tag `v1.0.0` was first published on
 20 October 2026 on a tree that held the package, its documentation, its tests
-and the simulated benchmark. On 11 November 2026 the tag and the release files were set on the
-present tree. The package code is the same. The present tree adds the scripts
-and records of every validation analysis and carries the revisions listed
-below. A source distribution or wheel of 1.0.0 downloaded before
-11 November 2026 therefore differs from the current one outside the package
-code only.
+and the simulated benchmark. On 11 November 2026 the tag and the release files
+were set on a tree that adds the scripts and records of every validation
+analysis, and on 13 November 2026 on the present tree, which adds the
+comparison with ARIBA and KMA. The package code is the same in all three, and
+the revisions are listed below. A source distribution or wheel of 1.0.0
+downloaded before 13 November 2026 therefore differs from the current one
+outside the package code only.
+
+Revisions of 13 November 2026:
+
+- `validation/run_comparator_benchmark.py` and
+  `validation/comparator-benchmark/`: ARIBA 2.14.7 and KMA 1.7.1 run on the
+  reads and reference sequences of the simulated benchmark, of the 25
+  *H. pylori* loci of the tier calibration and of LIBA-6656, and scored
+  against the same truth as Locus-Recon.
+- `README.md`, `docs/user-guide.md`, `docs/validation-results.md` and
+  `validation/README.md` report that comparison. The statement that
+  Locus-Recon had not been benchmarked against ARIBA or KMA was removed, and
+  the description of KMA was corrected: it returns a consensus sequence and
+  not only the best-matching allele.
+- `MANIFEST.in`: the source distribution includes the records of the
+  comparison.
 
 Revisions of 11 November 2026:
 
@@ -275,6 +291,14 @@ reports the geometry and leaves the join to the analyst.
   database errors, length-profile reporting, the three placeholder junction
   verdicts, and competitive path scoring both against constructed truth and on
   the published read pair, where the enumerated paths cannot be separated.
+- A comparison with ARIBA 2.14.7 and KMA 1.7.1 on 39 cases (13 simulated
+  samples, 25 *H. pylori* loci and *tcdB* of LIBA-6656) with the same reads
+  and reference sequences. Exact sequences in 19 (Locus-Recon), 19 (ARIBA)
+  and 20 (KMA) of the 25 *H. pylori* loci; no tool returned an exact *cagA*
+  gene. KMA returned both full-length *tcdB* sequences of LIBA-6656, one of
+  them without four bases that the reads support, where the standard
+  Locus-Recon workflow returned one held fragment. The comparators are not
+  dependencies and are not covered by the automated tests.
 - A 14-case deterministic completeness benchmark in which the withheld locus
   bases are known by construction, covering intact, flush, one-sided and
   two-sided truncation, reverse orientation and three split-contig layouts.
