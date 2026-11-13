@@ -60,24 +60,27 @@ settings, the scoring and every case.
 For the 23S rRNA gene, KMA was exact in all five isolates, and ARIBA and Locus-Recon in four. ARIBA called T for C
 at position 1,639 of Hpfe0002, the site that Locus-Recon reports as mixed and that KMA writes in lower case.
 Locus-Recon returned 2,570 of the 2,887 bp of Hpfe0006 and held them. No tool returned an exact *cagA* gene.
-ARIBA returned fragments of 372 to 1,323 bp in four isolates and nothing in the fifth. KMA returned a consensus
-of 3,341 to 3,412 bp at an edit distance of 145 to 239 from the gene. The Locus-Recon candidates matched the
+ARIBA returned fragments of 146 to 1,323 bp in four isolates and nothing in the fifth. KMA returned a consensus
+of 3,341 to 3,412 bp at an edit distance of 145 to 239 from the gene, with 13 to 65 bases in lower case. The
+Locus-Recon candidates matched the
 genome at every aligned base, had ends wrong by 6 to 33 bp, and were not accepted.
 
 **Simulated samples.** All tools were exact for the seven samples with one allele. In the four mixtures KMA
 returned both alleles, ARIBA returned one, and Locus-Recon returned the major allele and held it as a mixture.
 In the paralogue control ARIBA returned the true allele and the paralogue as two sequences. KMA returned one
-sequence with three wrong bases and a gap and gave no warning. Locus-Recon returned a sequence with five wrong
+sequence with three wrong bases and one extra base, all four in lower case. Locus-Recon returned a sequence with five wrong
 bases and held it as ambiguous.
 
 **LIBA-6656.** ARIBA returned 24 fragments of at most 1,421 bp. KMA returned two full-length sequences. The one
 on template B7.6 is identical to the chromosome-associated analyst-built candidate. The one on template B7.9 is
-the extrachromosomal candidate without four bases (positions 5,616 to 5,619); 67 reads span that site and none
-carries the deletion. The standard Locus-Recon workflow returned one held fragment of 1,955 bp.
+the extrachromosomal candidate without four bases (positions 5,616 to 5,619), with the 16 bases around the gap in
+lower case; 67 reads span that site and none carries the deletion. The standard Locus-Recon workflow returned one held fragment of 1,955 bp.
 
 **Reading.** When a close reference exists, KMA is the quick route to the sequence, and Locus-Recon does not
-return a better one. Locus-Recon accepted no sequence that differed from the truth, states why a sequence was not
-accepted, and estimates copy number.
+return a better one. KMA marks weakly supported bases in lower case, and every KMA sequence that differed from the
+truth carried that mark at its errors; the mark does not say what is wrong and cannot show missing bases.
+Locus-Recon accepted no sequence that differed from the truth, states why a sequence was not accepted, and
+estimates copy number.
 
 ## Copy number
 

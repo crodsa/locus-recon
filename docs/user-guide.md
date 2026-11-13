@@ -97,8 +97,9 @@ ARIBA and KMA were run on the same reads as Locus-Recon
 For a single-copy locus with a close reference the three tools returned the
 same sequence, and KMA did so in seconds and without an assembly. KMA also
 separated two divergent copies when the catalogue held a close allele of each.
-It gave no warning when its consensus was wrong: for a gene whose length
-varies, for a paralogue, and at a four-base gap that no read supports.
+Its consensus was wrong for a gene whose length varies, for a paralogue, and
+at a four-base gap that no read supports. The only sign was lower-case
+letters at those places, which KMA uses for weakly supported bases.
 
 Locus-Recon is the layer that says when a sequence can be trusted. It takes
 the assembly and the reads together, returns the locus sequence with resolved

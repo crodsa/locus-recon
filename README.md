@@ -206,7 +206,7 @@ release 1.0.0; [docs/validation-results.md](docs/validation-results.md) gives th
 | Depth, real amplification | *aphA1* in seven *Acinetobacter baumannii* runs | 10.5 and 77.7 copies, against 10 ± 2 and 75 ± 14 by published quantitative PCR |
 | Low copy number | 23S rRNA gene (two copies) in five *H. pylori* isolates | Depth ratios of 2.55 to 3.22; the graph gave two copies in four isolates and a lower bound of two in the fifth |
 | Collapsed divergent copies | *tcdB* of *Clostridioides difficile* LIBA-6656 | The workflow held a well-covered 1,955-bp fragment with 23 mixed sites. A dosage of 2.29 was shown to arise from overlapping alignments |
-| Comparison with ARIBA 2.14.7 and KMA 1.7.1 | The same reads and reference sequences: 25 *H. pylori* loci, 13 simulated samples, LIBA-6656 | Exact sequences in 19 (Locus-Recon), 19 (ARIBA) and 20 (KMA) of the 25 *H. pylori* loci. KMA returned sequences that differ from the truth for *cagA* and for the paralogue control without a warning; Locus-Recon accepted none of these |
+| Comparison with ARIBA 2.14.7 and KMA 1.7.1 | The same reads and reference sequences: 25 *H. pylori* loci, 13 simulated samples, LIBA-6656 | Exact sequences in 19 (Locus-Recon), 19 (ARIBA) and 20 (KMA) of the 25 *H. pylori* loci. KMA returned sequences that differ from the truth for *cagA* and for the paralogue control, marked only by lower-case bases; Locus-Recon accepted none of these and stated why |
 
 ## Limits
 

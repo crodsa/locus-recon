@@ -60,17 +60,17 @@ configurations) and KMA 20.
 |---|---|---|---|
 | *gyrB*, *ureB*, *glmM* (15) | 15 exact, all accepted | 15 exact | 15 exact |
 | 23S rRNA gene (5) | 4 exact and accepted; Hpfe0002 with one mixed site reported at position 1,639. Hpfe0006: 2,570 of 2,887 bp, held, with the missing 317 bp located on a second scaffold | 4 exact. Hpfe0002: T for C at position 1,639, with the flag `variants_suggest_collapsed_repeat` | 5 exact. Hpfe0002: position 1,639 in lower case |
-| *cagA* (5) | No exact sequence and none accepted: candidates identical to the genome over the overlap, with ends wrong by 6 to 33 bp | No exact sequence: fragments of 372 to 1,323 bp in four isolates, none in the fifth (624 to 2,457 bp with `--nucmer_min_id 80`) | No exact sequence: consensus of 3,341 to 3,412 bp at an edit distance of 145 to 239 from the gene, without a warning |
+| *cagA* (5) | No exact sequence and none accepted: candidates identical to the genome over the overlap, with ends wrong by 6 to 33 bp | No exact sequence: fragments of 146 to 1,323 bp in four isolates, none in the fifth (at most 2,457 bp with `--nucmer_min_id 80`) | No exact sequence: consensus of 3,341 to 3,412 bp at an edit distance of 145 to 239 from the gene; 13 to 65 bases in lower case |
 | Simulated, one allele (7) | 7 exact; 3 accepted, 4 not accepted at 3× to 20× | 7 exact | 7 exact; 273 of 507 bases in lower case at 3× |
 | Simulated mixtures (4) | Major allele exact; a mixture is reported and the sample is held in all 4 | One allele, exact: the major one at 5, 10 and 20%, the second one at 50%. A flag for mixed bases at 20 and 50% only | Both alleles exact in all 4, with depths that follow the mixing fraction |
-| Paralogue control (1) | A sequence with wrong bases, held as ambiguous | The true allele, exact, and the paralogue as a second sequence (`region_assembled_twice`) | A sequence with three wrong bases and one gap; no warning |
+| Paralogue control (1) | A sequence with wrong bases, held as ambiguous | The true allele, exact, and the paralogue as a second sequence (`region_assembled_twice`) | A sequence with three wrong bases and one extra base, all four in lower case |
 | Sample without the locus (1) | Nothing returned | Nothing returned | Nothing returned |
 | LIBA-6656 *tcdB* | One fragment of 1,955 bp, held: 23 mixed sites, both ends missing, locus split | 24 fragments of at most 1,421 bp (25 with `--nucmer_min_id 80`) | Two full-length sequences and a 584-bp fragment |
 
 The two full-length sequences that KMA returns for LIBA-6656 are close to the two analyst-built candidates. The
 consensus on template B7.6 (7,104 bp) is identical to the chromosome-associated candidate. The consensus on
 template B7.9 (7,100 bp) is the extrachromosomal candidate without four bases, AGGA at positions 5,616 to 5,619,
-and has no mismatch. The reads do not support that deletion: in the competitive alignment of Supplementary Data 1,
+and has no mismatch; KMA wrote the 16 bases around the gap in lower case. The reads do not support that deletion: in the competitive alignment of Supplementary Data 1,
 67 reads span positions 5,606 to 5,629 and none carries a deletion (`kma_B7_9_gap_read_check.tsv`).
 
 KMA took 5.5 to 9.1 s per *H. pylori* isolate for the five loci and ARIBA 17.4 to 26.8 s. Locus-Recon was not
@@ -83,11 +83,16 @@ timed here; it needs a draft assembly and runs a local assembly and two read map
 - KMA is the quickest route to a sequence when a close template exists. It recovered the 23S rRNA gene that
   Locus-Recon left incomplete, and it separated the two *tcdB* copies of LIBA-6656 because the catalogue holds a
   close allele of each.
-- A consensus does not say when it is wrong. KMA returned a sequence that differs from the truth for every
-  *cagA* gene and for the paralogue control, and one that lacks four bases for one *tcdB* copy, each time without
-  a warning.
-- Locus-Recon accepted no wrong sequence. It also reports why a sequence was not accepted and estimates how
-  many copies the locus has. The comparators report depth but no copy number.
+- KMA returned a sequence that differs from the truth for every *cagA* gene and for the paralogue control, and
+  one that lacks four bases for one *tcdB* copy. Its only sign of doubt is the case of the letters: it writes
+  weakly supported bases in lower case, and each of these sequences had lower-case bases at or next to its
+  errors. The mark does not say what is wrong, it cannot show bases that are missing, and the `.res` report does
+  not mention it. Correct sequences can carry it too (273 of 507 bases at 3×, the mixed site of the 23S rRNA
+  gene of Hpfe0002). The column `lowercase_bases` of the result table gives the count for every case.
+- ARIBA showed the *cagA* problem by fragmentation and flagged two of the four mixtures.
+- Locus-Recon accepted no wrong sequence. It turns the evidence into a decision, states why a sequence was not
+  accepted, measures how much of the locus is missing and estimates how many copies the locus has. The
+  comparators report depth but no copy number.
 
 The comparison has limits. It covers one species with real truth, one bait strain and default settings. SRST2 and
 stringMLST were not run. The Locus-Recon
