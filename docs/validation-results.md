@@ -58,7 +58,9 @@ settings, the scoring and every case.
 
 **_H. pylori_, 25 loci.** The three tools returned the exact sequence of every *gyrB*, *ureB* and *glmM* gene.
 For the 23S rRNA gene, KMA was exact in all five isolates, and ARIBA and Locus-Recon in four. ARIBA called T for C
-at position 1,639 of Hpfe0002, the site that Locus-Recon reports as mixed and that KMA writes in lower case.
+at position 1,639 of Hpfe0002, with its flag for a collapsed repeat and both nucleotides listed (121 reads with
+T, 123 with C). Locus-Recon reports this site as mixed and KMA writes it in lower case. ARIBA and KMA returned
+the complete gene of Hpfe0006.
 Locus-Recon returned 2,570 of the 2,887 bp of Hpfe0006 and held them. No tool returned an exact *cagA* gene.
 ARIBA returned fragments of 146 to 1,323 bp in four isolates and nothing in the fifth. KMA returned a consensus
 of 3,341 to 3,412 bp at an edit distance of 145 to 239 from the gene, with 13 to 65 bases in lower case. The
@@ -77,10 +79,12 @@ the extrachromosomal candidate without four bases (positions 5,616 to 5,619), wi
 lower case; 67 reads span that site and none carries the deletion. The standard Locus-Recon workflow returned one held fragment of 1,955 bp.
 
 **Reading.** When a close reference exists, KMA is the quick route to the sequence, and Locus-Recon does not
-return a better one. KMA marks weakly supported bases in lower case, and every KMA sequence that differed from the
-truth carried that mark at its errors; the mark does not say what is wrong and cannot show missing bases.
-Locus-Recon accepted no sequence that differed from the truth, states why a sequence was not accepted, and
-estimates copy number.
+return a better one. KMA raises no flag. It writes in lower case a base that is not significantly
+overrepresented in the reads, and every KMA sequence that differed from the truth carried that mark at or next
+to its errors; the mark does not say what is wrong and cannot show missing bases. ARIBA reported its doubt in
+flags and in the read depths of each difference, except for the 5 and 10% mixtures, and in the paralogue control
+it alone returned the true allele. Neither tool states a decision. Locus-Recon accepted no sequence that
+differed from the truth, states why a sequence was not accepted, and estimates copy number.
 
 ## Copy number
 
@@ -107,5 +111,6 @@ The outputs were produced during development and their records name the commits 
 to the release is the SHA-256 digest of the package sources (`locus_recon/*.py`),
 `3863abc32fb5446a72919c790cb2558217871410f441db1ecf17dde3de55cdcf`, which `validation/common.py` computes.
 The report, the scorecard, the checksum list and the verification record of `liba6656-gfa-rerun/` are the
-output of the released code; see the [changelog](../CHANGELOG.md). The comparison with ARIBA and KMA was run on
-13 November 2026 from the source distribution of release 1.0.0, and its record carries the same digest.
+output of the released code; see the [changelog](../CHANGELOG.md). The tools of the comparison with ARIBA and
+KMA were run on 11 and 13 November 2026 from source distributions of release 1.0.0, and its record, of
+13 November 2026, carries the same digest.

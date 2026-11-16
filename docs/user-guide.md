@@ -98,8 +98,13 @@ For a single-copy locus with a close reference the three tools returned the
 same sequence, and KMA did so in seconds and without an assembly. KMA also
 separated two divergent copies when the catalogue held a close allele of each.
 Its consensus was wrong for a gene whose length varies, for a paralogue, and
-at a four-base gap that no read supports. The only sign was lower-case
-letters at those places, which KMA uses for weakly supported bases.
+at a four-base gap that no read supports. KMA raised no flag in these cases.
+It wrote the bases at those places in lower case, its notation for a base
+that is not significantly overrepresented in the reads. ARIBA reported its
+doubt in flags and in the read depths of each difference from the reference.
+It fragmented the gene whose length varies and the two divergent copies, and
+for the paralogue it returned the true allele beside the paralogue. Neither
+tool states a decision about the sequence as a whole.
 
 Locus-Recon is the layer that says when a sequence can be trusted. It takes
 the assembly and the reads together, returns the locus sequence with resolved

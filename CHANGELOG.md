@@ -17,11 +17,25 @@ identified by the SHA-256 digest
 20 October 2026 on a tree that held the package, its documentation, its tests
 and the simulated benchmark. On 11 November 2026 the tag and the release files
 were set on a tree that adds the scripts and records of every validation
-analysis, and on 13 November 2026 on the present tree, which adds the
-comparison with ARIBA and KMA. The package code is the same in all three, and
-the revisions are listed below. A source distribution or wheel of 1.0.0
-downloaded before 13 November 2026 therefore differs from the current one
+analysis, on 13 November 2026 on a tree that adds the comparison with ARIBA
+and KMA, and on 16 November 2026 on the present tree, which corrects the
+documentation of that comparison. The package code is the same in all four,
+and the revisions are listed below. A source distribution or wheel of 1.0.0
+downloaded before 16 November 2026 therefore differs from the current one
 outside the package code only.
+
+Revisions of 16 November 2026, after an independent audit of the text on the
+comparison:
+
+- `README.md`, `docs/user-guide.md`, `docs/validation-results.md` and
+  `validation/comparator-benchmark/README.md` no longer say that lower-case
+  bases were the only sign that KMA gave, and they state what ARIBA reported:
+  flags and read depths for its doubtful results, and the true allele in the
+  paralogue control. ARIBA and KMA both returned the complete 23S rRNA gene
+  of Hpfe0006.
+- The tools of the comparison were run on 11 and 13 November 2026; the
+  documents had given 13 November only.
+- No result file changed.
 
 Revisions of 13 November 2026:
 
