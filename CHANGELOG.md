@@ -18,14 +18,27 @@ identified by the SHA-256 digest
 and the simulated benchmark. On 11 November 2026 the tag and the release files
 were set on a tree that adds the scripts and records of every validation
 analysis, on 13 November 2026 on a tree that adds the comparison with ARIBA
-and KMA, and on 16 November 2026 on the present tree, which corrects the
-documentation of that comparison. The package code is the same in all four,
-and the revisions are listed below. A source distribution or wheel of 1.0.0
-downloaded before 16 November 2026 therefore differs from the current one
-outside the package code only.
+and KMA, and twice on 16 November 2026 on trees that correct the
+documentation: first that of the comparison, then `README.md` (the present
+tree). The package code is the same in all of them, and the revisions are
+listed below. A source distribution or wheel of 1.0.0 downloaded on or before
+16 November 2026 may therefore differ from the current one, outside the
+package code only.
 
-Revisions of 16 November 2026, after an independent audit of the text on the
-comparison:
+Second revision of 16 November 2026, `README.md` only:
+
+- The row on the comparison had said that KMA returned its wrong sequences
+  with the errors in lower case. Most of the difference from the true *cagA*
+  genes is missing sequence, which lower case cannot show. The row now uses
+  the wording of `validation/comparator-benchmark/README.md`.
+- The copy-number section says where the `--locus` coordinates and the
+  graph files come from.
+- The page mentions `--help` and the wheel and source distribution attached
+  to the release.
+- No result file changed.
+
+First revision of 16 November 2026, after an independent audit of the text on
+the comparison:
 
 - `README.md`, `docs/user-guide.md`, `docs/validation-results.md` and
   `validation/comparator-benchmark/README.md` no longer say that lower-case

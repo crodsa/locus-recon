@@ -72,6 +72,10 @@ Activate the environment in every new terminal with `conda activate locus-recon`
 
 To install exactly the released version, use the tag: `git clone --branch v1.0.0 https://github.com/crodsa/locus-recon.git`.
 
+The [release page](https://github.com/crodsa/locus-recon/releases/tag/v1.0.0) also carries a wheel and a source
+distribution of 1.0.0. The wheel holds the Python package only. The external tools still come from the Conda
+environment, and the test data of the next section come with the repository or the source distribution.
+
 ## Check the installation
 
 ```bash
@@ -89,6 +93,9 @@ python validation/run_mock_validation.py --force --threads 2 --memory-gb 4
 ```
 
 The dry run ends with `Dry run passed`. The benchmark writes its evaluation under `validation/mock_results/validation/`.
+
+Each of the four commands lists its options with `--help`, and the
+[command-line reference](docs/cli-reference.md) explains them.
 
 ## Run it on your data
 
@@ -177,7 +184,17 @@ locus-recon-graph-paths \
   --min-length 6000 --max-length 8000
 ```
 
-`SAMPLE/full_map.sorted.bam` is written by a reconstruction run without `--cleanup`. How to read the output:
+Where the inputs come from:
+
+- `SAMPLE/full_map.sorted.bam` is written by a reconstruction run without `--cleanup`.
+- `--locus` is the position of the locus on the draft assembly, written `contig:start-end`. Take the contig and
+  the two positions from `SAMPLE/blast_step1.tsv`, which lists the alignments of the baits to the draft
+  (columns 2, 5 and 6), and give the smaller position first.
+- The graph for `locus-recon-copy-number` is the `assembly_graph_after_simplification.gfa` that SPAdes wrote when
+  it assembled the draft. The graph under `SAMPLE/spades_local/` holds the recruited reads only and is the one
+  for `locus-recon-graph-paths`.
+
+How to read the output:
 
 - `MULTICOPY_DEPTH` means that the lower limit of the interval is above 1.5. `SINGLE_COPY_COMPATIBLE` is
   compatibility, not proof of one copy.
@@ -206,7 +223,7 @@ release 1.0.0; [docs/validation-results.md](docs/validation-results.md) gives th
 | Depth, real amplification | *aphA1* in seven *Acinetobacter baumannii* runs | 10.5 and 77.7 copies, against 10 ± 2 and 75 ± 14 by published quantitative PCR |
 | Low copy number | 23S rRNA gene (two copies) in five *H. pylori* isolates | Depth ratios of 2.55 to 3.22; the graph gave two copies in four isolates and a lower bound of two in the fifth |
 | Collapsed divergent copies | *tcdB* of *Clostridioides difficile* LIBA-6656 | The workflow held a well-covered 1,955-bp fragment with 23 mixed sites. A dosage of 2.29 was shown to arise from overlapping alignments |
-| Comparison with ARIBA 2.14.7 and KMA 1.7.1 | The same reads and reference sequences: 25 *H. pylori* loci, 13 simulated samples, LIBA-6656 | Exact sequences in 19 (Locus-Recon), 19 (ARIBA) and 20 (KMA) of the 25 *H. pylori* loci. KMA returned sequences that differ from the truth for *cagA* and for the paralogue control, without a flag and with the errors in lower case. ARIBA fragmented *cagA* and returned the true allele of the paralogue control. Locus-Recon accepted none of its wrong candidates and stated why |
+| Comparison with ARIBA 2.14.7 and KMA 1.7.1 | The same reads and reference sequences: 25 *H. pylori* loci, 13 simulated samples, LIBA-6656 | Exact sequences in 19 (Locus-Recon), 19 (ARIBA) and 20 (KMA) of the 25 *H. pylori* loci. KMA returned sequences that differ from the truth for *cagA* and for the paralogue control. It raised no flag. These sequences had lower-case bases at or next to their errors, but lower case cannot show bases that are missing, and correct sequences carried it too. ARIBA fragmented *cagA* and returned the true allele of the paralogue control. Locus-Recon accepted none of its wrong candidates and stated why |
 
 ## Limits
 
