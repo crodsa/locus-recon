@@ -81,6 +81,10 @@ UNCERTAINTY_THRESHOLDS = {
 # Flags that describe a run but do not, on their own, constrain the tier.
 DESCRIPTIVE_FLAG_PREFIXES = (
     "PATCHY_REMAP_SUPPORT",
+    # Credible mixed sites that are fewer than the mixture call requires.  The
+    # sites already count as uncertain bases, which is how they reach the tier;
+    # this flag makes them visible on a result that can otherwise be accepted.
+    "MIXED_SITE_BELOW_MIXTURE_CALL",
     # A length that is not a multiple of three in a reconstruction already
     # known to be clipped by a contig boundary.  The truncation is scored by
     # its own flag; this one only records that the frame arithmetic follows

@@ -746,6 +746,13 @@ def process_sample(
                 f"{elapsed:.1f}s"
             ),
         })
+        if (remap.get("mixed_site_count", 0)
+                and not remap.get("mixture_detected", False)):
+            log.warning(
+                f"  >> {sample_id}: {remap['mixed_site_count']} credible mixed "
+                "site(s) below the mixture call (MIXED_SITE_BELOW_MIXTURE_CALL); "
+                "see allele_remap.support.tsv before using the sequence"
+            )
         log.info(f"  >> SUCCESS: {sample_id} -> {final_fasta} ({elapsed:.1f}s)")
         return result
 

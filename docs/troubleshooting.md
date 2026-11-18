@@ -1,6 +1,6 @@
 # Troubleshooting guide
 
-This guide connects Locus-Recon 1.0.0 messages and unexpected results to the
+This guide connects Locus-Recon 1.0.1 messages and unexpected results to the
 evidence files that can explain them. It does not treat every negative result as
 a software error or every reconstruction as biologically correct.
 

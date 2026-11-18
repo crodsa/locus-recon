@@ -205,7 +205,7 @@ samtools --version
 spades.py --version
 ```
 
-The first command should report `locus-recon 1.0.0`; the remaining commands
+The first command should report `locus-recon 1.0.1`; the remaining commands
 confirm that all external programs are available inside the active environment.
 The package supports Python 3.9 or newer, although the supplied environment pins
 Python 3.11.13. See the
@@ -728,6 +728,28 @@ Interpret `copy_number_call` together with `copy_number_kind`:
 | `LOWER_BOUND` / `GRAPH_LOWER_BOUND` | Depth rejects one copy and the graph resolves only a lower bound on the contexts (one-sided, asymmetric, or from a traversal pruned by a cycle or a limit). |
 | `LOWER_BOUND` with `DEPTH_LOWER_BOUND` | Depth rejects one copy but `ambiguity_index` is below 0.70, so the dosage is only a floor; the larger of the depth floor and any graph floor is reported in `copy_number_lower_bound`. |
 | `NOT_ESTIMATED` | The evidence does not identify a count: `EVIDENCE_CONFLICT` when the graph resolves several contexts but depth is single-copy compatible, `INDETERMINATE` otherwise. Inspect status, bounds, and flags rather than coercing a number. |
+
+Read `copy_number_status` with these values. `SUPPORTED` means that the
+evidence named by the method agrees with the value returned. It does not mean
+that a count was validated. For a depth dosage it is given only when
+`dosage_status` is `ESTIMATED`. A dosage computed from overlapping spans
+(`REVIEW_OVERLAPPING_SPANS`) or from part of the query
+(`ESTIMATED_PARTIAL_COVERAGE`) is returned with the status `REVIEW` and the
+flag `DOSAGE_REVIEW_OVERLAPPING_SPANS` or `DOSAGE_ESTIMATED_PARTIAL_COVERAGE`:
+
+```text
+copy_number_call    2.287
+copy_number_kind    MEAN_DEPTH_DOSAGE
+copy_number_method  DEPTH_ONLY
+copy_number_status  REVIEW
+consensus_flags     DOSAGE_REVIEW_OVERLAPPING_SPANS
+dosage_status       REVIEW_OVERLAPPING_SPANS
+geometry_expected_dosage  1.843
+```
+
+These are the depth values of the *tcdB* locus of LIBA-6656, without a graph.
+The overlapping spans alone give 1.84, so the value cannot be read as two
+copies.
 
 `DEPTH_GRAPH_NUMERIC_DISCORDANCE` means that an integer graph count falls
 outside the unchanged depth interval. It preserves both observations and is

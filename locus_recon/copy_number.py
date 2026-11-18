@@ -606,6 +606,19 @@ def infer_graph_contexts(
     )
 
 
+def _dosage_consensus_status(depth: DepthRatioResult, flags: list[str]) -> str:
+    """Status of a consensus whose value is the depth dosage.
+
+    The consensus cannot be better supported than the dosage it returns.  A
+    dosage under review (overlapping spans) or estimated on part of the query
+    is returned with the status ``REVIEW`` and a flag that names the reason.
+    """
+    if depth.dosage_status == "ESTIMATED":
+        return "SUPPORTED"
+    flags.append(f"DOSAGE_{depth.dosage_status}")
+    return "REVIEW"
+
+
 def reconcile_copy_number(
     depth: DepthRatioResult,
     graph: GraphContextResult | None,
@@ -674,9 +687,10 @@ def reconcile_copy_number(
             )
         if count == 1 and depth.depth_call == "MULTICOPY_DEPTH" and dosage_usable:
             flags.append("GRAPH_SINGLE_CONTEXT_TANDEM_DEPTH")
+            status = _dosage_consensus_status(depth, flags)
             return CopyNumberConsensusResult(
                 depth.dosage_estimate, "MEAN_DEPTH_DOSAGE",
-                "DEPTH_TANDEM_COMPATIBLE", "SUPPORTED", consensus_flags=flags,
+                "DEPTH_TANDEM_COMPATIBLE", status, consensus_flags=flags,
             )
         if count >= 2 and depth_usable and depth.depth_call == "SINGLE_COPY_COMPATIBLE":
             flags.append("GRAPH_MULTICOPY_DEPTH_SINGLE_COPY_COMPATIBLE")
@@ -715,8 +729,9 @@ def reconcile_copy_number(
     if dosage_usable:
         if graph is not None:
             flags.append("GRAPH_EVIDENCE_UNRESOLVED")
+        status = _dosage_consensus_status(depth, flags)
         return CopyNumberConsensusResult(
-            depth.dosage_estimate, "MEAN_DEPTH_DOSAGE", "DEPTH_ONLY", "SUPPORTED",
+            depth.dosage_estimate, "MEAN_DEPTH_DOSAGE", "DEPTH_ONLY", status,
             consensus_flags=flags,
         )
 

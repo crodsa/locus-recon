@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "locus-recon"
-version = "1.0.0"
+version = "1.0.1"
 description = "Reconstruct fragmented bacterial loci and estimate depth-based locus copy number from Illumina reads"
 readme = "README.md"
 license = "MIT"

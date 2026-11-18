@@ -841,6 +841,16 @@ def _classify_confidence(
                 f"ALLELE_MIXTURE ({mixed_sites} bidirectional sites, "
                 f"median alt fraction={fraction:.3f})"
             )
+        elif mixed_sites:
+            # Below the number of sites that defines a mixture.  The tier is
+            # not changed here: each site is already an uncertain base.  The
+            # flag states that an accepted sequence can still hold such a site.
+            fraction = remap_metrics.get("median_mixed_fraction", 0.0)
+            flags.append(
+                f"MIXED_SITE_BELOW_MIXTURE_CALL ({mixed_sites} bidirectional "
+                f"site{'' if mixed_sites == 1 else 's'}, "
+                f"median alt fraction={fraction:.3f}; not a mixture call)"
+            )
         if candidate_sites and strand_biased_sites:
             flags.append(
                 f"STRAND_BIASED_ALT_SUPPORT ({strand_biased_sites}/"
@@ -1026,7 +1036,11 @@ def format_qc_report(
         f"|    Strand-biased : {qc['strand_biased_sites']:>7}",
         f"|    Max alt fract.: {qc['max_alt_fraction']:>7.3f}",
         f"|    Median mixture: {qc['median_mixed_fraction']:>7.3f}",
-        f"|    Mixture call  : {'YES <<' if qc['mixture_detected'] else 'NO':>7}",
+        f"|    Mixture call  : {'YES <<' if qc['mixture_detected'] else 'NO':>7}"
+        + (
+            "  (mixed site present <<)"
+            if qc["mixed_site_count"] and not qc["mixture_detected"] else ""
+        ),
         bar,
         "|  SEQUENCE COMPOSITION",
         f"|    GC content    : {qc['gc_pct']:>7.1f}%  "

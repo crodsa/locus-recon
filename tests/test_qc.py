@@ -430,6 +430,30 @@ def _tier(profile, sequence, remap):
     )
 
 
+def test_one_credible_mixed_site_is_flagged_without_changing_the_tier(tmp_path):
+    # Hpfe0002 23S rRNA: one site with both bases on both strands is below the
+    # two sites that define a mixture.  The sequence can still be accepted, and
+    # the flag says that it holds such a site.
+    profile = _length_profile(tmp_path)
+    sequence = "ATG" + _UNIT * 5
+    clean = _tier(profile, sequence, _moderate_remap())
+    remap = _moderate_remap()
+    remap.update(mixed_site_count=1, candidate_mixed_sites=1,
+                 median_mixed_fraction=0.472)
+
+    qc = _tier(profile, sequence, remap)
+
+    assert clean["confidence"] == qc["confidence"] == "HIGH"
+    assert not any(f.startswith("MIXED_SITE") for f in clean["flags"])
+    flagged = [f for f in qc["flags"] if f.startswith("MIXED_SITE_BELOW_MIXTURE_CALL")]
+    assert flagged == [
+        "MIXED_SITE_BELOW_MIXTURE_CALL (1 bidirectional site, "
+        "median alt fraction=0.472; not a mixture call)"
+    ]
+    assert flagged[0].startswith(DESCRIPTIVE_FLAG_PREFIXES)
+    assert not any(f.startswith("ALLELE_MIXTURE") for f in qc["flags"])
+
+
 @pytest.mark.parametrize("depth", [False, True])
 @pytest.mark.parametrize("breadth", [False, True])
 @pytest.mark.parametrize("uncertain", [False, True])

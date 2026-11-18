@@ -1,5 +1,35 @@
 # Changelog
 
+## 1.0.1 — 2026-11-18
+
+Two labels were corrected after a critical review of the manuscript. No
+threshold changed, and no sequence is accepted or held differently from
+1.0.0.
+
+- **Copy-number consensus.** When the value returned is the depth dosage
+  (`MEAN_DEPTH_DOSAGE`, methods `DEPTH_ONLY` and `DEPTH_TANDEM_COMPATIBLE`),
+  `copy_number_status` is `SUPPORTED` only if `dosage_status` is `ESTIMATED`.
+  A dosage under review (`REVIEW_OVERLAPPING_SPANS`) or estimated on part of
+  the query (`ESTIMATED_PARTIAL_COVERAGE`) is now returned with the status
+  `REVIEW` and the consensus flag `DOSAGE_REVIEW_OVERLAPPING_SPANS` or
+  `DOSAGE_ESTIMATED_PARTIAL_COVERAGE`. In 1.0.0 these cases were labelled
+  `SUPPORTED`, so the overlapping *tcdB* intervals of LIBA-6656 gave a
+  `SUPPORTED` dosage of 2.29 beside a dosage status that asked for review.
+  The numbers are unchanged. An integer graph count keeps its status,
+  because it does not depend on the dosage.
+- **Accepted sequences with a mixed site.** A candidate with credible mixed
+  sites below the number that defines a mixture (two by default) now carries
+  the descriptive flag `MIXED_SITE_BELOW_MIXTURE_CALL`. The flag does not
+  change the tier, which already counts each such site as an uncertain base.
+  It is written to `qc_flags`, to the QC report and to the log, so that an
+  accepted sequence with such a site, like the 23S rRNA gene of Hpfe0002, is
+  visibly marked.
+- Five tests cover these cases (221 tests in total).
+
+The package code of 1.0.1 is identified by the SHA-256 digest
+`2cc816cca467a7988c1f2a28cba11ed1cbb30b263e331f75ca48efa19ebefce0` of `locus_recon/*.py`. The validation records under `validation/`
+state the version that produced each of them.
+
 ## 1.0.0 — 2026-09-28
 
 Initial public release. Locus-Recon reconstructs a target locus from short

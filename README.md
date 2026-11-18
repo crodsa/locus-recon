@@ -20,7 +20,7 @@ Identity to the catalogue is reported but does not lower the confidence tier, so
 accepted and marked for curation. Three companion commands estimate copy number from read depth, count flanking
 contexts in the assembly graph, and list the alternative paths through a local graph.
 
-Release 1.0.0. Python 3.9 or later; Linux or macOS; MIT licence.
+Release 1.0.1. Python 3.9 or later; Linux or macOS; MIT licence.
 
 ## Contents
 
@@ -70,16 +70,16 @@ The environment pins Python 3.11.13, BLAST+ 2.16.0, BWA-MEM2 2.2.1, samtools 1.2
 If you do not have Conda, install [Miniforge](https://github.com/conda-forge/miniforge) first.
 Activate the environment in every new terminal with `conda activate locus-recon`.
 
-To install exactly the released version, use the tag: `git clone --branch v1.0.0 https://github.com/crodsa/locus-recon.git`.
+To install exactly the released version, use the tag: `git clone --branch v1.0.1 https://github.com/crodsa/locus-recon.git`.
 
-The [release page](https://github.com/crodsa/locus-recon/releases/tag/v1.0.0) also carries a wheel and a source
-distribution of 1.0.0. The wheel holds the Python package only. The external tools still come from the Conda
+The [release page](https://github.com/crodsa/locus-recon/releases) also carries a wheel and a source
+distribution of each release. The wheel holds the Python package only. The external tools still come from the Conda
 environment, and the test data of the next section come with the repository or the source distribution.
 
 ## Check the installation
 
 ```bash
-locus-recon --version          # locus-recon 1.0.0
+locus-recon --version          # locus-recon 1.0.1
 
 # checks inputs, tools and the bait database; maps and assembles nothing
 locus-recon \
@@ -141,7 +141,7 @@ Open the files in this order:
 
 | Result | `result_disposition` | What it means | What to do |
 |---|---|---|---|
-| `SUCCESS` + `HIGH` | `PASS` | No flag was raised | Use it; check provenance and scheme rules before submitting a new allele |
+| `SUCCESS` + `HIGH` | `PASS` | The criteria of the top tier were met. No flag that lowers the tier was raised; a descriptive flag can still be present | Read `qc_flags`, then use it; check provenance and scheme rules before submitting a new allele |
 | `SUCCESS` + `MEDIUM` or `LOW` | `REVIEW` | One or two moderate deviations | Read `qc_flags` and the per-base table before using the sequence. A sequence in review can be wrong |
 | `SUCCESS` + `SUSPECT` | `HOLD` | A severe flag, or three or more deviations | Do not use it as an allele call without independent confirmation |
 | `SKIP` | `HOLD` | No gradable candidate | Read `message`; this is not proof of absence |
@@ -150,7 +150,9 @@ Open the files in this order:
 Three situations deserve attention:
 
 - **Mixed sites.** `mixture_detected` and `ALLELE_MIXTURE` mean that the reads support two sequences at two or more
-  positions. The cause may be two divergent copies, a paralogue or a mixed culture.
+  positions. The cause may be two divergent copies, a paralogue or a mixed culture. One such position does not
+  define a mixture, and the sequence can still be accepted: it then carries `MIXED_SITE_BELOW_MIXTURE_CALL`, and
+  the reported base at that position is one of two that the reads support.
 - **Locus cut by a contig end.** `ALLELE_SPAN_CLIPPED_AT_CONTIG_END` gives the number of missing bases.
   `LOCUS_SPLIT_ACROSS_CONTIGS` names the contig that carries them. High depth on the reported part says nothing
   about the missing part.
@@ -204,14 +206,16 @@ How to read the output:
   dosage is labelled `REVIEW_OVERLAPPING_SPANS`. Compare it with `geometry_expected_dosage`: overlap alone can
   produce a value near two.
 - When `ambiguity_index` is below 0.70 the estimate is a lower bound.
+- `locus-recon-copy-number` returns `copy_number_status` `SUPPORTED` for a dosage only when `dosage_status` is
+  `ESTIMATED`. A dosage from overlapping spans or from part of the query is returned as `REVIEW`.
 - A path listed by `locus-recon-graph-paths` is a proposal, not an allele call.
 
 Details and worked examples are in the [user guide](docs/user-guide.md#when-every-copy-is-identical-the-depth-ratio).
 
 ## What has been tested
 
-All inputs, outputs and scripts are under [`validation/`](validation/README.md). The numbers below are those of
-release 1.0.0; [docs/validation-results.md](docs/validation-results.md) gives the detail.
+All inputs, outputs and scripts are under [`validation/`](validation/README.md). The numbers below were obtained
+with release 1.0.0, which accepts and holds the same sequences as 1.0.1; [docs/validation-results.md](docs/validation-results.md) gives the detail.
 
 | Test | Data | Result |
 |---|---|---|
@@ -258,13 +262,14 @@ Questions and bug reports: <https://github.com/crodsa/locus-recon/issues>.
 
 ## Citation and licence
 
-A manuscript that describes Locus-Recon 1.0.0 is in preparation. Until it is published, please cite the software
+A manuscript that describes Locus-Recon is in preparation. Until it is published, please cite the software
 name and version, this repository, and the name and release of the allele database that you used as baits.
 [`CITATION.cff`](CITATION.cff) holds the citation metadata, and the DOI of the archived release will be added there.
 
 Software: [MIT licence](LICENSE). Synthetic data, validation records and figures: [CC BY 4.0](LICENSE-DATA.md).
 Public sequencing runs keep the terms of their sources.
 
-Release 1.0.0 is the tag `v1.0.0`. Its package code is identified by the SHA-256 digest
-`3863abc32fb5446a72919c790cb2558217871410f441db1ecf17dde3de55cdcf` of `locus_recon/*.py`, and the
-[changelog](CHANGELOG.md) lists what the release contains.
+Release 1.0.1 is the tag `v1.0.1`. Its package code is identified by the SHA-256 digest
+`2cc816cca467a7988c1f2a28cba11ed1cbb30b263e331f75ca48efa19ebefce0` of `locus_recon/*.py`. Release 1.0.0
+(tag `v1.0.0`) has the digest `3863abc32fb5446a72919c790cb2558217871410f441db1ecf17dde3de55cdcf`. The
+[changelog](CHANGELOG.md) lists what each release contains and how 1.0.1 differs.

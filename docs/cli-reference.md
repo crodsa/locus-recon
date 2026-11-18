@@ -1,7 +1,7 @@
 # Command-line reference
 
 This page documents installation, all public command-line options, resource
-planning, cleanup, provenance, and exit behavior for Locus-Recon 1.0.0. For a
+planning, cleanup, provenance, and exit behavior for Locus-Recon 1.0.1. For a
 first run, begin with the [README quick start](user-guide.md#quick-start).
 
 ## Installation and dependencies

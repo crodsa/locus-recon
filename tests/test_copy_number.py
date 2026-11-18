@@ -432,6 +432,7 @@ def _depth(
     ci_low: float,
     ci_high: float,
     reliable: bool = True,
+    dosage_status: str | None = None,
 ) -> DepthRatioResult:
     return DepthRatioResult(
         locus_regions=["contig:1-100"],
@@ -450,7 +451,9 @@ def _depth(
         reliable=reliable,
         assembly_region_count=1,
         dosage_estimate=dosage,
-        dosage_status="ESTIMATED" if dosage is not None else "NOT_ESTIMATED",
+        dosage_status=dosage_status or (
+            "ESTIMATED" if dosage is not None else "NOT_ESTIMATED"
+        ),
         depth_call=call,
     )
 
@@ -578,6 +581,62 @@ def test_missing_graph_uses_reliable_depth_only():
     assert result.copy_number_kind == "MEAN_DEPTH_DOSAGE"
     assert result.copy_number_method == "DEPTH_ONLY"
     assert result.copy_number_status == "SUPPORTED"
+
+
+@pytest.mark.parametrize(
+    "dosage_status", ["REVIEW_OVERLAPPING_SPANS", "ESTIMATED_PARTIAL_COVERAGE"]
+)
+def test_depth_only_consensus_inherits_the_review_state_of_the_dosage(dosage_status):
+    # LIBA-6656 tcdB: overlapping spans return a dosage near two for a locus
+    # whose depth ratio is compatible with one copy.  The consensus must not
+    # call that value SUPPORTED.
+    depth = _depth(
+        "SINGLE_COPY_COMPATIBLE", dosage=2.287, ratio=1.21, ci_low=1.111,
+        ci_high=1.349, dosage_status=dosage_status,
+    )
+
+    result = reconcile_copy_number(depth, None)
+
+    assert result.copy_number_call == 2.287
+    assert result.copy_number_kind == "MEAN_DEPTH_DOSAGE"
+    assert result.copy_number_method == "DEPTH_ONLY"
+    assert result.copy_number_status == "REVIEW"
+    assert f"DOSAGE_{dosage_status}" in result.consensus_flags
+
+
+def test_tandem_dosage_under_review_is_not_supported():
+    depth = _depth(
+        "MULTICOPY_DEPTH", dosage=4.2, ratio=4.2, ci_low=3.8, ci_high=4.6,
+        dosage_status="REVIEW_OVERLAPPING_SPANS",
+    )
+    graph = _graph_result(
+        "MATCHED_CONTEXT_COUNT", left=1, right=1, count=1, lower_bound=1,
+    )
+
+    result = reconcile_copy_number(depth, graph)
+
+    assert result.copy_number_method == "DEPTH_TANDEM_COMPATIBLE"
+    assert result.copy_number_status == "REVIEW"
+    assert "DOSAGE_REVIEW_OVERLAPPING_SPANS" in result.consensus_flags
+    assert "GRAPH_SINGLE_CONTEXT_TANDEM_DEPTH" in result.consensus_flags
+
+
+def test_integer_graph_count_does_not_depend_on_the_dosage_status():
+    # The value returned is the graph count, so a dosage under review does not
+    # lower its status.
+    depth = _depth(
+        "MULTICOPY_DEPTH", dosage=3.221, ratio=3.221, ci_low=2.896, ci_high=3.546,
+        dosage_status="REVIEW_OVERLAPPING_SPANS",
+    )
+    graph = _graph_result(
+        "MATCHED_CONTEXT_COUNT", left=2, right=2, count=2, lower_bound=2,
+    )
+
+    result = reconcile_copy_number(depth, graph)
+
+    assert result.copy_number_kind == "INTEGER_CONTEXT_COUNT"
+    assert result.copy_number_status == "SUPPORTED"
+    assert not any(f.startswith("DOSAGE_") for f in result.consensus_flags)
 
 
 def test_unreliable_depth_without_graph_is_indeterminate():

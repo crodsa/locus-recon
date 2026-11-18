@@ -1,7 +1,7 @@
 # Output and interpretation reference
 
 This page documents the files, report fields, confidence system, and review
-logic implemented by Locus-Recon 1.0.0. Start with the
+logic implemented by Locus-Recon 1.0.1. Start with the
 [README result guide](../README.md#read-the-results) if you want a shorter
 introduction.
 
@@ -88,7 +88,7 @@ record retains every `DepthRatioResult` field and adds three evidence layers:
 |---|---|---|
 | Depth | `ratio`, `ratio_ci_low`, `ratio_ci_high`, `depth_call`, `dosage_estimate`, `dosage_status`, `dosage_flags` | Continuous pile-up over the assembly representation. These fields are unchanged from `locus-recon-depth-ratio`. |
 | Graph | `left_context_count`, `right_context_count`, `graph_context_count`, `graph_context_lower_bound`, `graph_context_status`, `graph_context_flags` | Bait-anchored flanking contexts retained by the GFA. An exact count requires matching positive counts at both ends. |
-| Consensus | `copy_number_call`, `copy_number_kind`, `copy_number_method`, `copy_number_status`, bounds, `consensus_flags` | Deterministic reconciliation that preserves the estimand and uncertainty state. |
+| Consensus | `copy_number_call`, `copy_number_kind`, `copy_number_method`, `copy_number_status`, bounds, `consensus_flags` | Deterministic reconciliation that preserves the estimand and uncertainty state. `copy_number_status` is `SUPPORTED`, `REVIEW`, `LOWER_BOUND`, `EVIDENCE_CONFLICT` or `INDETERMINATE`. A depth dosage is `SUPPORTED` only when `dosage_status` is `ESTIMATED`; otherwise it is `REVIEW`, with the flag `DOSAGE_REVIEW_OVERLAPPING_SPANS` or `DOSAGE_ESTIMATED_PARTIAL_COVERAGE`. |
 
 Never interpret `copy_number_call` without `copy_number_kind`. An
 `INTEGER_CONTEXT_COUNT` describes graph contexts; a `MEAN_DEPTH_DOSAGE`
@@ -420,6 +420,7 @@ implemented flag names by the evidence they represent.
 | Mapping quality | `MAPPING_QUALITY_BELOW_HIGH`, `REDUCED_MAPPING_QUALITY`, `LOW_MAPPING_QUALITY` | Mean mapping quality is below Q40, Q30, or Q20. |
 | Overall strand balance | `STRAND_BALANCE_BELOW_HIGH`, `STRAND_IMBALANCE`, `SEVERE_STRAND_IMBALANCE` | Strand balance is below 40%, 25%, or 10%. |
 | Mixed reads | `ALLELE_MIXTURE` | The configured number of credible bidirectional mixed positions was reached. |
+| Mixed site below the mixture call, descriptive | `MIXED_SITE_BELOW_MIXTURE_CALL` | One or more credible bidirectional mixed positions, fewer than the number that defines a mixture (`--mixture-min-sites`, default 2). Does not constrain the tier: each site already counts as an uncertain base. A sequence that carries this flag can be accepted, and the base reported at the site is one of two that the reads support. |
 | Strand artifact risk | `STRAND_BIASED_ALT_SUPPORT` | One or more candidate alternative sites were one-stranded or had Fisher strand-bias `p < 0.01`. |
 | Candidate/reference conflict | `REFERENCE_DISCORDANCE` | One or more positions were nearly fixed for an alternative base relative to the reconstructed candidate. |
 
