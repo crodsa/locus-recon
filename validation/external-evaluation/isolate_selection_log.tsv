@@ -1,0 +1,17 @@
+species	assembly	biosample	outcome
+Staphylococcus aureus	GCF_001019255.2	SAMN03255441	runs=4 illumina_paired=2 >=40x=2
+Campylobacter jejuni	GCF_002209005.1	SAMN04875588	runs=2 illumina_paired=1 >=40x=1
+Listeria monocytogenes	GCF_001188045.3	SAMN03255437	runs=3 illumina_paired=1 >=40x=1
+Enterococcus faecalis	GCF_003030425.1	SAMN06173337	runs=2 illumina_paired=1 >=40x=1
+Streptococcus pyogenes	GCF_001559175.2	SAMN03996295	runs=3 illumina_paired=1 >=40x=1
+Haemophilus influenzae	GCF_002073475.2	SAMN04875536	runs=2 illumina_paired=1 >=40x=1
+Bacillus cereus	GCF_013267475.1	SAMN11056495	runs=2 illumina_paired=1 >=40x=1
+Vibrio parahaemolyticus	GCF_001188185.2	SAMN03255431	runs=4 illumina_paired=2 >=40x=2
+Escherichia coli	GCF_002944935.1	SAMN03996288	runs=3 illumina_paired=1 >=40x=1
+Salmonella enterica	GCF_001188125.2	SAMN03255434	runs=4 illumina_paired=2 >=40x=2
+Neisseria meningitidis	GCF_002073575.2	SAMN04875546	runs=2 illumina_paired=1 >=40x=1
+Corynebacterium diphtheriae	GCF_002073375.2	SAMN04875534	runs=2 illumina_paired=1 >=40x=1
+Klebsiella pneumoniae	GCF_002951635.1	SAMN03996301	runs=3 illumina_paired=1 >=40x=1
+Mycobacterium tuberculosis	GCF_009730235.1	SAMN11056465	runs=3 illumina_paired=1 >=40x=1
+Pseudomonas aeruginosa	GCF_003812905.1	SAMN10163177	runs=2 illumina_paired=1 >=40x=1
+Bordetella pertussis	GCF_016904355.1	SAMN16357507	runs=2 illumina_paired=1 >=40x=1
