@@ -1,0 +1,85 @@
+locus-recon 1.0.1
+SPAdes genome assembler v4.2.0
+2.2.1
+samtools 1.22.1
+blastn: 2.16.0+
+Python 3.11.13
+biopython 1.87 numpy 1.26.4
+/home/crodsa/conda/envs/locus-recon-101/lib/python3.11/site-packages/locus_recon/__init__.py
+digest 2cc816cca467a7988c1f2a28cba11ed1cbb30b263e331f75ca48efa19ebefce0
+884cdf3c84f17dc9007576f26c6b431044dd35e1
+ARIBA version: 2.14.7
+KMA-1.7.1
+blastn: 2.17.0+
+Python 3.12.16
+== ariba flag 1
+Meaning of flag 1 [X] assembled [ ] assembled_into_one_contig [ ] region_assembled_twice [ ] complete_gene [ ] unique_contig [ ] scaffold_graph_bad [ ] assembly_fail [ ] variants_suggest_collapsed_repeat [ ] hit_both_strands [ ] has_variant [ ] ref_seq_choose_fail 
+== ariba flag 2
+Meaning of flag 2 [ ] assembled [X] assembled_into_one_contig [ ] region_assembled_twice [ ] complete_gene [ ] unique_contig [ ] scaffold_graph_bad [ ] assembly_fail [ ] variants_suggest_collapsed_repeat [ ] hit_both_strands [ ] has_variant [ ] ref_seq_choose_fail 
+== ariba flag 4
+Meaning of flag 4 [ ] assembled [ ] assembled_into_one_contig [X] region_assembled_twice [ ] complete_gene [ ] unique_contig [ ] scaffold_graph_bad [ ] assembly_fail [ ] variants_suggest_collapsed_repeat [ ] hit_both_strands [ ] has_variant [ ] ref_seq_choose_fail 
+== ariba flag 8
+Meaning of flag 8 [ ] assembled [ ] assembled_into_one_contig [ ] region_assembled_twice [X] complete_gene [ ] unique_contig [ ] scaffold_graph_bad [ ] assembly_fail [ ] variants_suggest_collapsed_repeat [ ] hit_both_strands [ ] has_variant [ ] ref_seq_choose_fail 
+== ariba flag 16
+Meaning of flag 16 [ ] assembled [ ] assembled_into_one_contig [ ] region_assembled_twice [ ] complete_gene [X] unique_contig [ ] scaffold_graph_bad [ ] assembly_fail [ ] variants_suggest_collapsed_repeat [ ] hit_both_strands [ ] has_variant [ ] ref_seq_choose_fail 
+== ariba flag 32
+Meaning of flag 32 [ ] assembled [ ] assembled_into_one_contig [ ] region_assembled_twice [ ] complete_gene [ ] unique_contig [X] scaffold_graph_bad [ ] assembly_fail [ ] variants_suggest_collapsed_repeat [ ] hit_both_strands [ ] has_variant [ ] ref_seq_choose_fail 
+== ariba flag 64
+Meaning of flag 64 [ ] assembled [ ] assembled_into_one_contig [ ] region_assembled_twice [ ] complete_gene [ ] unique_contig [ ] scaffold_graph_bad [X] assembly_fail [ ] variants_suggest_collapsed_repeat [ ] hit_both_strands [ ] has_variant [ ] ref_seq_choose_fail 
+== ariba flag 128
+Meaning of flag 128 [ ] assembled [ ] assembled_into_one_contig [ ] region_assembled_twice [ ] complete_gene [ ] unique_contig [ ] scaffold_graph_bad [ ] assembly_fail [X] variants_suggest_collapsed_repeat [ ] hit_both_strands [ ] has_variant [ ] ref_seq_choose_fail 
+== ariba flag 256
+Meaning of flag 256 [ ] assembled [ ] assembled_into_one_contig [ ] region_assembled_twice [ ] complete_gene [ ] unique_contig [ ] scaffold_graph_bad [ ] assembly_fail [ ] variants_suggest_collapsed_repeat [X] hit_both_strands [ ] has_variant [ ] ref_seq_choose_fail 
+== ariba flag 512
+Meaning of flag 512 [ ] assembled [ ] assembled_into_one_contig [ ] region_assembled_twice [ ] complete_gene [ ] unique_contig [ ] scaffold_graph_bad [ ] assembly_fail [ ] variants_suggest_collapsed_repeat [ ] hit_both_strands [X] has_variant [ ] ref_seq_choose_fail 
+== ariba flag 1024
+Meaning of flag 1024 [ ] assembled [ ] assembled_into_one_contig [ ] region_assembled_twice [ ] complete_gene [ ] unique_contig [ ] scaffold_graph_bad [ ] assembly_fail [ ] variants_suggest_collapsed_repeat [ ] hit_both_strands [ ] has_variant [X] ref_seq_choose_fail 
+== ariba flag 27
+Meaning of flag 27 [X] assembled [X] assembled_into_one_contig [ ] region_assembled_twice [X] complete_gene [X] unique_contig [ ] scaffold_graph_bad [ ] assembly_fail [ ] variants_suggest_collapsed_repeat [ ] hit_both_strands [ ] has_variant [ ] ref_seq_choose_fail 
+== ariba flag 539
+Meaning of flag 539 [X] assembled [X] assembled_into_one_contig [ ] region_assembled_twice [X] complete_gene [X] unique_contig [ ] scaffold_graph_bad [ ] assembly_fail [ ] variants_suggest_collapsed_repeat [ ] hit_both_strands [X] has_variant [ ] ref_seq_choose_fail 
+Usage:   seqtk <command> <arguments>
+Version: 1.5-r133
+992
+ena 200
+run_accession	fastq_ftp	fastq_md5	fastq_bytes	read_count	base_count
+SRR1955492	ftp.sra.ebi.ac.uk/vol1/fastq/SRR195/002/SRR1955492/SRR1955492_1.fastq.gz;ftp.sra.ebi.ac.uk/vol1/fastq/SRR195/002/SRR1955492/SRR1955492_2.fastq.gz	e042bd9f12d9002c1fc1a3692f8c18c9;dd40e8aec825d109a1c228f061bae3f0	657874073;655466949	7544883	1524066366
+ncbi ftp 200
+ncbi datasets 200
+ERR467623_1.fastq.gz
+ERR467623_2.fastq.gz
+GCF_022925855.1_ASM2292585v1_cds_from_genomic.fna.gz
+GCF_022925855.1_ASM2292585v1_rna_from_genomic.fna.gz
+GCF_022925875.1_ASM2292587v1_cds_from_genomic.fna.gz
+GCF_022925875.1_ASM2292587v1_rna_from_genomic.fna.gz
+GCF_022925905.1_ASM2292590v1_cds_from_genomic.fna.gz
+GCF_022925905.1_ASM2292590v1_rna_from_genomic.fna.gz
+GCF_022925925.1_ASM2292592v1_cds_from_genomic.fna.gz
+GCF_022925925.1_ASM2292592v1_rna_from_genomic.fna.gz
+GCF_022925945.1_ASM2292594v1_cds_from_genomic.fna.gz
+GCF_022925945.1_ASM2292594v1_rna_from_genomic.fna.gz
+SRR18335501_1.fastq.gz
+SRR18335501_2.fastq.gz
+SRR18335507_1.fastq.gz
+SRR18335507_2.fastq.gz
+SRR18335523_1.fastq.gz
+SRR18335523_2.fastq.gz
+SRR18335539_1.fastq.gz
+SRR18335539_2.fastq.gz
+SRR18335541_1.fastq.gz
+SRR18335541_2.fastq.gz
+reads
+repo
+repo_arms
+repo_isolate
+repo_tier
+tier_work
+ 10:57:49 up 5 days, 19:41,  2 users,  load average: 0.16, 0.09, 0.04
+%CPU     ELAPSED COMMAND
+ 1.2       00:09 systemd
+ 0.6       00:09 user-session-he
+ 0.2       00:09 wireplumber
+ 0.1  4-04:19:02 containerd
+ 0.0  5-19:41:51 NetworkManager
+ 0.0       12:57 usbmuxd
+ 0.0  4-04:19:02 systemd-oomd

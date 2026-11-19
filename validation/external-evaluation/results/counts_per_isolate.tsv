@@ -1,0 +1,209 @@
+strain	unit_set	decision_rule	units	units_with_a_copy	sequence_returned	exact	accepted	accepted_exact	accepted_not_exact	not_accepted_exact	not_accepted_not_exact	units_without_a_truth_sequence
+FDAARGOS_1	protocol	Locus-Recon, PASS	5	5	5	5	3	3	0	2	0	0
+FDAARGOS_1	protocol	ARIBA, protocol rule	5	5	5	5	3	3	0	2	0	0
+FDAARGOS_1	protocol	KMA, primary rule	5	5	5	5	4	4	0	1	0	0
+FDAARGOS_1	protocol	KMA, secondary rule	5	5	5	5	5	5	0	0	0	0
+FDAARGOS_262	protocol	Locus-Recon, PASS	8	8	8	8	8	8	0	0	0	0
+FDAARGOS_262	protocol	ARIBA, protocol rule	8	8	8	8	7	7	0	1	0	0
+FDAARGOS_262	protocol	KMA, primary rule	8	8	8	7	7	7	0	0	1	0
+FDAARGOS_262	protocol	KMA, secondary rule	8	8	8	7	7	7	0	0	1	0
+FDAARGOS_57	protocol	Locus-Recon, PASS	8	8	8	7	6	6	0	1	1	0
+FDAARGOS_57	protocol	ARIBA, protocol rule	8	8	8	7	7	7	0	0	1	0
+FDAARGOS_57	protocol	KMA, primary rule	8	8	8	8	7	7	0	1	0	0
+FDAARGOS_57	protocol	KMA, secondary rule	8	8	8	8	7	7	0	1	0	0
+FDAARGOS_324	protocol	Locus-Recon, PASS	8	8	8	8	7	7	0	1	0	0
+FDAARGOS_324	protocol	ARIBA, protocol rule	8	8	8	8	6	6	0	2	0	0
+FDAARGOS_324	protocol	KMA, primary rule	8	8	8	8	8	8	0	0	0	0
+FDAARGOS_324	protocol	KMA, secondary rule	8	8	8	8	8	8	0	0	0	0
+FDAARGOS_149	protocol	Locus-Recon, PASS	8	8	8	8	8	8	0	0	0	0
+FDAARGOS_149	protocol	ARIBA, protocol rule	8	8	8	7	6	5	1	2	0	0
+FDAARGOS_149	protocol	KMA, primary rule	8	8	8	8	7	7	0	1	0	0
+FDAARGOS_149	protocol	KMA, secondary rule	8	8	8	8	7	7	0	1	0	0
+FDAARGOS_199	protocol	Locus-Recon, PASS	8	7	7	6	6	6	0	0	1	1
+FDAARGOS_199	protocol	ARIBA, protocol rule	8	7	7	7	6	6	0	1	0	1
+FDAARGOS_199	protocol	KMA, primary rule	8	7	7	7	6	6	0	1	0	1
+FDAARGOS_199	protocol	KMA, secondary rule	8	7	7	7	6	6	0	1	0	1
+FDAARGOS_780	protocol	Locus-Recon, PASS	8	7	7	7	5	5	0	2	0	1
+FDAARGOS_780	protocol	ARIBA, protocol rule	8	7	7	6	4	4	0	2	1	1
+FDAARGOS_780	protocol	KMA, primary rule	8	7	7	7	5	5	0	2	0	1
+FDAARGOS_780	protocol	KMA, secondary rule	8	7	7	7	6	6	0	1	0	1
+FDAARGOS_51	protocol	Locus-Recon, PASS	8	8	8	6	5	5	0	1	2	0
+FDAARGOS_51	protocol	ARIBA, protocol rule	8	8	8	6	5	5	0	1	2	0
+FDAARGOS_51	protocol	KMA, primary rule	8	8	8	6	7	6	1	0	1	0
+FDAARGOS_51	protocol	KMA, secondary rule	8	8	8	6	7	6	1	0	1	0
+FDAARGOS_144	protocol	Locus-Recon, PASS	7	7	7	7	6	6	0	1	0	0
+FDAARGOS_144	protocol	ARIBA, protocol rule	7	7	7	6	5	5	0	1	1	0
+FDAARGOS_144	protocol	KMA, primary rule	7	7	7	7	6	6	0	1	0	0
+FDAARGOS_144	protocol	KMA, secondary rule	7	7	7	7	7	7	0	0	0	0
+FDAARGOS_54	protocol	Locus-Recon, PASS	7	6	6	5	5	5	0	0	1	1
+FDAARGOS_54	protocol	ARIBA, protocol rule	7	6	6	5	5	5	0	0	1	1
+FDAARGOS_54	protocol	KMA, primary rule	7	6	6	5	5	5	0	0	1	1
+FDAARGOS_54	protocol	KMA, secondary rule	7	6	6	5	5	5	0	0	1	1
+FDAARGOS_209	protocol	Locus-Recon, PASS	8	8	8	0	6	0	6	0	2	0
+FDAARGOS_209	protocol	ARIBA, protocol rule	8	8	8	0	7	0	7	0	1	0
+FDAARGOS_209	protocol	KMA, primary rule	8	8	8	0	7	0	7	0	1	0
+FDAARGOS_209	protocol	KMA, secondary rule	8	8	8	0	7	0	7	0	1	0
+FDAARGOS_197	protocol	Locus-Recon, PASS	8	8	8	8	8	8	0	0	0	0
+FDAARGOS_197	protocol	ARIBA, protocol rule	8	8	8	7	7	7	0	0	1	0
+FDAARGOS_197	protocol	KMA, primary rule	8	8	8	8	6	6	0	2	0	0
+FDAARGOS_197	protocol	KMA, secondary rule	8	8	8	8	7	7	0	1	0	0
+FDAARGOS_156	protocol	Locus-Recon, PASS	2	2	2	0	0	0	0	0	2	0
+FDAARGOS_156	protocol	ARIBA, protocol rule	2	2	2	0	0	0	0	0	2	0
+FDAARGOS_156	protocol	KMA, primary rule	2	2	2	0	0	0	0	0	2	0
+FDAARGOS_156	protocol	KMA, secondary rule	2	2	2	0	1	0	1	0	1	0
+FDAARGOS_750	protocol	Locus-Recon, PASS	8	8	8	8	7	7	0	1	0	0
+FDAARGOS_750	protocol	ARIBA, protocol rule	8	8	8	8	8	8	0	0	0	0
+FDAARGOS_750	protocol	KMA, primary rule	8	8	8	8	8	8	0	0	0	0
+FDAARGOS_750	protocol	KMA, secondary rule	8	8	8	8	8	8	0	0	0	0
+FDAARGOS_501	protocol	Locus-Recon, PASS	7	7	7	7	7	7	0	0	0	0
+FDAARGOS_501	protocol	ARIBA, protocol rule	7	7	7	7	7	7	0	0	0	0
+FDAARGOS_501	protocol	KMA, primary rule	7	7	7	7	7	7	0	0	0	0
+FDAARGOS_501	protocol	KMA, secondary rule	7	7	7	7	7	7	0	0	0	0
+FDAARGOS_1365	protocol	Locus-Recon, PASS	8	8	8	8	8	8	0	0	0	0
+FDAARGOS_1365	protocol	ARIBA, protocol rule	8	8	8	7	7	7	0	0	1	0
+FDAARGOS_1365	protocol	KMA, primary rule	8	8	8	8	8	8	0	0	0	0
+FDAARGOS_1365	protocol	KMA, secondary rule	8	8	8	8	8	8	0	0	0	0
+FDAARGOS_1	supplementary	Locus-Recon, PASS	3	3	3	3	3	3	0	0	0	0
+FDAARGOS_1	supplementary	ARIBA, protocol rule	3	3	3	3	3	3	0	0	0	0
+FDAARGOS_1	supplementary	KMA, primary rule	3	3	3	3	3	3	0	0	0	0
+FDAARGOS_1	supplementary	KMA, secondary rule	3	3	3	3	3	3	0	0	0	0
+FDAARGOS_144	supplementary	Locus-Recon, PASS	1	1	1	0	0	0	0	0	1	0
+FDAARGOS_144	supplementary	ARIBA, protocol rule	1	1	1	0	0	0	0	0	1	0
+FDAARGOS_144	supplementary	KMA, primary rule	1	1	1	0	0	0	0	0	1	0
+FDAARGOS_144	supplementary	KMA, secondary rule	1	1	1	0	0	0	0	0	1	0
+FDAARGOS_54	supplementary	Locus-Recon, PASS	1	1	1	0	0	0	0	0	1	0
+FDAARGOS_54	supplementary	ARIBA, protocol rule	1	1	1	0	0	0	0	0	1	0
+FDAARGOS_54	supplementary	KMA, primary rule	1	1	1	0	0	0	0	0	1	0
+FDAARGOS_54	supplementary	KMA, secondary rule	1	1	1	0	0	0	0	0	1	0
+FDAARGOS_156	supplementary	Locus-Recon, PASS	6	6	6	5	5	5	0	0	1	0
+FDAARGOS_156	supplementary	ARIBA, protocol rule	6	6	6	6	5	5	0	1	0	0
+FDAARGOS_156	supplementary	KMA, primary rule	6	6	6	5	5	5	0	0	1	0
+FDAARGOS_156	supplementary	KMA, secondary rule	6	6	6	5	5	5	0	0	1	0
+FDAARGOS_501	supplementary	Locus-Recon, PASS	1	1	1	0	0	0	0	0	1	0
+FDAARGOS_501	supplementary	ARIBA, protocol rule	1	1	1	0	0	0	0	0	1	0
+FDAARGOS_501	supplementary	KMA, primary rule	1	1	1	0	0	0	0	0	1	0
+FDAARGOS_501	supplementary	KMA, secondary rule	1	1	1	0	0	0	0	0	1	0
+FDAARGOS_1	protocol and supplementary	Locus-Recon, PASS	8	8	8	8	6	6	0	2	0	0
+FDAARGOS_1	protocol and supplementary	ARIBA, protocol rule	8	8	8	8	6	6	0	2	0	0
+FDAARGOS_1	protocol and supplementary	KMA, primary rule	8	8	8	8	7	7	0	1	0	0
+FDAARGOS_1	protocol and supplementary	KMA, secondary rule	8	8	8	8	8	8	0	0	0	0
+FDAARGOS_262	protocol and supplementary	Locus-Recon, PASS	8	8	8	8	8	8	0	0	0	0
+FDAARGOS_262	protocol and supplementary	ARIBA, protocol rule	8	8	8	8	7	7	0	1	0	0
+FDAARGOS_262	protocol and supplementary	KMA, primary rule	8	8	8	7	7	7	0	0	1	0
+FDAARGOS_262	protocol and supplementary	KMA, secondary rule	8	8	8	7	7	7	0	0	1	0
+FDAARGOS_57	protocol and supplementary	Locus-Recon, PASS	8	8	8	7	6	6	0	1	1	0
+FDAARGOS_57	protocol and supplementary	ARIBA, protocol rule	8	8	8	7	7	7	0	0	1	0
+FDAARGOS_57	protocol and supplementary	KMA, primary rule	8	8	8	8	7	7	0	1	0	0
+FDAARGOS_57	protocol and supplementary	KMA, secondary rule	8	8	8	8	7	7	0	1	0	0
+FDAARGOS_324	protocol and supplementary	Locus-Recon, PASS	8	8	8	8	7	7	0	1	0	0
+FDAARGOS_324	protocol and supplementary	ARIBA, protocol rule	8	8	8	8	6	6	0	2	0	0
+FDAARGOS_324	protocol and supplementary	KMA, primary rule	8	8	8	8	8	8	0	0	0	0
+FDAARGOS_324	protocol and supplementary	KMA, secondary rule	8	8	8	8	8	8	0	0	0	0
+FDAARGOS_149	protocol and supplementary	Locus-Recon, PASS	8	8	8	8	8	8	0	0	0	0
+FDAARGOS_149	protocol and supplementary	ARIBA, protocol rule	8	8	8	7	6	5	1	2	0	0
+FDAARGOS_149	protocol and supplementary	KMA, primary rule	8	8	8	8	7	7	0	1	0	0
+FDAARGOS_149	protocol and supplementary	KMA, secondary rule	8	8	8	8	7	7	0	1	0	0
+FDAARGOS_199	protocol and supplementary	Locus-Recon, PASS	8	7	7	6	6	6	0	0	1	1
+FDAARGOS_199	protocol and supplementary	ARIBA, protocol rule	8	7	7	7	6	6	0	1	0	1
+FDAARGOS_199	protocol and supplementary	KMA, primary rule	8	7	7	7	6	6	0	1	0	1
+FDAARGOS_199	protocol and supplementary	KMA, secondary rule	8	7	7	7	6	6	0	1	0	1
+FDAARGOS_780	protocol and supplementary	Locus-Recon, PASS	8	7	7	7	5	5	0	2	0	1
+FDAARGOS_780	protocol and supplementary	ARIBA, protocol rule	8	7	7	6	4	4	0	2	1	1
+FDAARGOS_780	protocol and supplementary	KMA, primary rule	8	7	7	7	5	5	0	2	0	1
+FDAARGOS_780	protocol and supplementary	KMA, secondary rule	8	7	7	7	6	6	0	1	0	1
+FDAARGOS_51	protocol and supplementary	Locus-Recon, PASS	8	8	8	6	5	5	0	1	2	0
+FDAARGOS_51	protocol and supplementary	ARIBA, protocol rule	8	8	8	6	5	5	0	1	2	0
+FDAARGOS_51	protocol and supplementary	KMA, primary rule	8	8	8	6	7	6	1	0	1	0
+FDAARGOS_51	protocol and supplementary	KMA, secondary rule	8	8	8	6	7	6	1	0	1	0
+FDAARGOS_144	protocol and supplementary	Locus-Recon, PASS	8	8	8	7	6	6	0	1	1	0
+FDAARGOS_144	protocol and supplementary	ARIBA, protocol rule	8	8	8	6	5	5	0	1	2	0
+FDAARGOS_144	protocol and supplementary	KMA, primary rule	8	8	8	7	6	6	0	1	1	0
+FDAARGOS_144	protocol and supplementary	KMA, secondary rule	8	8	8	7	7	7	0	0	1	0
+FDAARGOS_54	protocol and supplementary	Locus-Recon, PASS	8	7	7	5	5	5	0	0	2	1
+FDAARGOS_54	protocol and supplementary	ARIBA, protocol rule	8	7	7	5	5	5	0	0	2	1
+FDAARGOS_54	protocol and supplementary	KMA, primary rule	8	7	7	5	5	5	0	0	2	1
+FDAARGOS_54	protocol and supplementary	KMA, secondary rule	8	7	7	5	5	5	0	0	2	1
+FDAARGOS_209	protocol and supplementary	Locus-Recon, PASS	8	8	8	0	6	0	6	0	2	0
+FDAARGOS_209	protocol and supplementary	ARIBA, protocol rule	8	8	8	0	7	0	7	0	1	0
+FDAARGOS_209	protocol and supplementary	KMA, primary rule	8	8	8	0	7	0	7	0	1	0
+FDAARGOS_209	protocol and supplementary	KMA, secondary rule	8	8	8	0	7	0	7	0	1	0
+FDAARGOS_197	protocol and supplementary	Locus-Recon, PASS	8	8	8	8	8	8	0	0	0	0
+FDAARGOS_197	protocol and supplementary	ARIBA, protocol rule	8	8	8	7	7	7	0	0	1	0
+FDAARGOS_197	protocol and supplementary	KMA, primary rule	8	8	8	8	6	6	0	2	0	0
+FDAARGOS_197	protocol and supplementary	KMA, secondary rule	8	8	8	8	7	7	0	1	0	0
+FDAARGOS_156	protocol and supplementary	Locus-Recon, PASS	8	8	8	5	5	5	0	0	3	0
+FDAARGOS_156	protocol and supplementary	ARIBA, protocol rule	8	8	8	6	5	5	0	1	2	0
+FDAARGOS_156	protocol and supplementary	KMA, primary rule	8	8	8	5	5	5	0	0	3	0
+FDAARGOS_156	protocol and supplementary	KMA, secondary rule	8	8	8	5	6	5	1	0	2	0
+FDAARGOS_750	protocol and supplementary	Locus-Recon, PASS	8	8	8	8	7	7	0	1	0	0
+FDAARGOS_750	protocol and supplementary	ARIBA, protocol rule	8	8	8	8	8	8	0	0	0	0
+FDAARGOS_750	protocol and supplementary	KMA, primary rule	8	8	8	8	8	8	0	0	0	0
+FDAARGOS_750	protocol and supplementary	KMA, secondary rule	8	8	8	8	8	8	0	0	0	0
+FDAARGOS_501	protocol and supplementary	Locus-Recon, PASS	8	8	8	7	7	7	0	0	1	0
+FDAARGOS_501	protocol and supplementary	ARIBA, protocol rule	8	8	8	7	7	7	0	0	1	0
+FDAARGOS_501	protocol and supplementary	KMA, primary rule	8	8	8	7	7	7	0	0	1	0
+FDAARGOS_501	protocol and supplementary	KMA, secondary rule	8	8	8	7	7	7	0	0	1	0
+FDAARGOS_1365	protocol and supplementary	Locus-Recon, PASS	8	8	8	8	8	8	0	0	0	0
+FDAARGOS_1365	protocol and supplementary	ARIBA, protocol rule	8	8	8	7	7	7	0	0	1	0
+FDAARGOS_1365	protocol and supplementary	KMA, primary rule	8	8	8	8	8	8	0	0	0	0
+FDAARGOS_1365	protocol and supplementary	KMA, secondary rule	8	8	8	8	8	8	0	0	0	0
+FDAARGOS_1	protocol, isolates whose draft agrees with the complete genome	Locus-Recon, PASS	5	5	5	5	3	3	0	2	0	0
+FDAARGOS_1	protocol, isolates whose draft agrees with the complete genome	ARIBA, protocol rule	5	5	5	5	3	3	0	2	0	0
+FDAARGOS_1	protocol, isolates whose draft agrees with the complete genome	KMA, primary rule	5	5	5	5	4	4	0	1	0	0
+FDAARGOS_1	protocol, isolates whose draft agrees with the complete genome	KMA, secondary rule	5	5	5	5	5	5	0	0	0	0
+FDAARGOS_262	protocol, isolates whose draft agrees with the complete genome	Locus-Recon, PASS	8	8	8	8	8	8	0	0	0	0
+FDAARGOS_262	protocol, isolates whose draft agrees with the complete genome	ARIBA, protocol rule	8	8	8	8	7	7	0	1	0	0
+FDAARGOS_262	protocol, isolates whose draft agrees with the complete genome	KMA, primary rule	8	8	8	7	7	7	0	0	1	0
+FDAARGOS_262	protocol, isolates whose draft agrees with the complete genome	KMA, secondary rule	8	8	8	7	7	7	0	0	1	0
+FDAARGOS_57	protocol, isolates whose draft agrees with the complete genome	Locus-Recon, PASS	8	8	8	7	6	6	0	1	1	0
+FDAARGOS_57	protocol, isolates whose draft agrees with the complete genome	ARIBA, protocol rule	8	8	8	7	7	7	0	0	1	0
+FDAARGOS_57	protocol, isolates whose draft agrees with the complete genome	KMA, primary rule	8	8	8	8	7	7	0	1	0	0
+FDAARGOS_57	protocol, isolates whose draft agrees with the complete genome	KMA, secondary rule	8	8	8	8	7	7	0	1	0	0
+FDAARGOS_324	protocol, isolates whose draft agrees with the complete genome	Locus-Recon, PASS	8	8	8	8	7	7	0	1	0	0
+FDAARGOS_324	protocol, isolates whose draft agrees with the complete genome	ARIBA, protocol rule	8	8	8	8	6	6	0	2	0	0
+FDAARGOS_324	protocol, isolates whose draft agrees with the complete genome	KMA, primary rule	8	8	8	8	8	8	0	0	0	0
+FDAARGOS_324	protocol, isolates whose draft agrees with the complete genome	KMA, secondary rule	8	8	8	8	8	8	0	0	0	0
+FDAARGOS_149	protocol, isolates whose draft agrees with the complete genome	Locus-Recon, PASS	8	8	8	8	8	8	0	0	0	0
+FDAARGOS_149	protocol, isolates whose draft agrees with the complete genome	ARIBA, protocol rule	8	8	8	7	6	5	1	2	0	0
+FDAARGOS_149	protocol, isolates whose draft agrees with the complete genome	KMA, primary rule	8	8	8	8	7	7	0	1	0	0
+FDAARGOS_149	protocol, isolates whose draft agrees with the complete genome	KMA, secondary rule	8	8	8	8	7	7	0	1	0	0
+FDAARGOS_199	protocol, isolates whose draft agrees with the complete genome	Locus-Recon, PASS	8	7	7	6	6	6	0	0	1	1
+FDAARGOS_199	protocol, isolates whose draft agrees with the complete genome	ARIBA, protocol rule	8	7	7	7	6	6	0	1	0	1
+FDAARGOS_199	protocol, isolates whose draft agrees with the complete genome	KMA, primary rule	8	7	7	7	6	6	0	1	0	1
+FDAARGOS_199	protocol, isolates whose draft agrees with the complete genome	KMA, secondary rule	8	7	7	7	6	6	0	1	0	1
+FDAARGOS_780	protocol, isolates whose draft agrees with the complete genome	Locus-Recon, PASS	8	7	7	7	5	5	0	2	0	1
+FDAARGOS_780	protocol, isolates whose draft agrees with the complete genome	ARIBA, protocol rule	8	7	7	6	4	4	0	2	1	1
+FDAARGOS_780	protocol, isolates whose draft agrees with the complete genome	KMA, primary rule	8	7	7	7	5	5	0	2	0	1
+FDAARGOS_780	protocol, isolates whose draft agrees with the complete genome	KMA, secondary rule	8	7	7	7	6	6	0	1	0	1
+FDAARGOS_51	protocol, isolates whose draft agrees with the complete genome	Locus-Recon, PASS	8	8	8	6	5	5	0	1	2	0
+FDAARGOS_51	protocol, isolates whose draft agrees with the complete genome	ARIBA, protocol rule	8	8	8	6	5	5	0	1	2	0
+FDAARGOS_51	protocol, isolates whose draft agrees with the complete genome	KMA, primary rule	8	8	8	6	7	6	1	0	1	0
+FDAARGOS_51	protocol, isolates whose draft agrees with the complete genome	KMA, secondary rule	8	8	8	6	7	6	1	0	1	0
+FDAARGOS_144	protocol, isolates whose draft agrees with the complete genome	Locus-Recon, PASS	7	7	7	7	6	6	0	1	0	0
+FDAARGOS_144	protocol, isolates whose draft agrees with the complete genome	ARIBA, protocol rule	7	7	7	6	5	5	0	1	1	0
+FDAARGOS_144	protocol, isolates whose draft agrees with the complete genome	KMA, primary rule	7	7	7	7	6	6	0	1	0	0
+FDAARGOS_144	protocol, isolates whose draft agrees with the complete genome	KMA, secondary rule	7	7	7	7	7	7	0	0	0	0
+FDAARGOS_54	protocol, isolates whose draft agrees with the complete genome	Locus-Recon, PASS	7	6	6	5	5	5	0	0	1	1
+FDAARGOS_54	protocol, isolates whose draft agrees with the complete genome	ARIBA, protocol rule	7	6	6	5	5	5	0	0	1	1
+FDAARGOS_54	protocol, isolates whose draft agrees with the complete genome	KMA, primary rule	7	6	6	5	5	5	0	0	1	1
+FDAARGOS_54	protocol, isolates whose draft agrees with the complete genome	KMA, secondary rule	7	6	6	5	5	5	0	0	1	1
+FDAARGOS_197	protocol, isolates whose draft agrees with the complete genome	Locus-Recon, PASS	8	8	8	8	8	8	0	0	0	0
+FDAARGOS_197	protocol, isolates whose draft agrees with the complete genome	ARIBA, protocol rule	8	8	8	7	7	7	0	0	1	0
+FDAARGOS_197	protocol, isolates whose draft agrees with the complete genome	KMA, primary rule	8	8	8	8	6	6	0	2	0	0
+FDAARGOS_197	protocol, isolates whose draft agrees with the complete genome	KMA, secondary rule	8	8	8	8	7	7	0	1	0	0
+FDAARGOS_156	protocol, isolates whose draft agrees with the complete genome	Locus-Recon, PASS	2	2	2	0	0	0	0	0	2	0
+FDAARGOS_156	protocol, isolates whose draft agrees with the complete genome	ARIBA, protocol rule	2	2	2	0	0	0	0	0	2	0
+FDAARGOS_156	protocol, isolates whose draft agrees with the complete genome	KMA, primary rule	2	2	2	0	0	0	0	0	2	0
+FDAARGOS_156	protocol, isolates whose draft agrees with the complete genome	KMA, secondary rule	2	2	2	0	1	0	1	0	1	0
+FDAARGOS_750	protocol, isolates whose draft agrees with the complete genome	Locus-Recon, PASS	8	8	8	8	7	7	0	1	0	0
+FDAARGOS_750	protocol, isolates whose draft agrees with the complete genome	ARIBA, protocol rule	8	8	8	8	8	8	0	0	0	0
+FDAARGOS_750	protocol, isolates whose draft agrees with the complete genome	KMA, primary rule	8	8	8	8	8	8	0	0	0	0
+FDAARGOS_750	protocol, isolates whose draft agrees with the complete genome	KMA, secondary rule	8	8	8	8	8	8	0	0	0	0
+FDAARGOS_501	protocol, isolates whose draft agrees with the complete genome	Locus-Recon, PASS	7	7	7	7	7	7	0	0	0	0
+FDAARGOS_501	protocol, isolates whose draft agrees with the complete genome	ARIBA, protocol rule	7	7	7	7	7	7	0	0	0	0
+FDAARGOS_501	protocol, isolates whose draft agrees with the complete genome	KMA, primary rule	7	7	7	7	7	7	0	0	0	0
+FDAARGOS_501	protocol, isolates whose draft agrees with the complete genome	KMA, secondary rule	7	7	7	7	7	7	0	0	0	0
+FDAARGOS_1365	protocol, isolates whose draft agrees with the complete genome	Locus-Recon, PASS	8	8	8	8	8	8	0	0	0	0
+FDAARGOS_1365	protocol, isolates whose draft agrees with the complete genome	ARIBA, protocol rule	8	8	8	7	7	7	0	0	1	0
+FDAARGOS_1365	protocol, isolates whose draft agrees with the complete genome	KMA, primary rule	8	8	8	8	8	8	0	0	0	0
+FDAARGOS_1365	protocol, isolates whose draft agrees with the complete genome	KMA, secondary rule	8	8	8	8	8	8	0	0	0	0
