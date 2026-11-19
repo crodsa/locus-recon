@@ -213,7 +213,9 @@ closed truth records, generates SPAdes drafts from Illumina only, maps the reads
 back to those drafts, discovers 23S rRNA and `gyrB` from a fixed external
 `NC_000915.1` bait, evaluates the released depth rule unchanged, and counts bait-
 anchored contexts in the corresponding SPAdes GFA. The archived run reports one
-context for every `gyrB` control, two for four of the five 23S loci, and a lower
+context for every `gyrB` control, two for four of the five 23S loci (returned
+for review as a lower bound of two since release 1.0.2, because the depth
+interval excludes two), and a lower
 bound of two at Hpfe0004, where the traversal met a cycle; the workflow
 verifies that the 21 depth fields it reports equal the depth-only table
 archived before the graph analysis. Because the prespecified graph criterion
@@ -229,11 +231,18 @@ under `validation/low-copy-23S/`. These five cases informed the graph/depth
 design and are therefore a biological demonstration, not an independent
 exact-copy performance estimate.
 
-## Records of release 1.0.1
+## Records of releases 1.0.1 and 1.0.2
 
 Every analysis above was run again with release 1.0.1 on 18 and 19 November 2026
 (`regenerate/regenerate_validation.sh`), and the records in this folder are the
-output of that run. `regenerate/` holds the driver and its helpers.
+output of that run. Release 1.0.2 changed one label of the copy-number
+consensus. The four analyses that depend on it or that verify the release were
+run again with 1.0.2 (`regenerate/regenerate_102.sh`): the simulated benchmark,
+`low-copy-23S/`, `liba6656-gfa-rerun/` and the consensus without a graph in
+`liba6656-depth/`. Each record states the version that wrote it.
+[`consensus-relabel-1.0.2/`](consensus-relabel-1.0.2/README.md) applies the
+label of 1.0.2 to the stored results of the external evaluation and of the
+targeted tests, which were run with 1.0.1. `regenerate/` holds the driver and its helpers.
 [`INTEGRATION_RUN.md`](INTEGRATION_RUN.md) records one run of the complete
 workflow with the real external programs. The records of release 1.0.0 are in
 the Git history (tag `v1.0.0`).

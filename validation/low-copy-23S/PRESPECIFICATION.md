@@ -113,8 +113,11 @@ the result was seen.
 - Primary criteria 1 to 3 are met. All five 23S loci were `MULTICOPY_DEPTH`,
   no `gyrB` control was, and every estimate, interval, error, ambiguity metric,
   geometry, dosage status and flag is reported in `results.tsv`.
-- Graph criterion 1 is met in four of five loci. Hpfe0001, Hpfe0002, Hpfe0003
-  and Hpfe0006 returned two matched contexts and `copy_number_call=2`. At
+- Graph criterion 1 is met in four of five loci by the count: Hpfe0001,
+  Hpfe0002, Hpfe0003 and Hpfe0006 returned two matched contexts and
+  `copy_number_call=2`. Since release 1.0.2 these four counts have the status
+  `REVIEW` and are lower bounds, because the depth interval excludes two, so
+  `evaluation.json` counts no supported two-copy call. At
   Hpfe0004 both locus ends also yielded two contexts, but the traversal met a
   cycle (`CYCLE_ENCOUNTERED`). Locus-Recon treats a traversal pruned by a cycle
   or a safety limit as incomplete and reports its count as a lower bound, so

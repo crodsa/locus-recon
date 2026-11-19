@@ -1,6 +1,6 @@
 # Integration run with the external tools
 
-The 221 unit tests under `tests/` replace SPAdes, BWA-MEM2, samtools and BLAST+ with
+The 224 unit tests under `tests/` replace SPAdes, BWA-MEM2, samtools and BLAST+ with
 stubs. They check the logic of the package and never start those programs. This file
 documents one run of the complete workflow with the real programs, on the smallest
 data set of the repository: the 13 simulated samples of `validation/mock_dataset/`.
@@ -11,7 +11,7 @@ checksums below.
 
 | Component | Version |
 |---|---|
-| locus-recon | locus-recon 1.0.1 |
+| locus-recon | locus-recon 1.0.2 |
 | python | Python 3.11.13 |
 | spades | SPAdes genome assembler v4.2.0 |
 | bwa-mem2 | 2.2.1 |
@@ -23,8 +23,8 @@ checksums below.
 | platform | Linux 6.8.0-149-generic x86_64 |
 | cpu | Intel(R) Core(TM) i7-14700 |
 
-Package source digest (`source_sha256` of `validation/common.py`): `2cc816cca467a7988c1f2a28cba11ed1cbb30b263e331f75ca48efa19ebefce0`.
-Git commit of the tree: `884cdf3c84f17dc9007576f26c6b431044dd35e1`.
+Package source digest (`source_sha256` of `validation/common.py`): `a24d41d80d2a3e04729eda04efa6938d82ac2d99e4ea875377353f014aae9b35`.
+Git commit of the tree: `f985906673912a900fd0035e3045cd2a5f9a29f3`.
 
 ## Commands
 
@@ -77,25 +77,25 @@ Files of the results directory that summarise the run:
 | `mockLocus_hold_candidates.fasta` | 4863 | `2844bc4c40f1837909601720129ece9db95a30ee08d779fc090f5acc4fb1ff6f` | yes |
 | `mockLocus_reconstructed_candidates.fasta` | 8350 | `24b96160651d86f21c73f3e6952a8eb66b3261a9643aa6aa855c428eff1780f8` | yes |
 | `validation/validation_summary.json` | 1174 | `c1654b26e0e03ca0b924fa5e2781c2600537076f18318792cbcaa2081dc9d666` | yes |
-| `validation/validation_results.tsv` | 3096 | `c1d5865aeb718722dac6bf404832e6e9aa82eb4e9913633e54f2f130f66769d5` | no |
-| `locus_recon_report_mockLocus.tsv` | 9439 | `858c37a23f07b3c9e484e5d75781479620f4136b1672c5638915d7f0928cb498` | no |
+| `validation/validation_results.tsv` | 3096 | `8cc15dec71b1a58caf40c2e960c797d8ac25911af7f9a2da26628ab3c840b2ba` | no |
+| `locus_recon_report_mockLocus.tsv` | 9475 | `cf10ed4015f44b6f27058687b0c72223908921054662c192afc8d86188379b34` | no |
 
 ## What is reproducible to the byte
 
-The command was run twice on the same machine (67 s and 66 s). Of the 228 files kept from the first run, 157 had the same bytes in the second.
+The command was run twice on the same machine (65 s and 65 s). Of the 228 files kept from the first run, 152 had the same bytes in the second.
 
 | Kind of file | Same bytes | Different bytes |
 |---|---|---|
-| `allele_region.bed` | 11 | 1 |
+| `allele_region.bed` | 10 | 2 |
 | `allele_remap.flagstat.txt` | 12 | 0 |
 | `allele_remap.support.tsv` | 12 | 0 |
 | `allele_remap_bwa.log` | 0 | 12 |
-| `assembly_graph_after_simplification.gfa` | 11 | 1 |
+| `assembly_graph_after_simplification.gfa` | 10 | 2 |
 | `blast_step1.tsv` | 13 | 0 |
-| `blast_step5.tsv` | 11 | 1 |
+| `blast_step5.tsv` | 10 | 2 |
 | `blast_validation.tsv` | 12 | 0 |
 | `bwa_pipe.log` | 0 | 12 |
-| `contigs.fasta` | 11 | 1 |
+| `contigs.fasta` | 10 | 2 |
 | `locus_recon_batch_mockLocus.log` | 0 | 1 |
 | `locus_recon_report_mockLocus.tsv` | 0 | 1 |
 | `mapping_flagstat.txt` | 12 | 0 |
@@ -108,7 +108,7 @@ The command was run twice on the same machine (67 s and 66 s). Of the 228 files 
 | `recon.log` | 0 | 13 |
 | `reconstructed.fasta` | 12 | 0 |
 | `run_manifest.json` | 0 | 1 |
-| `scaffolds.fasta` | 11 | 1 |
+| `scaffolds.fasta` | 10 | 2 |
 | `spades.log` | 0 | 12 |
 | `target_regions.bed` | 12 | 0 |
 | `validation_results.tsv` | 0 | 1 |
@@ -119,7 +119,7 @@ The candidate sequences, the QC reports, the per-base tables (`allele_remap.supp
 `validation_summary.json` are the files to compare. Logs, the batch report, `validation_results.tsv`,
 `run_manifest.json` and `workflow_provenance.json` carry dates, run times or absolute paths and differ
 between runs. SPAdes writes its own paths and times in `params.txt` and `spades.log`.
-In 1 sample(s) (`depth_10x_A`) the local SPAdes assembly itself differed between the two runs, and with it the files that describe the contig; the candidate sequence, its QC report and its per-base table were the same.
+In 2 sample(s) (`depth_10x_A`, `depth_20x_A`) the local SPAdes assembly itself differed between the two runs, and with it the files that describe the contig; the candidate sequence, its QC report and its per-base table were the same.
 
 To compare a new run with the recorded one:
 
@@ -129,16 +129,15 @@ sha256sum */*_mockLocus_reconstructed.fasta mockLocus_*.fasta validation/validat
 ```
 
 The complete list of checksums of the recorded run is `evidence/mock_run_and_repeat_checksums.tsv` in the
-regeneration package (`validation/regenerated-1.0.1/`), and the files themselves are under `evidence/mock/`.
+regeneration package (`validation_evidence/release_1.0.2/regenerated-1.0.2/` of Supplementary Data 1 of the article), and the files themselves are under `evidence/mock/`.
 
 ## Relation to the unit tests
 
 | Test run | Last line of pytest |
 |---|---|
-| `release_as_committed.pytest.txt` | 1 failed, 220 passed in 21.76s |
-| `release_with_all_records.pytest.txt` | 1 failed, 220 passed in 21.85s |
-| `release_with_all_records_and_test_update.pytest.txt` | 221 passed in 25.53s |
-| `release_with_liba6656_record.pytest.txt` | 221 passed in 23.33s |
+| `release_as_committed.pytest.txt` | 1 failed, 223 passed in 20.57s |
+| `release_with_regenerated_records.pytest.txt` | 1 failed, 223 passed in 20.91s |
+| `release_with_regenerated_records_and_test_update.pytest.txt` | 224 passed in 20.53s |
 
 All external programs are replaced with stubs in those tests. A change that breaks the call of an
 external program, or that depends on its real output, is therefore visible only in a run such as this

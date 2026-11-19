@@ -1,0 +1,12 @@
+analysis	values_compared	equal	different_run_metadata	different_labels_introduced_in_1.0.1	different_explained_otherwise	different_unexplained
+simulated benchmark	1115	1053	62	0	0	0
+completeness benchmark	549	548	1	0	0	0
+tier calibration	1646	1638	0	4	4	0
+checks of single components	4831	4824	0	0	7	0
+synthetic copy series	330	327	3	0	0	0
+aphA1	98	93	2	0	3	0
+23S rRNA gene and gyrB	477	476	0	0	1	0
+LIBA-6656 depth	80	80	0	0	0	0
+LIBA-6656 overlap control	624	624	0	0	0	0
+LIBA-6656 standard workflow	230	217	10	0	3	0
+comparison with ARIBA and KMA	4403	4233	0	1	169	0

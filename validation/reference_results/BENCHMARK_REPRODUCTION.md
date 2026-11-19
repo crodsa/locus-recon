@@ -4,7 +4,7 @@ The compact files in this directory record the behaviour of the bundled syntheti
 benchmark. They are reference results for this deterministic panel, not universal
 estimates of biological performance.
 
-The run recorded here was made from a clean results directory with Locus-Recon 1.0.1 on 2026-11-18.
+The run recorded here was made from a clean results directory with Locus-Recon 1.0.2 on 2026-11-19.
 
 ```bash
 python validation/run_mock_validation.py \
@@ -21,7 +21,7 @@ Environment:
 - samtools: samtools 1.22.1
 - spades: SPAdes genome assembler v4.2.0
 - package source digest (`source_sha256`, see `validation/common.py`):
-  `2cc816cca467a7988c1f2a28cba11ed1cbb30b263e331f75ca48efa19ebefce0`
+  `a24d41d80d2a3e04729eda04efa6938d82ac2d99e4ea875377353f014aae9b35`
 
 Outcome:
 
@@ -42,8 +42,8 @@ Outcome:
 - `paralog_control`: status `SUCCESS`, tier `SUSPECT`, disposition `HOLD`, identical to the truth false, remap depth 110.8x, mixed sites 14 (median alternative fraction 0.4718), strand-biased sites 0, ambiguity flagged true;
 - `negative_control`: status `SKIP`, tier `none`, disposition `HOLD`, identical to the truth false, remap depth 0.0x, mixed sites 0 (median alternative fraction 0.0), strand-biased sites 0, ambiguity flagged false;
 
-Timing: the 12 samples that entered read recruitment took a median of 5.20 s each (range 5.0 to 5.8 s), 63.9 s in total. These figures describe this run on this machine.
+Timing: the 12 samples that entered read recruitment took a median of 5.10 s each (range 4.8 to 5.7 s), 61.9 s in total. These figures describe this run on this machine.
 
-A second run of the same command was compared file by file with this one: 157 of 228 kept files were byte-identical (`evidence/mock_run_and_repeat_checksums.tsv` in the regeneration package lists every file).
+A second run of the same command was compared file by file with this one: 152 of 228 kept files were byte-identical (`evidence/mock_run_and_repeat_checksums.tsv` in the regeneration package lists every file).
 
 In `locus_recon_report_mockLocus.tsv`, `allele_file` is shown relative to the results directory; the pipeline itself writes absolute paths.

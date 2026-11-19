@@ -1,0 +1,80 @@
+unit_set	truth	factor	bin	units	isolates	ratio_median_relative_error	ratio_median_absolute_relative_error	ratio_largest_absolute_relative_error	dosage_median_relative_error	dosage_median_absolute_relative_error	dosage_largest_absolute_relative_error	called_multicopy_depth
+protocol	one copy	locus_gc_pct	below 40%	18	7	-0.0205	0.1095	0.213	-0.0205	0.1095	0.213	0
+protocol	one copy	locus_gc_pct	40 to 55%	36	10	0.0605	0.0875	0.212	0.0605	0.0875	0.212	0
+protocol	one copy	locus_gc_pct	55% or more	27	6	0.157	0.157	0.589	0.157	0.157	0.589	0
+protocol	one copy	genome_gc_pct	below 40%	37	7	0.02	0.102	0.213	0.02	0.102	0.213	0
+protocol	one copy	genome_gc_pct	40 to 55%	26	5	0.04	0.09	0.217	0.04	0.09	0.217	0
+protocol	one copy	genome_gc_pct	55% or more	18	3	0.2055	0.2055	0.589	0.2055	0.2055	0.589	0
+protocol	one copy	locus_bp	below 1,500 bp	34	15	0.04	0.105	0.589	0.04	0.105	0.589	0
+protocol	one copy	locus_bp	1,500 to 2,499 bp	31	15	0.097	0.128	0.567	0.097	0.128	0.567	0
+protocol	one copy	locus_bp	2,500 bp or more	16	15	0.0655	0.071	0.456	0.0655	0.071	0.456	0
+protocol	one copy	discovery_intervals	1	81	15	0.087	0.115	0.589	0.087	0.115	0.589	0
+protocol	two or more copies	locus_gc_pct	40 to 55%	29	15	-0.1489	0.1865	0.961	-0.0222	0.1123	0.843	18
+protocol	two or more copies	locus_gc_pct	55% or more	3	2	0.1315	0.1315	0.4597	0.1315	0.1315	0.4597	3
+protocol	two or more copies	genome_gc_pct	below 40%	14	7	-0.1372	0.1372	0.3253	-0.1032	0.1032	0.3253	11
+protocol	two or more copies	genome_gc_pct	40 to 55%	11	5	-0.1489	0.151	0.618	0.061	0.073	0.2741	5
+protocol	two or more copies	genome_gc_pct	55% or more	7	3	0.1935	0.4597	0.961	0.4597	0.4597	0.843	5
+protocol	two or more copies	locus_bp	below 1,500 bp	4	4	-0.1527	0.1527	0.618	-0.0198	0.116	0.2365	2
+protocol	two or more copies	locus_bp	1,500 to 2,499 bp	15	15	-0.1123	0.1718	0.961	-0.043	0.154	0.7257	10
+protocol	two or more copies	locus_bp	2,500 bp or more	13	13	-0.102	0.1935	0.9305	-0.0172	0.102	0.843	9
+protocol	two or more copies	discovery_intervals	1	12	8	-0.0249	0.1011	0.4913	-0.0249	0.1011	0.4913	12
+protocol	two or more copies	discovery_intervals	2	8	8	-0.1632	0.1847	0.618	-0.0588	0.1584	0.2365	6
+protocol	two or more copies	discovery_intervals	3 or more	12	8	-0.2214	0.2297	0.961	0.0194	0.2011	0.843	3
+supplementary	one copy	locus_gc_pct	below 40%	2	1	-0.0105	0.1595	0.17	-0.0105	0.1595	0.17	0
+supplementary	one copy	locus_gc_pct	40 to 55%	3	2	0.226	0.226	0.29	0.226	0.226	0.29	0
+supplementary	one copy	locus_gc_pct	55% or more	3	1	0.258	0.258	0.312	0.258	0.258	0.312	0
+supplementary	one copy	genome_gc_pct	below 40%	3	1	-0.064	0.149	0.17	-0.064	0.149	0.17	0
+supplementary	one copy	genome_gc_pct	55% or more	5	1	0.258	0.258	0.312	0.258	0.258	0.312	0
+supplementary	one copy	locus_bp	below 1,500 bp	4	2	-0.021	0.117	0.312	-0.021	0.117	0.312	0
+supplementary	one copy	locus_bp	1,500 to 2,499 bp	3	2	0.226	0.226	0.258	0.226	0.226	0.258	0
+supplementary	one copy	locus_bp	2,500 bp or more	1	1	0.29	0.29	0.29	0.29	0.29	0.29	0
+supplementary	one copy	discovery_intervals	1	8	2	0.1875	0.198	0.312	0.1875	0.198	0.312	0
+supplementary	two or more copies	locus_gc_pct	40 to 55%	3	3	-0.1035	0.1035	0.554	-0.0815	0.0815	0.103	1
+supplementary	two or more copies	locus_gc_pct	55% or more	1	1	-0.1835	0.1835	0.1835	0.605	0.605	0.605	0
+supplementary	two or more copies	genome_gc_pct	40 to 55%	2	2	-0.3288	0.3288	0.554	-0.0922	0.0922	0.103	0
+supplementary	two or more copies	genome_gc_pct	55% or more	2	2	-0.0862	0.0973	0.1835	0.3315	0.3315	0.605	1
+supplementary	two or more copies	locus_bp	below 1,500 bp	4	4	-0.1435	0.1435	0.554	-0.0118	0.0922	0.605	1
+supplementary	two or more copies	discovery_intervals	2	3	3	-0.1835	0.1835	0.554	0.058	0.103	0.605	1
+supplementary	two or more copies	discovery_intervals	3 or more	1	1	-0.1035	0.1035	0.1035	-0.0815	0.0815	0.0815	0
+protocol and supplementary	one copy	locus_gc_pct	below 40%	20	7	-0.0205	0.1205	0.213	-0.0205	0.1205	0.213	0
+protocol and supplementary	one copy	locus_gc_pct	40 to 55%	39	12	0.065	0.088	0.29	0.065	0.088	0.29	0
+protocol and supplementary	one copy	locus_gc_pct	55% or more	30	7	0.169	0.169	0.589	0.169	0.169	0.589	0
+protocol and supplementary	one copy	genome_gc_pct	below 40%	40	7	0.0155	0.102	0.213	0.0155	0.102	0.213	0
+protocol and supplementary	one copy	genome_gc_pct	40 to 55%	26	5	0.04	0.09	0.217	0.04	0.09	0.217	0
+protocol and supplementary	one copy	genome_gc_pct	55% or more	23	4	0.222	0.222	0.589	0.222	0.222	0.589	0
+protocol and supplementary	one copy	locus_bp	below 1,500 bp	38	16	0.023	0.105	0.589	0.023	0.105	0.589	0
+protocol and supplementary	one copy	locus_bp	1,500 to 2,499 bp	34	16	0.118	0.1335	0.567	0.118	0.1335	0.567	0
+protocol and supplementary	one copy	locus_bp	2,500 bp or more	17	16	0.087	0.087	0.456	0.087	0.087	0.456	0
+protocol and supplementary	one copy	discovery_intervals	1	89	16	0.093	0.117	0.589	0.093	0.117	0.589	0
+protocol and supplementary	two or more copies	locus_gc_pct	40 to 55%	32	15	-0.1344	0.1792	0.961	-0.0326	0.1037	0.843	19
+protocol and supplementary	two or more copies	locus_gc_pct	55% or more	4	3	0.0404	0.1575	0.4597	0.2956	0.2956	0.605	3
+protocol and supplementary	two or more copies	genome_gc_pct	below 40%	14	7	-0.1372	0.1372	0.3253	-0.1032	0.1032	0.3253	11
+protocol and supplementary	two or more copies	genome_gc_pct	40 to 55%	13	5	-0.1489	0.151	0.618	0.0044	0.0815	0.2741	5
+protocol and supplementary	two or more copies	genome_gc_pct	55% or more	9	3	0.1315	0.1976	0.961	0.4597	0.4597	0.843	6
+protocol and supplementary	two or more copies	locus_bp	below 1,500 bp	8	8	-0.1527	0.1527	0.618	-0.0118	0.1018	0.605	3
+protocol and supplementary	two or more copies	locus_bp	1,500 to 2,499 bp	15	15	-0.1123	0.1718	0.961	-0.043	0.154	0.7257	10
+protocol and supplementary	two or more copies	locus_bp	2,500 bp or more	13	13	-0.102	0.1935	0.9305	-0.0172	0.102	0.843	9
+protocol and supplementary	two or more copies	discovery_intervals	1	12	8	-0.0249	0.1011	0.4913	-0.0249	0.1011	0.4913	12
+protocol and supplementary	two or more copies	discovery_intervals	2	11	10	-0.1718	0.1835	0.618	-0.0172	0.154	0.605	7
+protocol and supplementary	two or more copies	discovery_intervals	3 or more	13	9	-0.1865	0.2031	0.961	-0.0222	0.1965	0.843	3
+protocol, isolates whose draft agrees with the complete genome	one copy	locus_gc_pct	below 40%	18	7	-0.0205	0.1095	0.213	-0.0205	0.1095	0.213	0
+protocol, isolates whose draft agrees with the complete genome	one copy	locus_gc_pct	40 to 55%	33	9	0.056	0.087	0.212	0.056	0.087	0.212	0
+protocol, isolates whose draft agrees with the complete genome	one copy	locus_gc_pct	55% or more	25	5	0.181	0.181	0.589	0.181	0.181	0.589	0
+protocol, isolates whose draft agrees with the complete genome	one copy	genome_gc_pct	below 40%	37	7	0.02	0.102	0.213	0.02	0.102	0.213	0
+protocol, isolates whose draft agrees with the complete genome	one copy	genome_gc_pct	40 to 55%	21	4	0.056	0.087	0.217	0.056	0.087	0.217	0
+protocol, isolates whose draft agrees with the complete genome	one copy	genome_gc_pct	55% or more	18	3	0.2055	0.2055	0.589	0.2055	0.2055	0.589	0
+protocol, isolates whose draft agrees with the complete genome	one copy	locus_bp	below 1,500 bp	32	14	0.0605	0.105	0.589	0.0605	0.105	0.589	0
+protocol, isolates whose draft agrees with the complete genome	one copy	locus_bp	1,500 to 2,499 bp	29	14	0.116	0.133	0.567	0.116	0.133	0.567	0
+protocol, isolates whose draft agrees with the complete genome	one copy	locus_bp	2,500 bp or more	15	14	0.044	0.055	0.456	0.044	0.055	0.456	0
+protocol, isolates whose draft agrees with the complete genome	one copy	discovery_intervals	1	76	14	0.09	0.1165	0.589	0.09	0.1165	0.589	0
+protocol, isolates whose draft agrees with the complete genome	two or more copies	locus_gc_pct	40 to 55%	26	14	-0.1161	0.1792	0.961	-0.0436	0.1084	0.843	18
+protocol, isolates whose draft agrees with the complete genome	two or more copies	locus_gc_pct	55% or more	3	2	0.1315	0.1315	0.4597	0.1315	0.1315	0.4597	3
+protocol, isolates whose draft agrees with the complete genome	two or more copies	genome_gc_pct	below 40%	14	7	-0.1372	0.1372	0.3253	-0.1032	0.1032	0.3253	11
+protocol, isolates whose draft agrees with the complete genome	two or more copies	genome_gc_pct	40 to 55%	8	4	-0.0231	0.1109	0.618	-0.0089	0.0618	0.2741	5
+protocol, isolates whose draft agrees with the complete genome	two or more copies	genome_gc_pct	55% or more	7	3	0.1935	0.4597	0.961	0.4597	0.4597	0.843	5
+protocol, isolates whose draft agrees with the complete genome	two or more copies	locus_bp	below 1,500 bp	3	3	-0.1545	0.1545	0.618	-0.1005	0.1315	0.2365	2
+protocol, isolates whose draft agrees with the complete genome	two or more copies	locus_bp	1,500 to 2,499 bp	14	14	-0.0814	0.1603	0.961	-0.0436	0.1376	0.7257	10
+protocol, isolates whose draft agrees with the complete genome	two or more copies	locus_bp	2,500 bp or more	12	12	-0.1011	0.19	0.9305	-0.0197	0.1011	0.843	9
+protocol, isolates whose draft agrees with the complete genome	two or more copies	discovery_intervals	1	12	8	-0.0249	0.1011	0.4913	-0.0249	0.1011	0.4913	12
+protocol, isolates whose draft agrees with the complete genome	two or more copies	discovery_intervals	2	7	7	-0.1545	0.1718	0.618	-0.1005	0.1628	0.2365	6
+protocol, isolates whose draft agrees with the complete genome	two or more copies	discovery_intervals	3 or more	10	7	-0.2214	0.2297	0.961	-0.0333	0.2094	0.843	3

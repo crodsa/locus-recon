@@ -1,0 +1,73 @@
+unit_set	stratum	decision_rule	units	accepted_exact	accepted_not_exact	not_accepted_exact	not_accepted_not_exact	of_which_no_sequence	accepted	not_accepted	exact	proportion_accepted	proportion_exact_among_accepted	proportion_exact_among_not_accepted	note
+protocol	all strata with a copy	Locus-Recon, PASS	113	89	6	9	9	0	95	18	98	0.8407	0.9368	0.5	
+protocol	all strata with a copy	KMA, primary rule	113	90	8	9	6	0	98	15	99	0.8673	0.9184	0.6	
+protocol	all strata with a copy	KMA, secondary rule	113	94	9	5	5	0	103	10	99	0.9115	0.9126	0.5	
+protocol	all strata with a copy	ARIBA, protocol rule	113	82	8	12	11	0	90	23	94	0.7965	0.9111	0.5217	
+protocol	one copy	Locus-Recon, PASS	81	75	5	1	0	0	80	1	76	0.9877	0.9375	1	
+protocol	one copy	KMA, primary rule	81	73	5	2	1	0	78	3	75	0.963	0.9359	0.6667	
+protocol	one copy	KMA, secondary rule	81	74	5	1	1	0	79	2	75	0.9753	0.9367	0.5	
+protocol	one copy	ARIBA, protocol rule	81	74	6	0	1	0	80	1	74	0.9877	0.925	0	
+protocol	several identical copies	Locus-Recon, PASS	6	5	1	0	0	0	6	0	5	1	0.8333		
+protocol	several identical copies	KMA, primary rule	6	4	1	1	0	0	5	1	5	0.8333	0.8	1	
+protocol	several identical copies	KMA, secondary rule	6	4	1	1	0	0	5	1	5	0.8333	0.8	1	
+protocol	several identical copies	ARIBA, protocol rule	6	4	1	0	1	0	5	1	4	0.8333	0.8	0	
+protocol	several different copies	Locus-Recon, PASS	26	9	0	8	9	0	9	17	17	0.3462	1	0.4706	
+protocol	several different copies	KMA, primary rule	26	13	2	6	5	0	15	11	19	0.5769	0.8667	0.5455	
+protocol	several different copies	KMA, secondary rule	26	16	3	3	4	0	19	7	19	0.7308	0.8421	0.4286	
+protocol	several different copies	ARIBA, protocol rule	26	4	1	12	9	0	5	21	16	0.1923	0.8	0.5714	
+protocol	no copy under the protocol rule, bait aligned in parts	Locus-Recon, PASS	3					0	0	3		0			no truth sequence in this stratum; exactness is not defined
+protocol	no copy under the protocol rule, bait aligned in parts	KMA, primary rule	3					0	0	3		0			no truth sequence in this stratum; exactness is not defined
+protocol	no copy under the protocol rule, bait aligned in parts	KMA, secondary rule	3					0	0	3		0			no truth sequence in this stratum; exactness is not defined
+protocol	no copy under the protocol rule, bait aligned in parts	ARIBA, protocol rule	3					0	0	3		0			no truth sequence in this stratum; exactness is not defined
+supplementary	all strata with a copy	Locus-Recon, PASS	12	8	0	0	4	0	8	4	8	0.6667	1	0	
+supplementary	all strata with a copy	KMA, primary rule	12	8	0	0	4	0	8	4	8	0.6667	1	0	
+supplementary	all strata with a copy	KMA, secondary rule	12	8	0	0	4	0	8	4	8	0.6667	1	0	
+supplementary	all strata with a copy	ARIBA, protocol rule	12	8	0	1	3	0	8	4	9	0.6667	1	0.25	
+supplementary	one copy	Locus-Recon, PASS	8	8	0	0	0	0	8	0	8	1	1		
+supplementary	one copy	KMA, primary rule	8	8	0	0	0	0	8	0	8	1	1		
+supplementary	one copy	KMA, secondary rule	8	8	0	0	0	0	8	0	8	1	1		
+supplementary	one copy	ARIBA, protocol rule	8	8	0	0	0	0	8	0	8	1	1		
+supplementary	several different copies	Locus-Recon, PASS	4	0	0	0	4	0	0	4	0	0		0	
+supplementary	several different copies	KMA, primary rule	4	0	0	0	4	0	0	4	0	0		0	
+supplementary	several different copies	KMA, secondary rule	4	0	0	0	4	0	0	4	0	0		0	
+supplementary	several different copies	ARIBA, protocol rule	4	0	0	1	3	0	0	4	1	0		0.25	
+protocol and supplementary	all strata with a copy	Locus-Recon, PASS	125	97	6	9	13	0	103	22	106	0.824	0.9417	0.4091	
+protocol and supplementary	all strata with a copy	KMA, primary rule	125	98	8	9	10	0	106	19	107	0.848	0.9245	0.4737	
+protocol and supplementary	all strata with a copy	KMA, secondary rule	125	102	9	5	9	0	111	14	107	0.888	0.9189	0.3571	
+protocol and supplementary	all strata with a copy	ARIBA, protocol rule	125	90	8	13	14	0	98	27	103	0.784	0.9184	0.4815	
+protocol and supplementary	one copy	Locus-Recon, PASS	89	83	5	1	0	0	88	1	84	0.9888	0.9432	1	
+protocol and supplementary	one copy	KMA, primary rule	89	81	5	2	1	0	86	3	83	0.9663	0.9419	0.6667	
+protocol and supplementary	one copy	KMA, secondary rule	89	82	5	1	1	0	87	2	83	0.9775	0.9425	0.5	
+protocol and supplementary	one copy	ARIBA, protocol rule	89	82	6	0	1	0	88	1	82	0.9888	0.9318	0	
+protocol and supplementary	several identical copies	Locus-Recon, PASS	6	5	1	0	0	0	6	0	5	1	0.8333		
+protocol and supplementary	several identical copies	KMA, primary rule	6	4	1	1	0	0	5	1	5	0.8333	0.8	1	
+protocol and supplementary	several identical copies	KMA, secondary rule	6	4	1	1	0	0	5	1	5	0.8333	0.8	1	
+protocol and supplementary	several identical copies	ARIBA, protocol rule	6	4	1	0	1	0	5	1	4	0.8333	0.8	0	
+protocol and supplementary	several different copies	Locus-Recon, PASS	30	9	0	8	13	0	9	21	17	0.3	1	0.381	
+protocol and supplementary	several different copies	KMA, primary rule	30	13	2	6	9	0	15	15	19	0.5	0.8667	0.4	
+protocol and supplementary	several different copies	KMA, secondary rule	30	16	3	3	8	0	19	11	19	0.6333	0.8421	0.2727	
+protocol and supplementary	several different copies	ARIBA, protocol rule	30	4	1	13	12	0	5	25	17	0.1667	0.8	0.52	
+protocol and supplementary	no copy under the protocol rule, bait aligned in parts	Locus-Recon, PASS	3					0	0	3		0			no truth sequence in this stratum; exactness is not defined
+protocol and supplementary	no copy under the protocol rule, bait aligned in parts	KMA, primary rule	3					0	0	3		0			no truth sequence in this stratum; exactness is not defined
+protocol and supplementary	no copy under the protocol rule, bait aligned in parts	KMA, secondary rule	3					0	0	3		0			no truth sequence in this stratum; exactness is not defined
+protocol and supplementary	no copy under the protocol rule, bait aligned in parts	ARIBA, protocol rule	3					0	0	3		0			no truth sequence in this stratum; exactness is not defined
+protocol, isolates whose draft agrees with the complete genome	all strata with a copy	Locus-Recon, PASS	105	89	0	9	7	0	89	16	98	0.8476	1	0.5625	
+protocol, isolates whose draft agrees with the complete genome	all strata with a copy	KMA, primary rule	105	90	1	9	5	0	91	14	99	0.8667	0.989	0.6429	
+protocol, isolates whose draft agrees with the complete genome	all strata with a copy	KMA, secondary rule	105	94	2	5	4	0	96	9	99	0.9143	0.9792	0.5556	
+protocol, isolates whose draft agrees with the complete genome	all strata with a copy	ARIBA, protocol rule	105	82	1	12	10	0	83	22	94	0.7905	0.988	0.5455	
+protocol, isolates whose draft agrees with the complete genome	one copy	Locus-Recon, PASS	76	75	0	1	0	0	75	1	76	0.9868	1	1	
+protocol, isolates whose draft agrees with the complete genome	one copy	KMA, primary rule	76	73	0	2	1	0	73	3	75	0.9605	1	0.6667	
+protocol, isolates whose draft agrees with the complete genome	one copy	KMA, secondary rule	76	74	0	1	1	0	74	2	75	0.9737	1	0.5	
+protocol, isolates whose draft agrees with the complete genome	one copy	ARIBA, protocol rule	76	74	1	0	1	0	75	1	74	0.9868	0.9867	0	
+protocol, isolates whose draft agrees with the complete genome	several identical copies	Locus-Recon, PASS	5	5	0	0	0	0	5	0	5	1	1		
+protocol, isolates whose draft agrees with the complete genome	several identical copies	KMA, primary rule	5	4	0	1	0	0	4	1	5	0.8	1	1	
+protocol, isolates whose draft agrees with the complete genome	several identical copies	KMA, secondary rule	5	4	0	1	0	0	4	1	5	0.8	1	1	
+protocol, isolates whose draft agrees with the complete genome	several identical copies	ARIBA, protocol rule	5	4	0	0	1	0	4	1	4	0.8	1	0	
+protocol, isolates whose draft agrees with the complete genome	several different copies	Locus-Recon, PASS	24	9	0	8	7	0	9	15	17	0.375	1	0.5333	
+protocol, isolates whose draft agrees with the complete genome	several different copies	KMA, primary rule	24	13	1	6	4	0	14	10	19	0.5833	0.9286	0.6	
+protocol, isolates whose draft agrees with the complete genome	several different copies	KMA, secondary rule	24	16	2	3	3	0	18	6	19	0.75	0.8889	0.5	
+protocol, isolates whose draft agrees with the complete genome	several different copies	ARIBA, protocol rule	24	4	0	12	8	0	4	20	16	0.1667	1	0.6	
+protocol, isolates whose draft agrees with the complete genome	no copy under the protocol rule, bait aligned in parts	Locus-Recon, PASS	3					0	0	3		0			no truth sequence in this stratum; exactness is not defined
+protocol, isolates whose draft agrees with the complete genome	no copy under the protocol rule, bait aligned in parts	KMA, primary rule	3					0	0	3		0			no truth sequence in this stratum; exactness is not defined
+protocol, isolates whose draft agrees with the complete genome	no copy under the protocol rule, bait aligned in parts	KMA, secondary rule	3					0	0	3		0			no truth sequence in this stratum; exactness is not defined
+protocol, isolates whose draft agrees with the complete genome	no copy under the protocol rule, bait aligned in parts	ARIBA, protocol rule	3					0	0	3		0			no truth sequence in this stratum; exactness is not defined

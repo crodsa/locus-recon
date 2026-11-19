@@ -1,0 +1,87 @@
+/data/PROJECTS/locus_recon_revision/external/work/isolates/FDAARGOS_501/truth/complete_genome.fna /data/PROJECTS/locus_recon_revision/external/work/isolates/FDAARGOS_501/spades/contigs.fasta
+NUCMER
+
+                               [REF]                [QRY]
+[Sequences]
+TotalSeqs                          1                 4159
+AlignedSeqs               1(100.00%)           240(5.77%)
+UnalignedSeqs               0(0.00%)         3919(94.23%)
+
+[Bases]
+TotalBases                   6865838              8085402
+AlignedBases        6865838(100.00%)      6829492(84.47%)
+UnalignedBases              0(0.00%)      1255910(15.53%)
+
+[Alignments]
+1-to-1                            81                   81
+TotalLength                  6789065              6789055
+AvgLength                   83815.62             83815.49
+AvgIdentity                   100.00               100.00
+
+M-to-M                           300                  300
+TotalLength                  6916376              6916357
+AvgLength                   23054.59             23054.52
+AvgIdentity                    99.96                99.96
+
+[Feature Estimates]
+Breakpoints                      598                  116
+Relocations                        0                    1
+Translocations                    77                    0
+Inversions                         0                    0
+
+Insertions                        50                  242
+InsertionSum                   85806                52783
+InsertionAvg                 1716.12               218.11
+
+TandemIns                          3                    0
+TandemInsSum                     307                    0
+TandemInsAvg                  102.33                 0.00
+
+[SNPs]
+TotalSNPs                         12                   12
+AC                          0(0.00%)             1(8.33%)
+AG                         3(25.00%)            2(16.67%)
+AT                          0(0.00%)             0(0.00%)
+CT                         3(25.00%)            2(16.67%)
+CG                          1(8.33%)             0(0.00%)
+CA                          1(8.33%)             0(0.00%)
+GC                          0(0.00%)             1(8.33%)
+GA                         2(16.67%)            3(25.00%)
+GT                          0(0.00%)             0(0.00%)
+TG                          0(0.00%)             0(0.00%)
+TC                         2(16.67%)            3(25.00%)
+TA                          0(0.00%)             0(0.00%)
+
+TotalGSNPs                         9                    9
+CA                          0(0.00%)             0(0.00%)
+CG                         1(11.11%)             0(0.00%)
+CT                         3(33.33%)            2(22.22%)
+GC                          0(0.00%)            1(11.11%)
+GA                         1(11.11%)            2(22.22%)
+GT                          0(0.00%)             0(0.00%)
+AT                          0(0.00%)             0(0.00%)
+AC                          0(0.00%)             0(0.00%)
+AG                         2(22.22%)            1(11.11%)
+TA                          0(0.00%)             0(0.00%)
+TC                         2(22.22%)            3(33.33%)
+TG                          0(0.00%)             0(0.00%)
+
+TotalIndels                        5                    5
+A.                          0(0.00%)             0(0.00%)
+C.                          0(0.00%)            1(20.00%)
+G.                          0(0.00%)            4(80.00%)
+T.                          0(0.00%)             0(0.00%)
+.T                          0(0.00%)             0(0.00%)
+.A                          0(0.00%)             0(0.00%)
+.C                         1(20.00%)             0(0.00%)
+.G                         4(80.00%)             0(0.00%)
+
+TotalGIndels                       5                    5
+C.                          0(0.00%)            1(20.00%)
+G.                          0(0.00%)            4(80.00%)
+A.                          0(0.00%)             0(0.00%)
+T.                          0(0.00%)             0(0.00%)
+.T                          0(0.00%)             0(0.00%)
+.A                          0(0.00%)             0(0.00%)
+.G                         4(80.00%)             0(0.00%)
+.C                         1(20.00%)             0(0.00%)

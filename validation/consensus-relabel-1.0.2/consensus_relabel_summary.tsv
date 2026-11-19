@@ -1,0 +1,53 @@
+analysis	source	consensus	copy_number_status	against_truth	units
+external evaluation	external evaluation, protocol set	recomputed	LOWER_BOUND	correct	10
+external evaluation	external evaluation, protocol set	recomputed	LOWER_BOUND	truth not defined	1
+external evaluation	external evaluation, protocol set	recomputed	REVIEW	correct	8
+external evaluation	external evaluation, protocol set	recomputed	REVIEW	truth not defined	1
+external evaluation	external evaluation, protocol set	recomputed	REVIEW	wrong	13
+external evaluation	external evaluation, protocol set	recomputed	SUPPORTED	correct	81
+external evaluation	external evaluation, protocol set	recomputed	SUPPORTED	truth not defined	1
+external evaluation	external evaluation, protocol set	recomputed	SUPPORTED	wrong	1
+external evaluation	external evaluation, protocol set	stored	LOWER_BOUND	correct	10
+external evaluation	external evaluation, protocol set	stored	LOWER_BOUND	truth not defined	1
+external evaluation	external evaluation, protocol set	stored	REVIEW	correct	6
+external evaluation	external evaluation, protocol set	stored	REVIEW	truth not defined	1
+external evaluation	external evaluation, protocol set	stored	REVIEW	wrong	8
+external evaluation	external evaluation, protocol set	stored	SUPPORTED	correct	83
+external evaluation	external evaluation, protocol set	stored	SUPPORTED	truth not defined	1
+external evaluation	external evaluation, protocol set	stored	SUPPORTED	wrong	6
+external evaluation	external evaluation, supplementary set	recomputed	REVIEW	correct	3
+external evaluation	external evaluation, supplementary set	recomputed	REVIEW	wrong	1
+external evaluation	external evaluation, supplementary set	recomputed	SUPPORTED	correct	8
+external evaluation	external evaluation, supplementary set	stored	REVIEW	correct	3
+external evaluation	external evaluation, supplementary set	stored	REVIEW	wrong	1
+external evaluation	external evaluation, supplementary set	stored	SUPPORTED	correct	8
+targeted test 4	targeted test 4, with the graph	recomputed	INDETERMINATE	no value	30
+targeted test 4	targeted test 4, with the graph	recomputed	REVIEW	correct	69
+targeted test 4	targeted test 4, with the graph	recomputed	REVIEW	wrong	4
+targeted test 4	targeted test 4, with the graph	recomputed	SUPPORTED	correct	67
+targeted test 4	targeted test 4, with the graph	stored	INDETERMINATE	no value	30
+targeted test 4	targeted test 4, with the graph	stored	REVIEW	correct	62
+targeted test 4	targeted test 4, with the graph	stored	REVIEW	wrong	4
+targeted test 4	targeted test 4, with the graph	stored	SUPPORTED	correct	74
+targeted test 4	targeted test 4, without the graph	recomputed	INDETERMINATE	no value	30
+targeted test 4	targeted test 4, without the graph	recomputed	REVIEW	correct	63
+targeted test 4	targeted test 4, without the graph	recomputed	REVIEW	wrong	4
+targeted test 4	targeted test 4, without the graph	recomputed	SUPPORTED	correct	73
+targeted test 4	targeted test 4, without the graph	stored	INDETERMINATE	no value	30
+targeted test 4	targeted test 4, without the graph	stored	REVIEW	correct	63
+targeted test 4	targeted test 4, without the graph	stored	REVIEW	wrong	4
+targeted test 4	targeted test 4, without the graph	stored	SUPPORTED	correct	73
+targeted test 5	targeted test 5, with the graph	recomputed	EVIDENCE_CONFLICT	no value	5
+targeted test 5	targeted test 5, with the graph	recomputed	INDETERMINATE	no value	40
+targeted test 5	targeted test 5, with the graph	recomputed	REVIEW	correct	32
+targeted test 5	targeted test 5, with the graph	recomputed	SUPPORTED	correct	28
+targeted test 5	targeted test 5, with the graph	stored	EVIDENCE_CONFLICT	no value	5
+targeted test 5	targeted test 5, with the graph	stored	INDETERMINATE	no value	40
+targeted test 5	targeted test 5, with the graph	stored	REVIEW	correct	30
+targeted test 5	targeted test 5, with the graph	stored	SUPPORTED	correct	30
+targeted test 5	targeted test 5, without the graph	recomputed	INDETERMINATE	no value	40
+targeted test 5	targeted test 5, without the graph	recomputed	REVIEW	correct	50
+targeted test 5	targeted test 5, without the graph	recomputed	SUPPORTED	correct	15
+targeted test 5	targeted test 5, without the graph	stored	INDETERMINATE	no value	40
+targeted test 5	targeted test 5, without the graph	stored	REVIEW	correct	50
+targeted test 5	targeted test 5, without the graph	stored	SUPPORTED	correct	15

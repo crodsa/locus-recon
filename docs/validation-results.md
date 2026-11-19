@@ -1,4 +1,4 @@
-# Validation results of release 1.0.1
+# Validation results of releases 1.0.1 and 1.0.2
 
 This page gives the result of each validation analysis and the folder that holds its inputs, outputs and script.
 [validation/README.md](../validation/README.md) explains how to rerun them, and [validation.md](validation.md)
@@ -16,7 +16,7 @@ it does not.
 | Checks of single components | `frame-and-graph-evidence/` | Frame search, bait validation, length profile, runs of N, path ranking | Recorded outcome of each check | The checks use constructed inputs |
 | Synthetic copy series, 27 data sets | `constructed-copy-series/` | Depth arithmetic and bootstrap for one to three copies | Median absolute error 0.04 copies; all classes correct | Coverage bias of real libraries; reads are error-free and uniform |
 | *aphA1* in *Acinetobacter baumannii*, seven runs | `aphA1-copy-number/` | Depth dosage of a real amplification | 10.5 and 77.7 copies against 10 ± 2 and 75 ± 14 by published quantitative PCR | Six runs come from one patient |
-| 23S rRNA gene and *gyrB*, five *H. pylori* isolates | `low-copy-23S/` | A small copy number | Depth ratios of 2.55 to 3.22 for two copies; graph count of two in four isolates, lower bound in the fifth | These genomes also guided the design of the graph method |
+| 23S rRNA gene and *gyrB*, five *H. pylori* isolates | `low-copy-23S/` | A small copy number | Depth ratios of 2.55 to 3.22 for two copies; two contexts in the graph in four isolates, returned for review as a lower bound of two because the depth interval excludes two; lower bound in the fifth | These genomes also guided the design of the graph method |
 | *Clostridioides difficile* LIBA-6656, *tcdB* | `liba6656-gfa-rerun/`, `liba6656-depth/`, `depth-copy-number/overlap_null/` | A locus with two divergent copies that collapse in the draft | The workflow held a 1,955-bp fragment; the query-weighted dosage of 2.29 is explained by overlapping alignments | Two full-length sequences were built by hand from the graph. They are hypotheses that await long reads |
 | Comparison with ARIBA 2.14.7 and KMA 1.7.1, 39 cases | `comparator-benchmark/` | The sequences that three tools return from the same reads and reference sequences | Exact in 19, 19 and 20 of 25 *H. pylori* loci for Locus-Recon, ARIBA and KMA | Other species, tuned settings, SRST2 or stringMLST |
 | External evaluation, 16 species, 128 units of isolate and locus | `external-evaluation/` | Sequence, decision and copy number on public isolates that took no part in development, with a protocol written before the runs | Of 113 units with a truth copy, 98 sequences exact (KMA 99, ARIBA 94); 95 accepted, 89 of them exact; the six accepted and not exact belong to one isolate whose public reads do not match its public genome | Difficult loci; an independent truth; the copy number of amplified genes |
@@ -91,6 +91,12 @@ of 89 units with the status `SUPPORTED`, 6 of 14 with `REVIEW` and 10 of 10 with
 wrong `SUPPORTED` results are rRNA genes with six or seven copies for which the graph gave two contexts while the
 depth ratio was 4.80 to 7.45; the sixth is in FDAARGOS_209. The context count is the number of distinct flanks,
 so it is a lower bound when copies share their flanks.
+
+**Release 1.0.2.** The rule of release 1.0.2 was written after these results were known. Applied to the stored
+results (`validation/consensus-relabel-1.0.2/`), it moves seven counts of the protocol set from `SUPPORTED` to
+`REVIEW`: the five wrong counts of two and two correct counts of three. Then 81 of 82 `SUPPORTED` results are
+correct, and the seven counts hold as lower bounds. In the targeted tests it moves nine correct counts to
+`REVIEW`. This is a description of the same data and not a test of the rule.
 
 ## Targeted tests with simulated reads
 
@@ -170,7 +176,9 @@ published value exists for comparison.
 
 **23S rRNA gene and _gyrB_.** Depth called every 23S rRNA locus multicopy and every *gyrB* locus single-copy.
 The 23S rRNA ratios exceeded two in all five isolates, and the cause was not established. The graph gave two
-contexts at both ends in four isolates. In Hpfe0004 the walk met a cycle and the result is a lower bound of two.
+contexts at both ends in four isolates. Their depth intervals exclude two, so release 1.0.2 returns the count of
+two with the status `REVIEW` and as a lower bound (release 1.0.1: `SUPPORTED`). In Hpfe0004 the walk met a cycle
+and the result is a lower bound of two.
 
 **LIBA-6656.** The depth ratio of *tcdB* was 1.21 (1.11 to 1.35), compatible with a single copy, because each
 divergent copy lies on its own contigs. The query-weighted dosage was 2.29, but the nine intervals overlap on the
@@ -184,6 +192,14 @@ Every analysis of this page was run again on 18 and 19 November 2026 with releas
 programs (`validation/regenerate/`), and the records under `validation/` are the output of that run. They carry
 the SHA-256 digest of the package sources (`locus_recon/*.py`),
 `2cc816cca467a7988c1f2a28cba11ed1cbb30b263e331f75ca48efa19ebefce0`, which `validation/common.py` computes.
+Release 1.0.2 (digest `a24d41d80d2a3e04729eda04efa6938d82ac2d99e4ea875377353f014aae9b35`) differs from 1.0.1 in
+`locus_recon/copy_number.py` and in the version string. Four analyses were run again with it on 19 November 2026
+and their records carry its digest: the simulated benchmark, the 23S rRNA gene and *gyrB*, the standard workflow
+on LIBA-6656 and the consensus of LIBA-6656 without a graph. Of 2,210 values compared with the records of 1.0.1,
+the eight that the rule changes are the status and the upper bound of the four 23S rRNA counts; every
+reconstructed sequence, QC report and per-base table of the simulated benchmark has the same bytes. The other
+analyses do not call the function that changed and keep their records of 1.0.1. The external evaluation and the
+targeted tests were run with 1.0.1, as their protocol states, and are kept as written.
 Against the records of release 1.0.0 (tag `v1.0.0`), 14,383 values were compared: no tier, disposition, sequence,
 dosage, ratio or interval changed, and the only new label is `MIXED_SITE_BELOW_MIXTURE_CALL` on the 23S rRNA
 sequence of Hpfe0002. ARIBA and KMA were not run again; their outputs of 11 and 13 November 2026 were scored

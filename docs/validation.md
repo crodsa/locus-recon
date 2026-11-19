@@ -187,9 +187,10 @@ but the traversal met a cycle, and the count was reported as a lower bound of
 two. All five single-copy `gyrB` controls returned one. The raw 23S depth
 ratios were 2.546–3.221, and the workflow verified that the 21 depth columns
 it reports are identical to the depth-only table archived before the graph
-analysis. The graph acceptance criterion for 23S was therefore met in four of
-five loci, and the combined `all_primary_criteria_passed` flag in
-`evaluation.json` is `false`; the editorial note in
+analysis. With release 1.0.1 the graph acceptance criterion for 23S was therefore met in
+four of five loci. Release 1.0.2 returns the four counts for review, as lower
+bounds of two, so `evaluation.json` counts no supported two-copy call. With
+both releases the combined `all_primary_criteria_passed` flag is `false`; the editorial note in
 `validation/low-copy-23S/PRESPECIFICATION.md` sets out each criterion. Because
 these examples informed the graph/depth design, they are a biological
 demonstration rather than an independent estimate of exact-copy sensitivity.

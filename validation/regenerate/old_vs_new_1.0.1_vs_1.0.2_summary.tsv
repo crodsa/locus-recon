@@ -1,0 +1,5 @@
+analysis	values_compared	equal	different_run_metadata	different_by_the_rule_changed_in_1.0.2	different_explained_otherwise	different_unexplained
+simulated benchmark	1157	1096	59	0	2	0
+23S rRNA gene and gyrB	644	608	9	8	19	0
+LIBA-6656 standard workflow	231	218	10	0	3	0
+LIBA-6656 consensus without a graph	178	176	2	0	0	0

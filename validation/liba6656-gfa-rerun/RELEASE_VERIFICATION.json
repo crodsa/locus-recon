@@ -57,7 +57,7 @@
           "sha256": "62662d9b6a8fc4f7f7a93a2336e2e3770156d72f6dbeb9f4d1454a11b4b22270"
         }
       },
-      "locus_recon_version": "1.0.1",
+      "locus_recon_version": "1.0.2",
       "parameters": {
         "cleanup": false,
         "memory_per_sample": 12,
@@ -120,7 +120,7 @@
           "sha256": "62662d9b6a8fc4f7f7a93a2336e2e3770156d72f6dbeb9f4d1454a11b4b22270"
         }
       },
-      "locus_recon_version": "1.0.1",
+      "locus_recon_version": "1.0.2",
       "parameters": {
         "cleanup": false,
         "memory_per_sample": 12,
@@ -167,11 +167,11 @@
   "runs_agree": true,
   "schema_version": "1.0",
   "software": {
-    "git_commit": "884cdf3c84f17dc9007576f26c6b431044dd35e1",
-    "git_tree_clean": false,
+    "git_commit": "f985906673912a900fd0035e3045cd2a5f9a29f3",
+    "git_tree_clean": true,
     "name": "locus-recon",
-    "source_sha256": "2cc816cca467a7988c1f2a28cba11ed1cbb30b263e331f75ca48efa19ebefce0",
-    "version": "1.0.1"
+    "source_sha256": "a24d41d80d2a3e04729eda04efa6938d82ac2d99e4ea875377353f014aae9b35",
+    "version": "1.0.2"
   },
   "terminal_paths": {
     "length_range_bp": {

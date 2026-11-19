@@ -1,0 +1,121 @@
+locus	unit_set	decision_rule	units	units_with_a_copy	sequence_returned	exact	accepted	accepted_exact	accepted_not_exact	not_accepted_exact	not_accepted_not_exact	units_without_a_truth_sequence
+rpoB	protocol	Locus-Recon, PASS	15	15	15	14	15	14	1	0	0	0
+rpoB	protocol	ARIBA, protocol rule	15	15	15	14	15	14	1	0	0	0
+rpoB	protocol	KMA, primary rule	15	15	15	14	15	14	1	0	0	0
+rpoB	protocol	KMA, secondary rule	15	15	15	14	15	14	1	0	0	0
+recA	protocol	Locus-Recon, PASS	15	14	14	13	14	13	1	0	0	1
+recA	protocol	ARIBA, protocol rule	15	14	14	13	14	13	1	0	0	1
+recA	protocol	KMA, primary rule	15	14	14	13	14	13	1	0	0	1
+recA	protocol	KMA, secondary rule	15	14	14	13	14	13	1	0	0	1
+dnaK	protocol	Locus-Recon, PASS	15	15	15	14	15	14	1	0	0	0
+dnaK	protocol	ARIBA, protocol rule	15	15	15	14	15	14	1	0	0	0
+dnaK	protocol	KMA, primary rule	15	15	15	13	14	13	1	0	1	0
+dnaK	protocol	KMA, secondary rule	15	15	15	13	14	13	1	0	1	0
+23S	protocol	Locus-Recon, PASS	16	14	14	12	6	6	0	6	2	2
+23S	protocol	ARIBA, protocol rule	16	14	14	9	4	3	1	6	4	2
+23S	protocol	KMA, primary rule	16	14	14	12	10	9	1	3	1	2
+23S	protocol	KMA, secondary rule	16	14	14	12	13	11	2	1	0	2
+16S	protocol	Locus-Recon, PASS	16	16	16	11	9	8	1	3	4	0
+16S	protocol	ARIBA, protocol rule	16	16	16	12	8	7	1	5	3	0
+16S	protocol	KMA, primary rule	16	16	16	12	11	9	2	3	2	0
+16S	protocol	KMA, secondary rule	16	16	16	12	12	10	2	2	2	0
+gyrB	protocol	Locus-Recon, PASS	14	14	14	13	14	13	1	0	0	0
+gyrB	protocol	ARIBA, protocol rule	14	14	14	12	13	12	1	0	1	0
+gyrB	protocol	KMA, primary rule	14	14	14	13	13	12	1	1	0	0
+gyrB	protocol	KMA, secondary rule	14	14	14	13	13	12	1	1	0	0
+atpD	protocol	Locus-Recon, PASS	14	14	14	13	14	13	1	0	0	0
+atpD	protocol	ARIBA, protocol rule	14	14	14	12	14	12	2	0	0	0
+atpD	protocol	KMA, primary rule	14	14	14	13	13	12	1	1	0	0
+atpD	protocol	KMA, secondary rule	14	14	14	13	14	13	1	0	0	0
+tuf	protocol	Locus-Recon, PASS	11	11	11	8	8	8	0	0	3	0
+tuf	protocol	ARIBA, protocol rule	11	11	11	8	7	7	0	1	3	0
+tuf	protocol	KMA, primary rule	11	11	11	9	8	8	0	1	2	0
+tuf	protocol	KMA, secondary rule	11	11	11	9	8	8	0	1	2	0
+gyrB	supplementary	Locus-Recon, PASS	2	2	2	2	2	2	0	0	0	0
+gyrB	supplementary	ARIBA, protocol rule	2	2	2	2	2	2	0	0	0	0
+gyrB	supplementary	KMA, primary rule	2	2	2	2	2	2	0	0	0	0
+gyrB	supplementary	KMA, secondary rule	2	2	2	2	2	2	0	0	0	0
+atpD	supplementary	Locus-Recon, PASS	2	2	2	2	2	2	0	0	0	0
+atpD	supplementary	ARIBA, protocol rule	2	2	2	2	2	2	0	0	0	0
+atpD	supplementary	KMA, primary rule	2	2	2	2	2	2	0	0	0	0
+atpD	supplementary	KMA, secondary rule	2	2	2	2	2	2	0	0	0	0
+tuf	supplementary	Locus-Recon, PASS	5	5	5	1	1	1	0	0	4	0
+tuf	supplementary	ARIBA, protocol rule	5	5	5	2	1	1	0	1	3	0
+tuf	supplementary	KMA, primary rule	5	5	5	1	1	1	0	0	4	0
+tuf	supplementary	KMA, secondary rule	5	5	5	1	1	1	0	0	4	0
+rpoB	supplementary	Locus-Recon, PASS	1	1	1	1	1	1	0	0	0	0
+rpoB	supplementary	ARIBA, protocol rule	1	1	1	1	1	1	0	0	0	0
+rpoB	supplementary	KMA, primary rule	1	1	1	1	1	1	0	0	0	0
+rpoB	supplementary	KMA, secondary rule	1	1	1	1	1	1	0	0	0	0
+recA	supplementary	Locus-Recon, PASS	1	1	1	1	1	1	0	0	0	0
+recA	supplementary	ARIBA, protocol rule	1	1	1	1	1	1	0	0	0	0
+recA	supplementary	KMA, primary rule	1	1	1	1	1	1	0	0	0	0
+recA	supplementary	KMA, secondary rule	1	1	1	1	1	1	0	0	0	0
+dnaK	supplementary	Locus-Recon, PASS	1	1	1	1	1	1	0	0	0	0
+dnaK	supplementary	ARIBA, protocol rule	1	1	1	1	1	1	0	0	0	0
+dnaK	supplementary	KMA, primary rule	1	1	1	1	1	1	0	0	0	0
+dnaK	supplementary	KMA, secondary rule	1	1	1	1	1	1	0	0	0	0
+gyrB	protocol and supplementary	Locus-Recon, PASS	16	16	16	15	16	15	1	0	0	0
+gyrB	protocol and supplementary	ARIBA, protocol rule	16	16	16	14	15	14	1	0	1	0
+gyrB	protocol and supplementary	KMA, primary rule	16	16	16	15	15	14	1	1	0	0
+gyrB	protocol and supplementary	KMA, secondary rule	16	16	16	15	15	14	1	1	0	0
+rpoB	protocol and supplementary	Locus-Recon, PASS	16	16	16	15	16	15	1	0	0	0
+rpoB	protocol and supplementary	ARIBA, protocol rule	16	16	16	15	16	15	1	0	0	0
+rpoB	protocol and supplementary	KMA, primary rule	16	16	16	15	16	15	1	0	0	0
+rpoB	protocol and supplementary	KMA, secondary rule	16	16	16	15	16	15	1	0	0	0
+recA	protocol and supplementary	Locus-Recon, PASS	16	15	15	14	15	14	1	0	0	1
+recA	protocol and supplementary	ARIBA, protocol rule	16	15	15	14	15	14	1	0	0	1
+recA	protocol and supplementary	KMA, primary rule	16	15	15	14	15	14	1	0	0	1
+recA	protocol and supplementary	KMA, secondary rule	16	15	15	14	15	14	1	0	0	1
+dnaK	protocol and supplementary	Locus-Recon, PASS	16	16	16	15	16	15	1	0	0	0
+dnaK	protocol and supplementary	ARIBA, protocol rule	16	16	16	15	16	15	1	0	0	0
+dnaK	protocol and supplementary	KMA, primary rule	16	16	16	14	15	14	1	0	1	0
+dnaK	protocol and supplementary	KMA, secondary rule	16	16	16	14	15	14	1	0	1	0
+atpD	protocol and supplementary	Locus-Recon, PASS	16	16	16	15	16	15	1	0	0	0
+atpD	protocol and supplementary	ARIBA, protocol rule	16	16	16	14	16	14	2	0	0	0
+atpD	protocol and supplementary	KMA, primary rule	16	16	16	15	15	14	1	1	0	0
+atpD	protocol and supplementary	KMA, secondary rule	16	16	16	15	16	15	1	0	0	0
+23S	protocol and supplementary	Locus-Recon, PASS	16	14	14	12	6	6	0	6	2	2
+23S	protocol and supplementary	ARIBA, protocol rule	16	14	14	9	4	3	1	6	4	2
+23S	protocol and supplementary	KMA, primary rule	16	14	14	12	10	9	1	3	1	2
+23S	protocol and supplementary	KMA, secondary rule	16	14	14	12	13	11	2	1	0	2
+16S	protocol and supplementary	Locus-Recon, PASS	16	16	16	11	9	8	1	3	4	0
+16S	protocol and supplementary	ARIBA, protocol rule	16	16	16	12	8	7	1	5	3	0
+16S	protocol and supplementary	KMA, primary rule	16	16	16	12	11	9	2	3	2	0
+16S	protocol and supplementary	KMA, secondary rule	16	16	16	12	12	10	2	2	2	0
+tuf	protocol and supplementary	Locus-Recon, PASS	16	16	16	9	9	9	0	0	7	0
+tuf	protocol and supplementary	ARIBA, protocol rule	16	16	16	10	8	8	0	2	6	0
+tuf	protocol and supplementary	KMA, primary rule	16	16	16	10	9	9	0	1	6	0
+tuf	protocol and supplementary	KMA, secondary rule	16	16	16	10	9	9	0	1	6	0
+rpoB	protocol, isolates whose draft agrees with the complete genome	Locus-Recon, PASS	14	14	14	14	14	14	0	0	0	0
+rpoB	protocol, isolates whose draft agrees with the complete genome	ARIBA, protocol rule	14	14	14	14	14	14	0	0	0	0
+rpoB	protocol, isolates whose draft agrees with the complete genome	KMA, primary rule	14	14	14	14	14	14	0	0	0	0
+rpoB	protocol, isolates whose draft agrees with the complete genome	KMA, secondary rule	14	14	14	14	14	14	0	0	0	0
+recA	protocol, isolates whose draft agrees with the complete genome	Locus-Recon, PASS	14	13	13	13	13	13	0	0	0	1
+recA	protocol, isolates whose draft agrees with the complete genome	ARIBA, protocol rule	14	13	13	13	13	13	0	0	0	1
+recA	protocol, isolates whose draft agrees with the complete genome	KMA, primary rule	14	13	13	13	13	13	0	0	0	1
+recA	protocol, isolates whose draft agrees with the complete genome	KMA, secondary rule	14	13	13	13	13	13	0	0	0	1
+dnaK	protocol, isolates whose draft agrees with the complete genome	Locus-Recon, PASS	14	14	14	14	14	14	0	0	0	0
+dnaK	protocol, isolates whose draft agrees with the complete genome	ARIBA, protocol rule	14	14	14	14	14	14	0	0	0	0
+dnaK	protocol, isolates whose draft agrees with the complete genome	KMA, primary rule	14	14	14	13	13	13	0	0	1	0
+dnaK	protocol, isolates whose draft agrees with the complete genome	KMA, secondary rule	14	14	14	13	13	13	0	0	1	0
+23S	protocol, isolates whose draft agrees with the complete genome	Locus-Recon, PASS	15	13	13	12	6	6	0	6	1	2
+23S	protocol, isolates whose draft agrees with the complete genome	ARIBA, protocol rule	15	13	13	9	3	3	0	6	4	2
+23S	protocol, isolates whose draft agrees with the complete genome	KMA, primary rule	15	13	13	12	9	9	0	3	1	2
+23S	protocol, isolates whose draft agrees with the complete genome	KMA, secondary rule	15	13	13	12	12	11	1	1	0	2
+16S	protocol, isolates whose draft agrees with the complete genome	Locus-Recon, PASS	15	15	15	11	8	8	0	3	4	0
+16S	protocol, isolates whose draft agrees with the complete genome	ARIBA, protocol rule	15	15	15	12	7	7	0	5	3	0
+16S	protocol, isolates whose draft agrees with the complete genome	KMA, primary rule	15	15	15	12	10	9	1	3	2	0
+16S	protocol, isolates whose draft agrees with the complete genome	KMA, secondary rule	15	15	15	12	11	10	1	2	2	0
+gyrB	protocol, isolates whose draft agrees with the complete genome	Locus-Recon, PASS	13	13	13	13	13	13	0	0	0	0
+gyrB	protocol, isolates whose draft agrees with the complete genome	ARIBA, protocol rule	13	13	13	12	12	12	0	0	1	0
+gyrB	protocol, isolates whose draft agrees with the complete genome	KMA, primary rule	13	13	13	13	12	12	0	1	0	0
+gyrB	protocol, isolates whose draft agrees with the complete genome	KMA, secondary rule	13	13	13	13	12	12	0	1	0	0
+atpD	protocol, isolates whose draft agrees with the complete genome	Locus-Recon, PASS	13	13	13	13	13	13	0	0	0	0
+atpD	protocol, isolates whose draft agrees with the complete genome	ARIBA, protocol rule	13	13	13	12	13	12	1	0	0	0
+atpD	protocol, isolates whose draft agrees with the complete genome	KMA, primary rule	13	13	13	13	12	12	0	1	0	0
+atpD	protocol, isolates whose draft agrees with the complete genome	KMA, secondary rule	13	13	13	13	13	13	0	0	0	0
+tuf	protocol, isolates whose draft agrees with the complete genome	Locus-Recon, PASS	10	10	10	8	8	8	0	0	2	0
+tuf	protocol, isolates whose draft agrees with the complete genome	ARIBA, protocol rule	10	10	10	8	7	7	0	1	2	0
+tuf	protocol, isolates whose draft agrees with the complete genome	KMA, primary rule	10	10	10	9	8	8	0	1	1	0
+tuf	protocol, isolates whose draft agrees with the complete genome	KMA, secondary rule	10	10	10	9	8	8	0	1	1	0

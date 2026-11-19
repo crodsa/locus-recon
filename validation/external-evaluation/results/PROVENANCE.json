@@ -1,0 +1,1557 @@
+{
+  "commands": {
+    "ariba": "ariba prepareref -f CATALOGUE -m METADATA DIR; ariba run --threads N DIR R1 R2 OUT",
+    "concordance": "dnadiff -p PREFIX COMPLETE_GENOME DRAFT_CONTIGS",
+    "copy-number": "locus-recon-copy-number --bam full_map.sorted.bam (--locus ... --gene-span ...)... --gene-length BP --gfa assembly_graph_after_simplification.gfa --bait BAIT --output-json OUT --output-tsv OUT",
+    "depth-ratio": "locus-recon-depth-ratio --bam full_map.sorted.bam (--locus CONTIG:START-END --gene-span START-END)... --gene-length BP --tsv OUT",
+    "draft": "spades.py --isolate -1 R1 -2 R2 -o DIR -t N -m 32",
+    "kma": "kma index -i CATALOGUE -o DB; kma -ipe R1 R2 -o OUT -t_db DB -t N",
+    "locus-recon": "locus-recon --samplesheet TSV --main-output-dir DIR --bait BAIT --locus NAME --threads N [--noncoding-locus]",
+    "subsample": "seqtk sample -s 20261118 <mate file> <pairs> | gzip -n -c",
+    "truth": "blastn -task blastn -query BAIT -subject COMPLETE_GENOME -evalue 1e-10"
+  },
+  "created_utc": "2026-11-19T13:24:57.963418+00:00",
+  "frozen_package": {
+    "console_script_version": "locus-recon 1.0.1",
+    "frozen_source_sha256": "2cc816cca467a7988c1f2a28cba11ed1cbb30b263e331f75ca48efa19ebefce0",
+    "imported_from": "/data/PROJECTS/locus_recon_revision/external/repo_run",
+    "imported_source_sha256": "2cc816cca467a7988c1f2a28cba11ed1cbb30b263e331f75ca48efa19ebefce0",
+    "imported_version": "1.0.1",
+    "installed_from": "/home/crodsa/conda/envs/locus-recon-101/lib/python3.11/site-packages",
+    "installed_source_sha256": "2cc816cca467a7988c1f2a28cba11ed1cbb30b263e331f75ca48efa19ebefce0"
+  },
+  "git_commit": "884cdf3c84f17dc9007576f26c6b431044dd35e1",
+  "inputs": [
+    {
+      "path": "validation/external-evaluation/PROTOCOL.md",
+      "sha256": "dbfed0903837a0ea102b0fcc8503d3ea477d14cdd83448d36430b769736f9ab2",
+      "size_bytes": 11775
+    },
+    {
+      "path": "validation/external-evaluation/isolates.tsv",
+      "sha256": "a4e4e43bf52b91c3422b76be8c86127e4ed1cbef22ba1625be6c7d310457fa80",
+      "size_bytes": 3308
+    },
+    {
+      "path": "validation/external-evaluation/isolate_selection_log.tsv",
+      "sha256": "ac01253b8666b496a096c860a29674b311de05440693cb113ec82342f90d14b8",
+      "size_bytes": 1382
+    },
+    {
+      "path": "validation/run_external_evaluation.py",
+      "sha256": "ef61c35b0b82d774d94993b2624a8bcfb76676e3d98b47b8bd0a3c16fa699073",
+      "size_bytes": 117831
+    },
+    {
+      "path": "validation/run_comparator_benchmark.py",
+      "sha256": "4e46403282be751387dc0e9cf839c1a570d59c4009c6d4c80562fb50b4290545",
+      "size_bytes": 40848
+    },
+    {
+      "path": "validation/run_tier_calibration.py",
+      "sha256": "738d64ff8156dda4460a8db01cdcc9d6ef8915093e10c0d28f61057940186b5a",
+      "size_bytes": 55891
+    },
+    {
+      "path": "validation/common.py",
+      "sha256": "dc5ca4ce16b314253cd6d46dc341106be21cdf4f27ab141944575e84439a650d",
+      "size_bytes": 7886
+    },
+    {
+      "path": "baits.fasta",
+      "sha256": "1f338d8cfc10c3f342d153aa599f7afb09247ee015ff328a022af26149c269d6",
+      "size_bytes": 270338
+    },
+    {
+      "path": "truth_sequences.fasta",
+      "sha256": "6949546336fc6dfbad83b7972497bf9fc79ffeded6ad60bd27c9ba15a931eb9f",
+      "size_bytes": 591939
+    }
+  ],
+  "outputs": [
+    {
+      "path": "accepted_not_identical.tsv",
+      "sha256": "127227e0c1a401a2cff2b80b88281f59d1100927396806284429098c1c2df5a5",
+      "size_bytes": 4497
+    },
+    {
+      "path": "baits.fasta",
+      "sha256": "1f338d8cfc10c3f342d153aa599f7afb09247ee015ff328a022af26149c269d6",
+      "size_bytes": 270338
+    },
+    {
+      "path": "baits.tsv",
+      "sha256": "ac282110478a3d2f9732a207c422ea42b22986ce2a845dd1bc886863603e3f18",
+      "size_bytes": 40236
+    },
+    {
+      "path": "block_size_sensitivity.tsv",
+      "sha256": "4f668116369893cad35dd6325f0bcf4c9367deb95231137944fd892133f36b60",
+      "size_bytes": 95093
+    },
+    {
+      "path": "comparator_returned_sequences.fasta",
+      "sha256": "f6c802f42c1c95163cc275502ce13ae22c5d4166a2206a752fb3f58e0e9633b8",
+      "size_bytes": 534717
+    },
+    {
+      "path": "copy_number_error_by_factor.tsv",
+      "sha256": "b188d9451094aa93f88980c4bfbf14f444252265aab638e74e1a8f0e68aa158b",
+      "size_bytes": 9295
+    },
+    {
+      "path": "copy_number_supported_but_wrong.tsv",
+      "sha256": "23a949b8bc1034c3dfc27c2262acf4497d3de0c643b22872699b632eee20a519",
+      "size_bytes": 8432
+    },
+    {
+      "path": "counts_per_isolate.tsv",
+      "sha256": "de50db040ebb363977c3815ff0cf967583e84739c341f793f1d9a0c9b0a27fa5",
+      "size_bytes": 17366
+    },
+    {
+      "path": "counts_per_locus.tsv",
+      "sha256": "fa82366d5b2368919f4498b77219ce9220b6ac1a001e994afa868d79c4364154",
+      "size_bytes": 9476
+    },
+    {
+      "path": "decision_tables.tsv",
+      "sha256": "134c3249a9c8fae1060c369efef67fa50965946a94641a25ad2f626a2fa14d50",
+      "size_bytes": 8763
+    },
+    {
+      "path": "external_copy_number.tsv",
+      "sha256": "5ea4fb8dc4b1c78459511db15444b7ba0885dfb1101901bb30a4e713226e6334",
+      "size_bytes": 123415
+    },
+    {
+      "path": "external_headline.tsv",
+      "sha256": "0f4fd1253f24848bcce40a3d46964b83834b4d3d87f61782cbd8e277960a2d31",
+      "size_bytes": 54342
+    },
+    {
+      "path": "external_summary.tsv",
+      "sha256": "e0aed8337c4d68b8dc98e3c0f76720c2c4f1c4d0dc16c5fe85949dabdc285124",
+      "size_bytes": 127453
+    },
+    {
+      "path": "external_units.tsv",
+      "sha256": "e306d11edbe8156b23a77de0ab056f77279e830c2f7bc48a4085220c35f4605f",
+      "size_bytes": 247146
+    },
+    {
+      "path": "input_reads.tsv",
+      "sha256": "f67c399884d9f70efcecbc41ddf4d3c27ee82d1322441b300c13c6714728a153",
+      "size_bytes": 16347
+    },
+    {
+      "path": "isolates_and_drafts.tsv",
+      "sha256": "cf1a46e1d15a2431b6f27eca5f0cf26fc7a126323b8413f15a0906a491e3e1ee",
+      "size_bytes": 7888
+    },
+    {
+      "path": "locus_recon_candidates.fasta",
+      "sha256": "2321ce18e21273fecd61fd007d5aa86ad19c36839e34398604a3fcd678c4e8cd",
+      "size_bytes": 270170
+    },
+    {
+      "path": "locus_recon_report_rows.tsv",
+      "sha256": "f78565d8e7dd4c1cd6510c7b60d140449c26bd5df4c37a2f19682d7c18d168ea",
+      "size_bytes": 84536
+    },
+    {
+      "path": "mixed_sites.tsv",
+      "sha256": "05d7d46f93261e50ffdf447d0fc3deefa2a33788e580cbd730f5c4200c524953",
+      "size_bytes": 43234
+    },
+    {
+      "path": "not_run.tsv",
+      "sha256": "879425ea8568550fab8cc818d98941533eb734199c8cdd78d25b7050edf56acb",
+      "size_bytes": 5
+    },
+    {
+      "path": "protocol_isolate_selection_log.tsv",
+      "sha256": "ac01253b8666b496a096c860a29674b311de05440693cb113ec82342f90d14b8",
+      "size_bytes": 1382
+    },
+    {
+      "path": "protocol_isolates.tsv",
+      "sha256": "a4e4e43bf52b91c3422b76be8c86127e4ed1cbef22ba1625be6c7d310457fa80",
+      "size_bytes": 3308
+    },
+    {
+      "path": "rerun_check_FDAARGOS_262.tsv",
+      "sha256": "18df696a92b52539d750643980f33ec63134b9d2d574d15200a9454ca120a62f",
+      "size_bytes": 46742
+    },
+    {
+      "path": "truth_copies.tsv",
+      "sha256": "b2ca85ff05facb2070f34f3861d06cba8a59c415747d1145a2b2042e80f7add5",
+      "size_bytes": 56797
+    },
+    {
+      "path": "truth_sequences.fasta",
+      "sha256": "6949546336fc6dfbad83b7972497bf9fc79ffeded6ad60bd27c9ba15a931eb9f",
+      "size_bytes": 591939
+    }
+  ],
+  "parameters": {
+    "block_sizes_bp": [
+      100,
+      250,
+      500,
+      1000
+    ],
+    "bootstrap_resamples_default": 1000,
+    "comparator_configurations": [
+      {
+        "configuration": "default",
+        "extra_arguments": [],
+        "tool": "ARIBA"
+      },
+      {
+        "configuration": "default",
+        "extra_arguments": [],
+        "tool": "KMA"
+      }
+    ],
+    "copy_number_options": "defaults; --locus and --gene-span from blast_step1.tsv; --gene-length; --gfa of the draft; --bait",
+    "depth_ratio_seed_default": 20260817,
+    "draft_against_complete_genome": {
+      "in_protocol": false,
+      "min_genome_aligned_pct": 98.0,
+      "min_identity_pct": 99.9,
+      "tool": "MUMmer dnadiff"
+    },
+    "draft_assembler": "SPAdes --isolate, contigs.fasta",
+    "fallback_bait_rules": {
+      "paralogue_suffixes": [
+        "A",
+        "B"
+      ],
+      "product_names": {
+        "atpD": [
+          "F0F1 ATP synthase subunit beta"
+        ],
+        "dnaK": [
+          "molecular chaperone DnaK"
+        ],
+        "gyrB": [
+          "DNA gyrase subunit B"
+        ],
+        "recA": [
+          "recombinase RecA",
+          "recombinase A"
+        ],
+        "rpoB": [
+          "DNA-directed RNA polymerase subunit beta"
+        ],
+        "tuf": [
+          "elongation factor Tu"
+        ]
+      }
+    },
+    "isolate_resampling": {
+      "resamples": 10000,
+      "seed": 20261118
+    },
+    "isolates": [
+      "FDAARGOS_1",
+      "FDAARGOS_262",
+      "FDAARGOS_57",
+      "FDAARGOS_324",
+      "FDAARGOS_149",
+      "FDAARGOS_199",
+      "FDAARGOS_780",
+      "FDAARGOS_51",
+      "FDAARGOS_144",
+      "FDAARGOS_54",
+      "FDAARGOS_209",
+      "FDAARGOS_197",
+      "FDAARGOS_156",
+      "FDAARGOS_750",
+      "FDAARGOS_501",
+      "FDAARGOS_1365"
+    ],
+    "loci": [
+      "gyrB",
+      "rpoB",
+      "recA",
+      "dnaK",
+      "atpD",
+      "23S",
+      "16S",
+      "tuf"
+    ],
+    "locus_recon_options": "defaults; --threads; --noncoding-locus for 23S and 16S",
+    "subsampling_seed": 20261118,
+    "target_depth_x": 100,
+    "truth": {
+      "blast_task": "blastn",
+      "evalue": "1e-10",
+      "min_fraction_of_bait": 0.9,
+      "min_identity_pct": 80.0
+    }
+  },
+  "read_files": [
+    {
+      "bases": 762033183,
+      "depth_full_x": 533.7,
+      "depth_used_x": 100.0,
+      "ena_base_count": 1524066366,
+      "ena_md5": "e042bd9f12d9002c1fc1a3692f8c18c9",
+      "ena_read_count": 7544883,
+      "genome_bp_observed": 2855468,
+      "genome_bp_table": 2855468,
+      "illumina_run": "SRR1955492",
+      "instrument": "Illumina HiSeq 2500",
+      "local_md5": "e042bd9f12d9002c1fc1a3692f8c18c9",
+      "mate": "1",
+      "pairs_kept": 1413599,
+      "reads": 7544883,
+      "seed": 20261118,
+      "sha256": "3e6f092242118777b955777e4cbae267a6c46ce29c255a7ab762f74849673061",
+      "size_bytes": 657874073,
+      "species": "Staphylococcus aureus",
+      "strain": "FDAARGOS_1",
+      "subsample_reproduced_by_a_second_run": true,
+      "subsampled": true,
+      "subsampled_bases": 142773499,
+      "subsampled_file": "SRR1955492_100x_seed20261118_1.fastq.gz",
+      "subsampled_reads": 1413599,
+      "subsampled_sha256": "e72f4e17e0888026f0bd21af0bc2fc3cb448f7f5f3c9117d5dd18def1896c8fe",
+      "url": "https://ftp.sra.ebi.ac.uk/vol1/fastq/SRR195/002/SRR1955492/SRR1955492_1.fastq.gz"
+    },
+    {
+      "bases": 762033183,
+      "depth_full_x": 533.7,
+      "depth_used_x": 100.0,
+      "ena_base_count": 1524066366,
+      "ena_md5": "dd40e8aec825d109a1c228f061bae3f0",
+      "ena_read_count": 7544883,
+      "genome_bp_observed": 2855468,
+      "genome_bp_table": 2855468,
+      "illumina_run": "SRR1955492",
+      "instrument": "Illumina HiSeq 2500",
+      "local_md5": "dd40e8aec825d109a1c228f061bae3f0",
+      "mate": "2",
+      "pairs_kept": 1413599,
+      "reads": 7544883,
+      "seed": 20261118,
+      "sha256": "d44f523e57fe51f6d0144d656834eafe4932141aa380a2b128e80fc28fcfcdaa",
+      "size_bytes": 655466949,
+      "species": "Staphylococcus aureus",
+      "strain": "FDAARGOS_1",
+      "subsample_reproduced_by_a_second_run": true,
+      "subsampled": true,
+      "subsampled_bases": 142773499,
+      "subsampled_file": "SRR1955492_100x_seed20261118_2.fastq.gz",
+      "subsampled_reads": 1413599,
+      "subsampled_sha256": "7b4bacb18800108bbea7c6e617380e34dfccd5f8442c10cdbb5861366a8f441f",
+      "url": "https://ftp.sra.ebi.ac.uk/vol1/fastq/SRR195/002/SRR1955492/SRR1955492_2.fastq.gz"
+    },
+    {
+      "bases": 566277508,
+      "depth_full_x": 640.4,
+      "depth_used_x": 100.0,
+      "ena_base_count": 1132555016,
+      "ena_md5": "889fabacbbec6da8ab1d743ee2442d65",
+      "ena_read_count": 5606708,
+      "genome_bp_observed": 1768428,
+      "genome_bp_table": 1768428,
+      "illumina_run": "SRR4125014",
+      "instrument": "Illumina HiSeq 2500",
+      "local_md5": "889fabacbbec6da8ab1d743ee2442d65",
+      "mate": "1",
+      "pairs_kept": 875460,
+      "reads": 5606708,
+      "seed": 20261118,
+      "sha256": "73a0cafe2f2864268a2cd1ca217115df3d0ef582cd0040da4f82e0ebdfba2d1a",
+      "size_bytes": 481064845,
+      "species": "Campylobacter jejuni",
+      "strain": "FDAARGOS_262",
+      "subsample_reproduced_by_a_second_run": true,
+      "subsampled": true,
+      "subsampled_bases": 88421460,
+      "subsampled_file": "SRR4125014_100x_seed20261118_1.fastq.gz",
+      "subsampled_reads": 875460,
+      "subsampled_sha256": "49b0e8b2b9a7716c139c4633b314aa456e3377eed9643f5a2a79746e8c84a8cc",
+      "url": "https://ftp.sra.ebi.ac.uk/vol1/fastq/SRR412/004/SRR4125014/SRR4125014_1.fastq.gz"
+    },
+    {
+      "bases": 566277508,
+      "depth_full_x": 640.4,
+      "depth_used_x": 100.0,
+      "ena_base_count": 1132555016,
+      "ena_md5": "aa3e9789355eb15be05f4c1bc57dead0",
+      "ena_read_count": 5606708,
+      "genome_bp_observed": 1768428,
+      "genome_bp_table": 1768428,
+      "illumina_run": "SRR4125014",
+      "instrument": "Illumina HiSeq 2500",
+      "local_md5": "aa3e9789355eb15be05f4c1bc57dead0",
+      "mate": "2",
+      "pairs_kept": 875460,
+      "reads": 5606708,
+      "seed": 20261118,
+      "sha256": "b91f4a61a7a0915120eba8b21a2a05fb73f33d2b896c7839c31a37d45572517f",
+      "size_bytes": 482209702,
+      "species": "Campylobacter jejuni",
+      "strain": "FDAARGOS_262",
+      "subsample_reproduced_by_a_second_run": true,
+      "subsampled": true,
+      "subsampled_bases": 88421460,
+      "subsampled_file": "SRR4125014_100x_seed20261118_2.fastq.gz",
+      "subsampled_reads": 875460,
+      "subsampled_sha256": "21612b5ba42b29788b54f890a990df72ca19975ec22990a3e10d06d6014d41b2",
+      "url": "https://ftp.sra.ebi.ac.uk/vol1/fastq/SRR412/004/SRR4125014/SRR4125014_2.fastq.gz"
+    },
+    {
+      "bases": 642297178,
+      "depth_full_x": 437.6,
+      "depth_used_x": 100.0,
+      "ena_base_count": 1284594356,
+      "ena_md5": "2c87d5a015cc1e3565864a73dfbfb6bb",
+      "ena_read_count": 6359378,
+      "genome_bp_observed": 2935398,
+      "genome_bp_table": 2935398,
+      "illumina_run": "SRR1950322",
+      "instrument": "Illumina HiSeq 2000",
+      "local_md5": "2c87d5a015cc1e3565864a73dfbfb6bb",
+      "mate": "1",
+      "pairs_kept": 1453168,
+      "reads": 6359378,
+      "seed": 20261118,
+      "sha256": "d2b5f9de26b5d4b4731eb9ac4ec6d7b6bc8248ef41324eab55d737ca7fc5d1a5",
+      "size_bytes": 627908239,
+      "species": "Listeria monocytogenes",
+      "strain": "FDAARGOS_57",
+      "subsample_reproduced_by_a_second_run": true,
+      "subsampled": true,
+      "subsampled_bases": 146769968,
+      "subsampled_file": "SRR1950322_100x_seed20261118_1.fastq.gz",
+      "subsampled_reads": 1453168,
+      "subsampled_sha256": "6ec911b256f2f4b3cd88dd6f14fd0dc888286cea1f637aca5d8b952872c51fc9",
+      "url": "https://ftp.sra.ebi.ac.uk/vol1/fastq/SRR195/002/SRR1950322/SRR1950322_1.fastq.gz"
+    },
+    {
+      "bases": 642297178,
+      "depth_full_x": 437.6,
+      "depth_used_x": 100.0,
+      "ena_base_count": 1284594356,
+      "ena_md5": "ae7d57a6004cdf688cbee9e4ff3ff9dd",
+      "ena_read_count": 6359378,
+      "genome_bp_observed": 2935398,
+      "genome_bp_table": 2935398,
+      "illumina_run": "SRR1950322",
+      "instrument": "Illumina HiSeq 2000",
+      "local_md5": "ae7d57a6004cdf688cbee9e4ff3ff9dd",
+      "mate": "2",
+      "pairs_kept": 1453168,
+      "reads": 6359378,
+      "seed": 20261118,
+      "sha256": "5b2535e461444182761ac786139c6d696f38e978dadf1119d6e607614ada50b5",
+      "size_bytes": 609009190,
+      "species": "Listeria monocytogenes",
+      "strain": "FDAARGOS_57",
+      "subsample_reproduced_by_a_second_run": true,
+      "subsampled": true,
+      "subsampled_bases": 146769968,
+      "subsampled_file": "SRR1950322_100x_seed20261118_2.fastq.gz",
+      "subsampled_reads": 1453168,
+      "subsampled_sha256": "ff2ceff10cf27639616e1a18c254b7d514fb020a956788801edbc69cabcf6af1",
+      "url": "https://ftp.sra.ebi.ac.uk/vol1/fastq/SRR195/002/SRR1950322/SRR1950322_2.fastq.gz"
+    },
+    {
+      "bases": 627314232,
+      "depth_full_x": 397.1,
+      "depth_used_x": 100.0,
+      "ena_base_count": 1254628464,
+      "ena_md5": "c7fc055f5c22ad732bea22980fb6b824",
+      "ena_read_count": 6211032,
+      "genome_bp_observed": 3159864,
+      "genome_bp_table": 3159864,
+      "illumina_run": "SRR5419826",
+      "instrument": "Illumina HiSeq 2500",
+      "local_md5": "c7fc055f5c22ad732bea22980fb6b824",
+      "mate": "1",
+      "pairs_kept": 1564290,
+      "reads": 6211032,
+      "seed": 20261118,
+      "sha256": "d83ddceeae8104b3edfcd7e977bd2e216d893e57bc216e814ee1f71fa5b8b9ca",
+      "size_bytes": 523194571,
+      "species": "Enterococcus faecalis",
+      "strain": "FDAARGOS_324",
+      "subsample_reproduced_by_a_second_run": true,
+      "subsampled": true,
+      "subsampled_bases": 157993290,
+      "subsampled_file": "SRR5419826_100x_seed20261118_1.fastq.gz",
+      "subsampled_reads": 1564290,
+      "subsampled_sha256": "d4275e3e1f99a43737641eb3d5133bea3cc6574d5fa7ccb7bc1f056c6c5b384a",
+      "url": "https://ftp.sra.ebi.ac.uk/vol1/fastq/SRR541/006/SRR5419826/SRR5419826_1.fastq.gz"
+    },
+    {
+      "bases": 627314232,
+      "depth_full_x": 397.1,
+      "depth_used_x": 100.0,
+      "ena_base_count": 1254628464,
+      "ena_md5": "16344876f6689761a3f9262229a2b34f",
+      "ena_read_count": 6211032,
+      "genome_bp_observed": 3159864,
+      "genome_bp_table": 3159864,
+      "illumina_run": "SRR5419826",
+      "instrument": "Illumina HiSeq 2500",
+      "local_md5": "16344876f6689761a3f9262229a2b34f",
+      "mate": "2",
+      "pairs_kept": 1564290,
+      "reads": 6211032,
+      "seed": 20261118,
+      "sha256": "9a6e0cf25b5384d03dcf37260bc8721220c1b1b795381abaf1c9911b44adad72",
+      "size_bytes": 525101759,
+      "species": "Enterococcus faecalis",
+      "strain": "FDAARGOS_324",
+      "subsample_reproduced_by_a_second_run": true,
+      "subsampled": true,
+      "subsampled_bases": 157993290,
+      "subsampled_file": "SRR5419826_100x_seed20261118_2.fastq.gz",
+      "subsampled_reads": 1564290,
+      "subsampled_sha256": "04b5e83fbe7a12ce11a915b28e617f5efca36fa21461f974e2a5492fe16c456a",
+      "url": "https://ftp.sra.ebi.ac.uk/vol1/fastq/SRR541/006/SRR5419826/SRR5419826_2.fastq.gz"
+    },
+    {
+      "bases": 625703181,
+      "depth_full_x": 680.2,
+      "depth_used_x": 100.0,
+      "ena_base_count": 1251406362,
+      "ena_md5": "2f5912aea8e3f35b778ffdfc27991e24",
+      "ena_read_count": 6195081,
+      "genome_bp_observed": 1839644,
+      "genome_bp_table": 1839644,
+      "illumina_run": "SRR2820674",
+      "instrument": "Illumina HiSeq 2500",
+      "local_md5": "2f5912aea8e3f35b778ffdfc27991e24",
+      "mate": "1",
+      "pairs_kept": 910715,
+      "reads": 6195081,
+      "seed": 20261118,
+      "sha256": "9f72010f4e652135f6ff25c1a632f8e343a02c398ce86310e648b0831aaa4735",
+      "size_bytes": 518713150,
+      "species": "Streptococcus pyogenes",
+      "strain": "FDAARGOS_149",
+      "subsample_reproduced_by_a_second_run": true,
+      "subsampled": true,
+      "subsampled_bases": 91982215,
+      "subsampled_file": "SRR2820674_100x_seed20261118_1.fastq.gz",
+      "subsampled_reads": 910715,
+      "subsampled_sha256": "2a582eb12384072048003afbb80bfc1bf1454fd53f11f389cdf850e0cae04a3e",
+      "url": "https://ftp.sra.ebi.ac.uk/vol1/fastq/SRR282/004/SRR2820674/SRR2820674_1.fastq.gz"
+    },
+    {
+      "bases": 625703181,
+      "depth_full_x": 680.2,
+      "depth_used_x": 100.0,
+      "ena_base_count": 1251406362,
+      "ena_md5": "772280e7f017bc6555a4a2e56870452e",
+      "ena_read_count": 6195081,
+      "genome_bp_observed": 1839644,
+      "genome_bp_table": 1839644,
+      "illumina_run": "SRR2820674",
+      "instrument": "Illumina HiSeq 2500",
+      "local_md5": "772280e7f017bc6555a4a2e56870452e",
+      "mate": "2",
+      "pairs_kept": 910715,
+      "reads": 6195081,
+      "seed": 20261118,
+      "sha256": "3b3483d649b7373f9759d3ca04967c48b9f9b5ea9d26a2648229f9a121bb4bd1",
+      "size_bytes": 514093485,
+      "species": "Streptococcus pyogenes",
+      "strain": "FDAARGOS_149",
+      "subsample_reproduced_by_a_second_run": true,
+      "subsampled": true,
+      "subsampled_bases": 91982215,
+      "subsampled_file": "SRR2820674_100x_seed20261118_2.fastq.gz",
+      "subsampled_reads": 910715,
+      "subsampled_sha256": "8e3ebda1a613bf338287fc4b6346c8bbb60ad32523a58d630f8af86fef10b013",
+      "url": "https://ftp.sra.ebi.ac.uk/vol1/fastq/SRR282/004/SRR2820674/SRR2820674_2.fastq.gz"
+    },
+    {
+      "bases": 617678024,
+      "depth_full_x": 674.8,
+      "depth_used_x": 100.0,
+      "ena_base_count": 1235356048,
+      "ena_md5": "52f3219360843923b3ecf15cef65fd33",
+      "ena_read_count": 6115624,
+      "genome_bp_observed": 1830681,
+      "genome_bp_table": 1830681,
+      "illumina_run": "SRR4123928",
+      "instrument": "Illumina HiSeq 2500",
+      "local_md5": "52f3219360843923b3ecf15cef65fd33",
+      "mate": "1",
+      "pairs_kept": 906278,
+      "reads": 6115624,
+      "seed": 20261118,
+      "sha256": "ddb21aa1f522192e8c764c43ea45431e82efa15e95bd170816cdda89c1a00a66",
+      "size_bytes": 543009175,
+      "species": "Haemophilus influenzae",
+      "strain": "FDAARGOS_199",
+      "subsample_reproduced_by_a_second_run": true,
+      "subsampled": true,
+      "subsampled_bases": 91534078,
+      "subsampled_file": "SRR4123928_100x_seed20261118_1.fastq.gz",
+      "subsampled_reads": 906278,
+      "subsampled_sha256": "da68d5ba034ca2384ed276b1f8661d69488ffa8b3ef9a5f00825e4a7062b4917",
+      "url": "https://ftp.sra.ebi.ac.uk/vol1/fastq/SRR412/008/SRR4123928/SRR4123928_1.fastq.gz"
+    },
+    {
+      "bases": 617678024,
+      "depth_full_x": 674.8,
+      "depth_used_x": 100.0,
+      "ena_base_count": 1235356048,
+      "ena_md5": "6232cce4e5ac6c608bdf2f58bf5563ea",
+      "ena_read_count": 6115624,
+      "genome_bp_observed": 1830681,
+      "genome_bp_table": 1830681,
+      "illumina_run": "SRR4123928",
+      "instrument": "Illumina HiSeq 2500",
+      "local_md5": "6232cce4e5ac6c608bdf2f58bf5563ea",
+      "mate": "2",
+      "pairs_kept": 906278,
+      "reads": 6115624,
+      "seed": 20261118,
+      "sha256": "697c9d422cb2559772be97d26b487b789f4b8fbe9a05b5b25f70a3a1170e1671",
+      "size_bytes": 546601127,
+      "species": "Haemophilus influenzae",
+      "strain": "FDAARGOS_199",
+      "subsample_reproduced_by_a_second_run": true,
+      "subsampled": true,
+      "subsampled_bases": 91534078,
+      "subsampled_file": "SRR4123928_100x_seed20261118_2.fastq.gz",
+      "subsampled_reads": 906278,
+      "subsampled_sha256": "15193f59dfe2747d7d645615456aec4959d5d3ad8c053494d16412e164bf5299",
+      "url": "https://ftp.sra.ebi.ac.uk/vol1/fastq/SRR412/008/SRR4123928/SRR4123928_2.fastq.gz"
+    },
+    {
+      "bases": 1583408952,
+      "depth_full_x": 561.3,
+      "depth_used_x": 100.0,
+      "ena_base_count": 3166817904,
+      "ena_md5": "f7d8759a06eb9657f0cb9b3dcea28bbe",
+      "ena_read_count": 10486152,
+      "genome_bp_observed": 5642349,
+      "genome_bp_table": 5642349,
+      "illumina_run": "SRR9641652",
+      "instrument": "Illumina HiSeq 4000",
+      "local_md5": "f7d8759a06eb9657f0cb9b3dcea28bbe",
+      "mate": "1",
+      "pairs_kept": 1868328,
+      "reads": 10486152,
+      "seed": 20261118,
+      "sha256": "db1099ec259bbf86755bff955b127ae20502ebbda097f99f84ee88e5653d4d6d",
+      "size_bytes": 833195581,
+      "species": "Bacillus cereus",
+      "strain": "FDAARGOS_780",
+      "subsample_reproduced_by_a_second_run": true,
+      "subsampled": true,
+      "subsampled_bases": 282117528,
+      "subsampled_file": "SRR9641652_100x_seed20261118_1.fastq.gz",
+      "subsampled_reads": 1868328,
+      "subsampled_sha256": "ce054dedb758d4fecb84a5794eb474f36d51655da2e3d8679dc59b7c850f5fbf",
+      "url": "https://ftp.sra.ebi.ac.uk/vol1/fastq/SRR964/002/SRR9641652/SRR9641652_1.fastq.gz"
+    },
+    {
+      "bases": 1583408952,
+      "depth_full_x": 561.3,
+      "depth_used_x": 100.0,
+      "ena_base_count": 3166817904,
+      "ena_md5": "317a93bc12c668e0fab61fa58bcb5113",
+      "ena_read_count": 10486152,
+      "genome_bp_observed": 5642349,
+      "genome_bp_table": 5642349,
+      "illumina_run": "SRR9641652",
+      "instrument": "Illumina HiSeq 4000",
+      "local_md5": "317a93bc12c668e0fab61fa58bcb5113",
+      "mate": "2",
+      "pairs_kept": 1868328,
+      "reads": 10486152,
+      "seed": 20261118,
+      "sha256": "3a5597fdc34b41b118482d6a4c2c17d20cbeed08be32f94077ccce617af8413f",
+      "size_bytes": 985167974,
+      "species": "Bacillus cereus",
+      "strain": "FDAARGOS_780",
+      "subsample_reproduced_by_a_second_run": true,
+      "subsampled": true,
+      "subsampled_bases": 282117528,
+      "subsampled_file": "SRR9641652_100x_seed20261118_2.fastq.gz",
+      "subsampled_reads": 1868328,
+      "subsampled_sha256": "fcf4479b467df4a3b7771781082ae5db20fbd791956ac534749e789271588a5f",
+      "url": "https://ftp.sra.ebi.ac.uk/vol1/fastq/SRR964/002/SRR9641652/SRR9641652_2.fastq.gz"
+    },
+    {
+      "bases": 569809983,
+      "depth_full_x": 221.3,
+      "depth_used_x": 100.0,
+      "ena_base_count": 1139619966,
+      "ena_md5": "e8b37408ddda275d7a7fff5902edc15c",
+      "ena_read_count": 5641683,
+      "genome_bp_observed": 5149217,
+      "genome_bp_table": 5149217,
+      "illumina_run": "SRR1784833",
+      "instrument": "Illumina HiSeq 2000",
+      "local_md5": "e8b37408ddda275d7a7fff5902edc15c",
+      "mate": "1",
+      "pairs_kept": 2549118,
+      "reads": 5641683,
+      "seed": 20261118,
+      "sha256": "9e45458f89ff3cdab0eab56ccb737dd23a0a679af78b6e7f03af3272a5acda53",
+      "size_bytes": 562048483,
+      "species": "Vibrio parahaemolyticus",
+      "strain": "FDAARGOS_51",
+      "subsample_reproduced_by_a_second_run": true,
+      "subsampled": true,
+      "subsampled_bases": 257460918,
+      "subsampled_file": "SRR1784833_100x_seed20261118_1.fastq.gz",
+      "subsampled_reads": 2549118,
+      "subsampled_sha256": "838c5e3a71195a1a9c1e530119b7942e37ce1bcbe931067079649cf7a776826e",
+      "url": "https://ftp.sra.ebi.ac.uk/vol1/fastq/SRR178/003/SRR1784833/SRR1784833_1.fastq.gz"
+    },
+    {
+      "bases": 569809983,
+      "depth_full_x": 221.3,
+      "depth_used_x": 100.0,
+      "ena_base_count": 1139619966,
+      "ena_md5": "f7ff9d0f1644958ab7ebde280a36622b",
+      "ena_read_count": 5641683,
+      "genome_bp_observed": 5149217,
+      "genome_bp_table": 5149217,
+      "illumina_run": "SRR1784833",
+      "instrument": "Illumina HiSeq 2000",
+      "local_md5": "f7ff9d0f1644958ab7ebde280a36622b",
+      "mate": "2",
+      "pairs_kept": 2549118,
+      "reads": 5641683,
+      "seed": 20261118,
+      "sha256": "12504bbcb9b606ca4120bc553f898444cec587ec41d2c39dd8927242ab5d2dce",
+      "size_bytes": 549302847,
+      "species": "Vibrio parahaemolyticus",
+      "strain": "FDAARGOS_51",
+      "subsample_reproduced_by_a_second_run": true,
+      "subsampled": true,
+      "subsampled_bases": 257460918,
+      "subsampled_file": "SRR1784833_100x_seed20261118_2.fastq.gz",
+      "subsampled_reads": 2549118,
+      "subsampled_sha256": "40c2498d9fdfe017e6e93acda68ee6ca6f067ab3ba6ff8315964cfa10c0823d7",
+      "url": "https://ftp.sra.ebi.ac.uk/vol1/fastq/SRR178/003/SRR1784833/SRR1784833_2.fastq.gz"
+    },
+    {
+      "bases": 549227496,
+      "depth_full_x": 218.7,
+      "depth_used_x": 100.0,
+      "ena_base_count": 1098454992,
+      "ena_md5": "8cd3dcbe6099bf1001079f2acf93f53b",
+      "ena_read_count": 5437896,
+      "genome_bp_observed": 5022152,
+      "genome_bp_table": 5022152,
+      "illumina_run": "SRR2820658",
+      "instrument": "Illumina HiSeq 2500",
+      "local_md5": "8cd3dcbe6099bf1001079f2acf93f53b",
+      "mate": "1",
+      "pairs_kept": 2486214,
+      "reads": 5437896,
+      "seed": 20261118,
+      "sha256": "459ea3938f8bb45fb77d0b02d113ff8ffd645803c85a7416d2466dc52172b839",
+      "size_bytes": 458587500,
+      "species": "Escherichia coli",
+      "strain": "FDAARGOS_144",
+      "subsample_reproduced_by_a_second_run": true,
+      "subsampled": true,
+      "subsampled_bases": 251107614,
+      "subsampled_file": "SRR2820658_100x_seed20261118_1.fastq.gz",
+      "subsampled_reads": 2486214,
+      "subsampled_sha256": "5581418761e3d101c06a02e6a053a724b477f174f8ecf9e02ace7210ed82c71e",
+      "url": "https://ftp.sra.ebi.ac.uk/vol1/fastq/SRR282/008/SRR2820658/SRR2820658_1.fastq.gz"
+    },
+    {
+      "bases": 549227496,
+      "depth_full_x": 218.7,
+      "depth_used_x": 100.0,
+      "ena_base_count": 1098454992,
+      "ena_md5": "2364429d3648c02dd27ecb94d6a8846d",
+      "ena_read_count": 5437896,
+      "genome_bp_observed": 5022152,
+      "genome_bp_table": 5022152,
+      "illumina_run": "SRR2820658",
+      "instrument": "Illumina HiSeq 2500",
+      "local_md5": "2364429d3648c02dd27ecb94d6a8846d",
+      "mate": "2",
+      "pairs_kept": 2486214,
+      "reads": 5437896,
+      "seed": 20261118,
+      "sha256": "94b1774332a8d62742b6323f1ba64529a8f0eec7f2b14748e202d12a87e6d103",
+      "size_bytes": 454708975,
+      "species": "Escherichia coli",
+      "strain": "FDAARGOS_144",
+      "subsample_reproduced_by_a_second_run": true,
+      "subsampled": true,
+      "subsampled_bases": 251107614,
+      "subsampled_file": "SRR2820658_100x_seed20261118_2.fastq.gz",
+      "subsampled_reads": 2486214,
+      "subsampled_sha256": "ec7da44bf113e3883fabf330e474c5b5f513d4714802ca1ffb7510c37b582fc6",
+      "url": "https://ftp.sra.ebi.ac.uk/vol1/fastq/SRR282/008/SRR2820658/SRR2820658_2.fastq.gz"
+    },
+    {
+      "bases": 491430650,
+      "depth_full_x": 206.9,
+      "depth_used_x": 100.0,
+      "ena_base_count": 982861300,
+      "ena_md5": "e34b7efc4a4cd3713064f4d598180794",
+      "ena_read_count": 4865650,
+      "genome_bp_observed": 4751278,
+      "genome_bp_table": 4751278,
+      "illumina_run": "SRR1950246",
+      "instrument": "Illumina HiSeq 2000",
+      "local_md5": "e34b7efc4a4cd3713064f4d598180794",
+      "mate": "1",
+      "pairs_kept": 2352118,
+      "reads": 4865650,
+      "seed": 20261118,
+      "sha256": "67d3cf2a45d7b90209fc87485529b4fadaad90b5fdd47c360898992bf9f19981",
+      "size_bytes": 479609852,
+      "species": "Salmonella enterica",
+      "strain": "FDAARGOS_54",
+      "subsample_reproduced_by_a_second_run": true,
+      "subsampled": true,
+      "subsampled_bases": 237563918,
+      "subsampled_file": "SRR1950246_100x_seed20261118_1.fastq.gz",
+      "subsampled_reads": 2352118,
+      "subsampled_sha256": "93f7a7afd802f26ad23321670e6a077e88891993fbfefe699ed4634f690a5250",
+      "url": "https://ftp.sra.ebi.ac.uk/vol1/fastq/SRR195/006/SRR1950246/SRR1950246_1.fastq.gz"
+    },
+    {
+      "bases": 491430650,
+      "depth_full_x": 206.9,
+      "depth_used_x": 100.0,
+      "ena_base_count": 982861300,
+      "ena_md5": "10c37775b9b7d50bc85c5424586c2931",
+      "ena_read_count": 4865650,
+      "genome_bp_observed": 4751278,
+      "genome_bp_table": 4751278,
+      "illumina_run": "SRR1950246",
+      "instrument": "Illumina HiSeq 2000",
+      "local_md5": "10c37775b9b7d50bc85c5424586c2931",
+      "mate": "2",
+      "pairs_kept": 2352118,
+      "reads": 4865650,
+      "seed": 20261118,
+      "sha256": "40d29c07e8df08bf1678263e7292567a7f44f05a01ca6b17b1f2a33bf8f08f08",
+      "size_bytes": 470116594,
+      "species": "Salmonella enterica",
+      "strain": "FDAARGOS_54",
+      "subsample_reproduced_by_a_second_run": true,
+      "subsampled": true,
+      "subsampled_bases": 237563918,
+      "subsampled_file": "SRR1950246_100x_seed20261118_2.fastq.gz",
+      "subsampled_reads": 2352118,
+      "subsampled_sha256": "cd879bba57f2438d65ebb301f91d6fb97631673447c2d69206de04de3f94a68e",
+      "url": "https://ftp.sra.ebi.ac.uk/vol1/fastq/SRR195/006/SRR1950246/SRR1950246_2.fastq.gz"
+    },
+    {
+      "bases": 697626695,
+      "depth_full_x": 639.7,
+      "depth_used_x": 100.0,
+      "ena_base_count": 1395253390,
+      "ena_md5": "72eda37b3158f5668d6fe8ce62c6db7a",
+      "ena_read_count": 6907195,
+      "genome_bp_observed": 2181232,
+      "genome_bp_table": 2181232,
+      "illumina_run": "SRR4272082",
+      "instrument": "Illumina HiSeq 2000",
+      "local_md5": "72eda37b3158f5668d6fe8ce62c6db7a",
+      "mate": "1",
+      "pairs_kept": 1079818,
+      "reads": 6907195,
+      "seed": 20261118,
+      "sha256": "460ab043e0b509220eb352c9c3069c4e341758d1fb9f4cf4c2a4a761a13975ca",
+      "size_bytes": 668701865,
+      "species": "Neisseria meningitidis",
+      "strain": "FDAARGOS_209",
+      "subsample_reproduced_by_a_second_run": true,
+      "subsampled": true,
+      "subsampled_bases": 109061618,
+      "subsampled_file": "SRR4272082_100x_seed20261118_1.fastq.gz",
+      "subsampled_reads": 1079818,
+      "subsampled_sha256": "05d521e1f6b51a107744ed681ec16c5ef83c369b6f8093df7a2adac267e9ccf2",
+      "url": "https://ftp.sra.ebi.ac.uk/vol1/fastq/SRR427/002/SRR4272082/SRR4272082_1.fastq.gz"
+    },
+    {
+      "bases": 697626695,
+      "depth_full_x": 639.7,
+      "depth_used_x": 100.0,
+      "ena_base_count": 1395253390,
+      "ena_md5": "4db52e50a273945315af9aa4582c6dc2",
+      "ena_read_count": 6907195,
+      "genome_bp_observed": 2181232,
+      "genome_bp_table": 2181232,
+      "illumina_run": "SRR4272082",
+      "instrument": "Illumina HiSeq 2000",
+      "local_md5": "4db52e50a273945315af9aa4582c6dc2",
+      "mate": "2",
+      "pairs_kept": 1079818,
+      "reads": 6907195,
+      "seed": 20261118,
+      "sha256": "c24ce89d1cd65217dcdb9c215320231fc795de7e55689603523df18eb6288f41",
+      "size_bytes": 657846565,
+      "species": "Neisseria meningitidis",
+      "strain": "FDAARGOS_209",
+      "subsample_reproduced_by_a_second_run": true,
+      "subsampled": true,
+      "subsampled_bases": 109061618,
+      "subsampled_file": "SRR4272082_100x_seed20261118_2.fastq.gz",
+      "subsampled_reads": 1079818,
+      "subsampled_sha256": "3d8b17e35aa441ebe9c2bbb56515e0acaf076abed954b7b6f005e869ceca90c8",
+      "url": "https://ftp.sra.ebi.ac.uk/vol1/fastq/SRR427/002/SRR4272082/SRR4272082_2.fastq.gz"
+    },
+    {
+      "bases": 562005006,
+      "depth_full_x": 451.6,
+      "depth_used_x": 100.0,
+      "ena_base_count": 1124010012,
+      "ena_md5": "abb1c4a0140d13fa9513e445ebcb97c6",
+      "ena_read_count": 5564406,
+      "genome_bp_observed": 2489049,
+      "genome_bp_table": 2489049,
+      "illumina_run": "SRR4271515",
+      "instrument": "Illumina HiSeq 2000",
+      "local_md5": "abb1c4a0140d13fa9513e445ebcb97c6",
+      "mate": "1",
+      "pairs_kept": 1232203,
+      "reads": 5564406,
+      "seed": 20261118,
+      "sha256": "a067ddb94275c18a39304afce54380c382034f6bae88d6f377e337270d02ad6a",
+      "size_bytes": 550650710,
+      "species": "Corynebacterium diphtheriae",
+      "strain": "FDAARGOS_197",
+      "subsample_reproduced_by_a_second_run": true,
+      "subsampled": true,
+      "subsampled_bases": 124452503,
+      "subsampled_file": "SRR4271515_100x_seed20261118_1.fastq.gz",
+      "subsampled_reads": 1232203,
+      "subsampled_sha256": "a025b314b7e968a2a359eb88dff0897b63312462ca2685e92eb43e0e2653ace7",
+      "url": "https://ftp.sra.ebi.ac.uk/vol1/fastq/SRR427/005/SRR4271515/SRR4271515_1.fastq.gz"
+    },
+    {
+      "bases": 562005006,
+      "depth_full_x": 451.6,
+      "depth_used_x": 100.0,
+      "ena_base_count": 1124010012,
+      "ena_md5": "0910e7ae9d75f37a08e3b24aa75326ed",
+      "ena_read_count": 5564406,
+      "genome_bp_observed": 2489049,
+      "genome_bp_table": 2489049,
+      "illumina_run": "SRR4271515",
+      "instrument": "Illumina HiSeq 2000",
+      "local_md5": "0910e7ae9d75f37a08e3b24aa75326ed",
+      "mate": "2",
+      "pairs_kept": 1232203,
+      "reads": 5564406,
+      "seed": 20261118,
+      "sha256": "a1bf0bf651b0dbf8b82ffc698a8522849cba76db908365ed83aff445ec663df1",
+      "size_bytes": 543476699,
+      "species": "Corynebacterium diphtheriae",
+      "strain": "FDAARGOS_197",
+      "subsample_reproduced_by_a_second_run": true,
+      "subsampled": true,
+      "subsampled_bases": 124452503,
+      "subsampled_file": "SRR4271515_100x_seed20261118_2.fastq.gz",
+      "subsampled_reads": 1232203,
+      "subsampled_sha256": "4d82068115e59edd41f371e12e9052eb17fae1569d5e81cd42e53bbf8fbc317b",
+      "url": "https://ftp.sra.ebi.ac.uk/vol1/fastq/SRR427/005/SRR4271515/SRR4271515_2.fastq.gz"
+    },
+    {
+      "bases": 514370881,
+      "depth_full_x": 185.3,
+      "depth_used_x": 100.0,
+      "ena_base_count": 1028741762,
+      "ena_md5": "b5b45e1df48fb7952dcb6121418bcb95",
+      "ena_read_count": 5092781,
+      "genome_bp_observed": 5550639,
+      "genome_bp_table": 5550639,
+      "illumina_run": "SRR2821776",
+      "instrument": "Illumina HiSeq 2500",
+      "local_md5": "b5b45e1df48fb7952dcb6121418bcb95",
+      "mate": "1",
+      "pairs_kept": 2747842,
+      "reads": 5092781,
+      "seed": 20261118,
+      "sha256": "2aede9b8a8e99952ab73def67afb742e2673853e9e2826ac4ea0efa86127e74e",
+      "size_bytes": 436077603,
+      "species": "Klebsiella pneumoniae",
+      "strain": "FDAARGOS_156",
+      "subsample_reproduced_by_a_second_run": true,
+      "subsampled": true,
+      "subsampled_bases": 277532042,
+      "subsampled_file": "SRR2821776_100x_seed20261118_1.fastq.gz",
+      "subsampled_reads": 2747842,
+      "subsampled_sha256": "e5fd9b3491d95bd56d3391c9b9082bb5f56bbd39e0564d7fb1d1f9da1baadbd2",
+      "url": "https://ftp.sra.ebi.ac.uk/vol1/fastq/SRR282/006/SRR2821776/SRR2821776_1.fastq.gz"
+    },
+    {
+      "bases": 514370881,
+      "depth_full_x": 185.3,
+      "depth_used_x": 100.0,
+      "ena_base_count": 1028741762,
+      "ena_md5": "c399992e86a7752a50c821d97bef9505",
+      "ena_read_count": 5092781,
+      "genome_bp_observed": 5550639,
+      "genome_bp_table": 5550639,
+      "illumina_run": "SRR2821776",
+      "instrument": "Illumina HiSeq 2500",
+      "local_md5": "c399992e86a7752a50c821d97bef9505",
+      "mate": "2",
+      "pairs_kept": 2747842,
+      "reads": 5092781,
+      "seed": 20261118,
+      "sha256": "1dd2eb17bd9412d2d549aeebd4b27e9da17decdad90090f55c68e2e45e8cd688",
+      "size_bytes": 439406064,
+      "species": "Klebsiella pneumoniae",
+      "strain": "FDAARGOS_156",
+      "subsample_reproduced_by_a_second_run": true,
+      "subsampled": true,
+      "subsampled_bases": 277532042,
+      "subsampled_file": "SRR2821776_100x_seed20261118_2.fastq.gz",
+      "subsampled_reads": 2747842,
+      "subsampled_sha256": "cd7296657144575278cf969b404c04ca0865d145ebe964abe565421e4a70aa54",
+      "url": "https://ftp.sra.ebi.ac.uk/vol1/fastq/SRR282/006/SRR2821776/SRR2821776_2.fastq.gz"
+    },
+    {
+      "bases": 919922049,
+      "depth_full_x": 414.9,
+      "depth_used_x": 100.0,
+      "ena_base_count": 1839844098,
+      "ena_md5": "3a11da2a934e6ce7b93c44da2cb830bb",
+      "ena_read_count": 6092199,
+      "genome_bp_observed": 4434666,
+      "genome_bp_table": 4434666,
+      "illumina_run": "SRR9176616",
+      "instrument": "Illumina HiSeq 4000",
+      "local_md5": "3a11da2a934e6ce7b93c44da2cb830bb",
+      "mate": "1",
+      "pairs_kept": 1468433,
+      "reads": 6092199,
+      "seed": 20261118,
+      "sha256": "6b60dbb7ecbccb52cf0a326526351ca33096e42ba227dd2a634d621cb9849ed5",
+      "size_bytes": 541715951,
+      "species": "Mycobacterium tuberculosis",
+      "strain": "FDAARGOS_750",
+      "subsample_reproduced_by_a_second_run": true,
+      "subsampled": true,
+      "subsampled_bases": 221733383,
+      "subsampled_file": "SRR9176616_100x_seed20261118_1.fastq.gz",
+      "subsampled_reads": 1468433,
+      "subsampled_sha256": "7ea9825bfb053671817abea426a6d002bf6f1a9ea994e284c025bbd044093909",
+      "url": "https://ftp.sra.ebi.ac.uk/vol1/fastq/SRR917/006/SRR9176616/SRR9176616_1.fastq.gz"
+    },
+    {
+      "bases": 919922049,
+      "depth_full_x": 414.9,
+      "depth_used_x": 100.0,
+      "ena_base_count": 1839844098,
+      "ena_md5": "f80276c436ba54c3b2e3f7f18846122f",
+      "ena_read_count": 6092199,
+      "genome_bp_observed": 4434666,
+      "genome_bp_table": 4434666,
+      "illumina_run": "SRR9176616",
+      "instrument": "Illumina HiSeq 4000",
+      "local_md5": "f80276c436ba54c3b2e3f7f18846122f",
+      "mate": "2",
+      "pairs_kept": 1468433,
+      "reads": 6092199,
+      "seed": 20261118,
+      "sha256": "bb7b907d58a9789d01791e62a31d1a1c6fa78ee3e26e01b9ef72053277593fcc",
+      "size_bytes": 626455520,
+      "species": "Mycobacterium tuberculosis",
+      "strain": "FDAARGOS_750",
+      "subsample_reproduced_by_a_second_run": true,
+      "subsampled": true,
+      "subsampled_bases": 221733383,
+      "subsampled_file": "SRR9176616_100x_seed20261118_2.fastq.gz",
+      "subsampled_reads": 1468433,
+      "subsampled_sha256": "04d8729a4db19aa702a761f9816e93aa3f6c316f064e1d04bb80c7b95486020f",
+      "url": "https://ftp.sra.ebi.ac.uk/vol1/fastq/SRR917/006/SRR9176616/SRR9176616_2.fastq.gz"
+    },
+    {
+      "bases": 1163599054,
+      "depth_full_x": 339.0,
+      "depth_used_x": 100.0,
+      "ena_base_count": 2327198108,
+      "ena_md5": "8347585f2da505ee7512fe13765567f3",
+      "ena_read_count": 7705954,
+      "genome_bp_observed": 6865838,
+      "genome_bp_table": 6865838,
+      "illumina_run": "SRR8178086",
+      "instrument": "Illumina HiSeq 4000",
+      "local_md5": "8347585f2da505ee7512fe13765567f3",
+      "mate": "1",
+      "pairs_kept": 2273457,
+      "reads": 7705954,
+      "seed": 20261118,
+      "sha256": "1d91511c1a4ea12ef669cbc459f347641637e71d3d9b3f4a54effdc573b184e2",
+      "size_bytes": 620799308,
+      "species": "Pseudomonas aeruginosa",
+      "strain": "FDAARGOS_501",
+      "subsample_reproduced_by_a_second_run": true,
+      "subsampled": true,
+      "subsampled_bases": 343292007,
+      "subsampled_file": "SRR8178086_100x_seed20261118_1.fastq.gz",
+      "subsampled_reads": 2273457,
+      "subsampled_sha256": "feecbb1ccae2a0ea8fa9d72c69ab743762411b503073dc52d75397961546a696",
+      "url": "https://ftp.sra.ebi.ac.uk/vol1/fastq/SRR817/006/SRR8178086/SRR8178086_1.fastq.gz"
+    },
+    {
+      "bases": 1163599054,
+      "depth_full_x": 339.0,
+      "depth_used_x": 100.0,
+      "ena_base_count": 2327198108,
+      "ena_md5": "945875b7ecdd25e458cc883d0d8d638d",
+      "ena_read_count": 7705954,
+      "genome_bp_observed": 6865838,
+      "genome_bp_table": 6865838,
+      "illumina_run": "SRR8178086",
+      "instrument": "Illumina HiSeq 4000",
+      "local_md5": "945875b7ecdd25e458cc883d0d8d638d",
+      "mate": "2",
+      "pairs_kept": 2273457,
+      "reads": 7705954,
+      "seed": 20261118,
+      "sha256": "3bfbe27e14e8b491a76f2e41578d0804c0a90f540a69b3b894f35917bb47255f",
+      "size_bytes": 726294984,
+      "species": "Pseudomonas aeruginosa",
+      "strain": "FDAARGOS_501",
+      "subsample_reproduced_by_a_second_run": true,
+      "subsampled": true,
+      "subsampled_bases": 343292007,
+      "subsampled_file": "SRR8178086_100x_seed20261118_2.fastq.gz",
+      "subsampled_reads": 2273457,
+      "subsampled_sha256": "4e93d8c8791b017a1b60e4dc6f130c9a215af6d45f066b20d9fd089ef9db2c80",
+      "url": "https://ftp.sra.ebi.ac.uk/vol1/fastq/SRR817/006/SRR8178086/SRR8178086_2.fastq.gz"
+    },
+    {
+      "bases": 1251425486,
+      "depth_full_x": 609.7,
+      "depth_used_x": 100.0,
+      "ena_base_count": 2502850972,
+      "ena_md5": "9436c26363e72654fa31a41adbf152f4",
+      "ena_read_count": 8287586,
+      "genome_bp_observed": 4105080,
+      "genome_bp_table": 4105080,
+      "illumina_run": "SRR13674456",
+      "instrument": "Illumina NovaSeq 6000",
+      "local_md5": "9436c26363e72654fa31a41adbf152f4",
+      "mate": "1",
+      "pairs_kept": 1359299,
+      "reads": 8287586,
+      "seed": 20261118,
+      "sha256": "696b0a80b632ec7ea6f0c02419fb6020eb8f89f1441946cb1cfbd5a35c04a5e8",
+      "size_bytes": 551338888,
+      "species": "Bordetella pertussis",
+      "strain": "FDAARGOS_1365",
+      "subsample_reproduced_by_a_second_run": true,
+      "subsampled": true,
+      "subsampled_bases": 205254149,
+      "subsampled_file": "SRR13674456_100x_seed20261118_1.fastq.gz",
+      "subsampled_reads": 1359299,
+      "subsampled_sha256": "81f184f7d1e994a2ad85bbca5dff345030d0a5c17f2ea5aa31ab9c0809a5eac4",
+      "url": "https://ftp.sra.ebi.ac.uk/vol1/fastq/SRR136/056/SRR13674456/SRR13674456_1.fastq.gz"
+    },
+    {
+      "bases": 1251425486,
+      "depth_full_x": 609.7,
+      "depth_used_x": 100.0,
+      "ena_base_count": 2502850972,
+      "ena_md5": "0291d9905efefd1365610f5bf32d4af3",
+      "ena_read_count": 8287586,
+      "genome_bp_observed": 4105080,
+      "genome_bp_table": 4105080,
+      "illumina_run": "SRR13674456",
+      "instrument": "Illumina NovaSeq 6000",
+      "local_md5": "0291d9905efefd1365610f5bf32d4af3",
+      "mate": "2",
+      "pairs_kept": 1359299,
+      "reads": 8287586,
+      "seed": 20261118,
+      "sha256": "76895f47874caf82d340610133fb4ab06189818c084750d01dd1fc1a34260abd",
+      "size_bytes": 571896894,
+      "species": "Bordetella pertussis",
+      "strain": "FDAARGOS_1365",
+      "subsample_reproduced_by_a_second_run": true,
+      "subsampled": true,
+      "subsampled_bases": 205254149,
+      "subsampled_file": "SRR13674456_100x_seed20261118_2.fastq.gz",
+      "subsampled_reads": 1359299,
+      "subsampled_sha256": "c70fb002ab8b6739527dcb28cd7db5c767894588d503284250b7e1cbdc28c9c0",
+      "url": "https://ftp.sra.ebi.ac.uk/vol1/fastq/SRR136/056/SRR13674456/SRR13674456_2.fastq.gz"
+    }
+  ],
+  "schema_version": "1.0",
+  "software": {
+    "git_commit": "884cdf3c84f17dc9007576f26c6b431044dd35e1",
+    "git_tree_clean": true,
+    "name": "locus-recon",
+    "source_sha256": "2cc816cca467a7988c1f2a28cba11ed1cbb30b263e331f75ca48efa19ebefce0",
+    "version": "1.0.1"
+  },
+  "stages": {
+    "assemble": {
+      "assemblies_at_a_time": 1,
+      "finished_utc": "2026-11-18T21:42:47+00:00",
+      "isolates": "FDAARGOS_1365",
+      "platform": "Linux-6.8.0-149-generic-x86_64-with-glibc2.39",
+      "python": "3.11.13",
+      "script_sha256": "cfb1367846c585af817d441e7f6475eb97909af3caa9651fb136280b4f5307de",
+      "spades_memory_gb": 32,
+      "stage": "assemble",
+      "threads": 8,
+      "threads_per_assembly": 8,
+      "tools": {
+        "spades": {
+          "command": [
+            "spades.py",
+            "--version"
+          ],
+          "exit_code": 0,
+          "version": "SPAdes genome assembler v4.2.0"
+        }
+      }
+    },
+    "block-size": {
+      "block_sizes": [
+        100,
+        250,
+        500,
+        1000
+      ],
+      "finished_utc": "2026-11-18T21:47:05+00:00",
+      "function": "locus_recon.depth_ratio.estimate_locus_copy_number(block=...)",
+      "isolates": "FDAARGOS_1365",
+      "other_arguments": "defaults (n_boot 1000, seed 20260817, max_backbone_bootstrap_blocks 512)",
+      "package": {
+        "console_script_version": "locus-recon 1.0.1",
+        "frozen_source_sha256": "2cc816cca467a7988c1f2a28cba11ed1cbb30b263e331f75ca48efa19ebefce0",
+        "imported_from": "/data/PROJECTS/locus_recon_revision/external/repo_run",
+        "imported_source_sha256": "2cc816cca467a7988c1f2a28cba11ed1cbb30b263e331f75ca48efa19ebefce0",
+        "imported_version": "1.0.1",
+        "installed_from": "/home/crodsa/conda/envs/locus-recon-101/lib/python3.11/site-packages",
+        "installed_source_sha256": "2cc816cca467a7988c1f2a28cba11ed1cbb30b263e331f75ca48efa19ebefce0"
+      },
+      "platform": "Linux-6.8.0-149-generic-x86_64-with-glibc2.39",
+      "python": "3.11.13",
+      "script_sha256": "cfb1367846c585af817d441e7f6475eb97909af3caa9651fb136280b4f5307de",
+      "stage": "block-size",
+      "threads": 8,
+      "tools": {
+        "samtools": {
+          "command": [
+            "samtools",
+            "--version"
+          ],
+          "exit_code": 0,
+          "version": "samtools 1.22.1"
+        }
+      }
+    },
+    "comparators": {
+      "catalogue_sequences_declared_noncoding_for_ariba": {
+        "FDAARGOS_1": [],
+        "FDAARGOS_1365": [],
+        "FDAARGOS_144": [],
+        "FDAARGOS_149": [],
+        "FDAARGOS_156": [],
+        "FDAARGOS_197": [],
+        "FDAARGOS_199": [],
+        "FDAARGOS_209": [],
+        "FDAARGOS_262": [],
+        "FDAARGOS_324": [],
+        "FDAARGOS_501": [],
+        "FDAARGOS_51": [],
+        "FDAARGOS_54": [],
+        "FDAARGOS_57": [],
+        "FDAARGOS_750": [],
+        "FDAARGOS_780": []
+      },
+      "configurations": [
+        {
+          "configuration": "default",
+          "extra_arguments": [],
+          "tool": "ARIBA"
+        },
+        {
+          "configuration": "default",
+          "extra_arguments": [],
+          "tool": "KMA"
+        }
+      ],
+      "finished_utc": "2026-11-18T21:49:06+00:00",
+      "isolates": "all",
+      "isolates_at_a_time": 3,
+      "platform": "Linux-6.8.0-149-generic-x86_64-with-glibc2.39",
+      "python": "3.12.16",
+      "script_sha256": "6c319149b31dd237c1d1ab8eb0480985fed7b5cbf2e9948e5f9721c0312221f2",
+      "stage": "comparators",
+      "threads": 12,
+      "threads_per_run": 4,
+      "tool_versions_text": {
+        "ariba": "ARIBA version: 2.14.7\n\nExternal dependencies:\nbowtie2\t2.5.5\t/home/crodsa/conda/envs/lr-comparators/bin/bowtie2\ncdhit\t4.8.1\t/home/crodsa/conda/envs/lr-comparators/bin/cd-hit-est\nnucmer\t3.1\t/home/crodsa/conda/envs/lr-comparators/bin/nucmer\nspades\t4.3.0\t/home/crodsa/conda/envs/lr-comparators/bin/spades.py\n\nExternal dependencies OK: True\n\nPython version:\n3.12.16 (main, Oct 26 2026, 11:37:43) [GCC 15.3.0]\n\nPython packages:\nariba\t2.14.7\t/home/crodsa/conda/envs/lr-comparators/lib/python3.12/site-packages/ariba/__init__.py\nbs4\t4.15.0\t/home/crodsa/conda/envs/lr-comparators/lib/python3.12/site-packages/bs4/__init__.py\ndendropy\t5.1.3\t/home/crodsa/conda/envs/lr-comparators/lib/python3.12/site-packages/dendropy/__init__.py\npyfastaq\t3.18.0\t/home/crodsa/conda/envs/lr-comparators/lib/python3.12/site-packages/pyfastaq/__init__.py\npymummer\t0.12.0\t/home/crodsa/conda/envs/lr-comparators/lib/python3.12/site-packages/pymummer/__init__.py\npysam\t0.24.1\t/home/crodsa/conda/envs/lr-comparators/lib/python3.12/site-packages/pysam/__init__.py\n\nPython packages OK: True\n\nEverything looks OK: True\n/home/crodsa/conda/envs/lr-comparators/lib/python3.12/site-packages/ariba/__init__.py:1: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.\n  from pkg_resources import get_distribution",
+        "blastn": "blastn: 2.17.0+\n Package: blast 2.17.0, build Aug 22 2026 11:52:50",
+        "kma": "KMA-1.7.1"
+      },
+      "tools": {
+        "blastn": {
+          "command": [
+            "blastn",
+            "-version"
+          ],
+          "exit_code": 0,
+          "version": "blastn: 2.17.0+"
+        },
+        "kma": {
+          "command": [
+            "kma",
+            "-v"
+          ],
+          "exit_code": 0,
+          "version": "KMA-1.7.1"
+        }
+      }
+    },
+    "concordance": {
+      "finished_utc": "2026-11-19T13:23:44+00:00",
+      "isolates": "all",
+      "min_genome_aligned_pct": 98.0,
+      "min_identity_pct": 99.9,
+      "platform": "Linux-6.8.0-149-generic-x86_64-with-glibc2.39",
+      "python": "3.12.16",
+      "script_sha256": "ef61c35b0b82d774d94993b2624a8bcfb76676e3d98b47b8bd0a3c16fa699073",
+      "stage": "concordance",
+      "threads": 12,
+      "tools": {
+        "nucmer": {
+          "command": [
+            "bash",
+            "-c",
+            "nucmer --version 2>&1 | grep -i version"
+          ],
+          "exit_code": 0,
+          "version": "NUCmer (NUCleotide MUMmer) version 3.1"
+        }
+      }
+    },
+    "copy-number": {
+      "finished_utc": "2026-11-18T21:46:10+00:00",
+      "isolates": "FDAARGOS_1365",
+      "package": {
+        "console_script_version": "locus-recon 1.0.1",
+        "frozen_source_sha256": "2cc816cca467a7988c1f2a28cba11ed1cbb30b263e331f75ca48efa19ebefce0",
+        "imported_from": "/data/PROJECTS/locus_recon_revision/external/repo_run",
+        "imported_source_sha256": "2cc816cca467a7988c1f2a28cba11ed1cbb30b263e331f75ca48efa19ebefce0",
+        "imported_version": "1.0.1",
+        "installed_from": "/home/crodsa/conda/envs/locus-recon-101/lib/python3.11/site-packages",
+        "installed_source_sha256": "2cc816cca467a7988c1f2a28cba11ed1cbb30b263e331f75ca48efa19ebefce0"
+      },
+      "platform": "Linux-6.8.0-149-generic-x86_64-with-glibc2.39",
+      "python": "3.11.13",
+      "script_sha256": "cfb1367846c585af817d441e7f6475eb97909af3caa9651fb136280b4f5307de",
+      "stage": "copy-number",
+      "threads": 8,
+      "tools": {
+        "blastn": {
+          "command": [
+            "blastn",
+            "-version"
+          ],
+          "exit_code": 0,
+          "version": "blastn: 2.16.0+"
+        },
+        "locus-recon-copy-number": {
+          "command": [
+            "locus-recon-copy-number",
+            "--version"
+          ],
+          "exit_code": 0,
+          "version": "locus-recon-copy-number 1.0.1"
+        },
+        "locus-recon-depth-ratio": {
+          "command": [
+            "locus-recon-depth-ratio",
+            "--version"
+          ],
+          "exit_code": 0,
+          "version": "locus-recon-depth-ratio 1.0.1"
+        },
+        "samtools": {
+          "command": [
+            "samtools",
+            "--version"
+          ],
+          "exit_code": 0,
+          "version": "samtools 1.22.1"
+        }
+      }
+    },
+    "prepare": {
+      "finished_utc": "2026-11-18T21:58:53+00:00",
+      "isolates": "all",
+      "platform": "Linux-6.8.0-149-generic-x86_64-with-glibc2.39",
+      "python": "3.11.13",
+      "script_sha256": "6c319149b31dd237c1d1ab8eb0480985fed7b5cbf2e9948e5f9721c0312221f2",
+      "seed": 20261118,
+      "stage": "prepare",
+      "target_depth_x": 100,
+      "threads": 12,
+      "tools": {
+        "blastn": {
+          "command": [
+            "blastn",
+            "-version"
+          ],
+          "exit_code": 0,
+          "version": "blastn: 2.16.0+"
+        },
+        "gzip": {
+          "command": [
+            "gzip",
+            "--version"
+          ],
+          "exit_code": 0,
+          "version": "gzip 1.12"
+        },
+        "seqtk": {
+          "command": [
+            "bash",
+            "-c",
+            "/home/crodsa/conda/envs/bioinfo/bin/seqtk 2>&1 | grep Version"
+          ],
+          "exit_code": 0,
+          "version": "Version: 1.5-r133"
+        }
+      },
+      "verify_subsample": true
+    },
+    "reconstruct": {
+      "finished_utc": "2026-11-18T21:45:40+00:00",
+      "isolates": "FDAARGOS_1365",
+      "package": {
+        "console_script_version": "locus-recon 1.0.1",
+        "frozen_source_sha256": "2cc816cca467a7988c1f2a28cba11ed1cbb30b263e331f75ca48efa19ebefce0",
+        "imported_from": "/data/PROJECTS/locus_recon_revision/external/repo_run",
+        "imported_source_sha256": "2cc816cca467a7988c1f2a28cba11ed1cbb30b263e331f75ca48efa19ebefce0",
+        "imported_version": "1.0.1",
+        "installed_from": "/home/crodsa/conda/envs/locus-recon-101/lib/python3.11/site-packages",
+        "installed_source_sha256": "2cc816cca467a7988c1f2a28cba11ed1cbb30b263e331f75ca48efa19ebefce0"
+      },
+      "platform": "Linux-6.8.0-149-generic-x86_64-with-glibc2.39",
+      "python": "3.11.13",
+      "runs_at_a_time": 2,
+      "script_sha256": "cfb1367846c585af817d441e7f6475eb97909af3caa9651fb136280b4f5307de",
+      "stage": "reconstruct",
+      "threads": 8,
+      "threads_per_run": 4,
+      "tools": {
+        "blastn": {
+          "command": [
+            "blastn",
+            "-version"
+          ],
+          "exit_code": 0,
+          "version": "blastn: 2.16.0+"
+        },
+        "bwa-mem2": {
+          "command": [
+            "bash",
+            "-c",
+            "bwa-mem2 version 2>/dev/null | tail -1"
+          ],
+          "exit_code": 0,
+          "version": "2.2.1"
+        },
+        "locus-recon": {
+          "command": [
+            "locus-recon",
+            "--version"
+          ],
+          "exit_code": 0,
+          "version": "locus-recon 1.0.1"
+        },
+        "samtools": {
+          "command": [
+            "samtools",
+            "--version"
+          ],
+          "exit_code": 0,
+          "version": "samtools 1.22.1"
+        },
+        "spades": {
+          "command": [
+            "spades.py",
+            "--version"
+          ],
+          "exit_code": 0,
+          "version": "SPAdes genome assembler v4.2.0"
+        }
+      }
+    },
+    "score": {
+      "finished_utc": "2026-11-19T13:24:57+00:00",
+      "isolates": "all",
+      "package": {
+        "console_script_version": "locus-recon 1.0.1",
+        "frozen_source_sha256": "2cc816cca467a7988c1f2a28cba11ed1cbb30b263e331f75ca48efa19ebefce0",
+        "imported_from": "/data/PROJECTS/locus_recon_revision/external/repo_run",
+        "imported_source_sha256": "2cc816cca467a7988c1f2a28cba11ed1cbb30b263e331f75ca48efa19ebefce0",
+        "imported_version": "1.0.1",
+        "installed_from": "/home/crodsa/conda/envs/locus-recon-101/lib/python3.11/site-packages",
+        "installed_source_sha256": "2cc816cca467a7988c1f2a28cba11ed1cbb30b263e331f75ca48efa19ebefce0"
+      },
+      "platform": "Linux-6.8.0-149-generic-x86_64-with-glibc2.39",
+      "python": "3.11.13",
+      "script_sha256": "ef61c35b0b82d774d94993b2624a8bcfb76676e3d98b47b8bd0a3c16fa699073",
+      "stage": "score",
+      "threads": 12,
+      "tools": {
+        "blastn": {
+          "command": [
+            "blastn",
+            "-version"
+          ],
+          "exit_code": 0,
+          "version": "blastn: 2.16.0+"
+        }
+      }
+    }
+  },
+  "tools": {
+    "blastn": {
+      "command": [
+        "blastn",
+        "-version"
+      ],
+      "exit_code": 0,
+      "version": "blastn: 2.16.0+"
+    },
+    "locus-recon": {
+      "command": [
+        "locus-recon",
+        "--version"
+      ],
+      "exit_code": 0,
+      "version": "locus-recon 1.0.1"
+    },
+    "python": {
+      "command": [
+        "python",
+        "--version"
+      ],
+      "exit_code": 0,
+      "version": "Python 3.11.13"
+    }
+  },
+  "workflow": "external_evaluation"
+}

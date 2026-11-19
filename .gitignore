@@ -10,5 +10,6 @@ dist/
 
 # Typical local run outputs
 results/
+!validation/external-evaluation/results/
 validation/mock_results/
 validation/mock_dry_run/

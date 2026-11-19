@@ -6,7 +6,7 @@
   "criterion_two_copy_sensitivity_ge_0_80": true,
   "criterion_zero_control_false_positives": true,
   "exact_single_copy_control_consensus_calls": 5,
-  "exact_two_copy_consensus_calls": 4,
+  "exact_two_copy_consensus_calls": 0,
   "samples": 5,
   "schema_version": "1.0",
   "single_copy_control_false_positives": 0,

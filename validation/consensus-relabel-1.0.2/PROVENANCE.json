@@ -1,0 +1,14 @@
+{
+  "software": {
+    "name": "locus-recon",
+    "version": "1.0.2",
+    "source_sha256": "a24d41d80d2a3e04729eda04efa6938d82ac2d99e4ea875377353f014aae9b35"
+  },
+  "units": 678,
+  "units_with_a_field_that_differs": 16,
+  "inputs": {
+    "validation/external-evaluation/results/external_copy_number.tsv": "5ea4fb8dc4b1c78459511db15444b7ba0885dfb1101901bb30a4e713226e6334",
+    "validation/targeted-tests/test4_graph_contexts.tsv": "2cf35be192bd4c43106912dc58bb1b2adc01416e7f79ba041a170fe05ea72c03",
+    "validation/targeted-tests/test5_overlapping_spans.tsv": "abdd23e880afea772ff799b6d9c80734f3808f28a3bb1345b1446706dd5e7894"
+  }
+}

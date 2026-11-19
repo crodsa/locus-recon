@@ -270,11 +270,13 @@ def test_committed_aphA1_panel_retains_full_class_and_qpcr_concordance():
 
 
 def test_committed_low_copy_panel_meets_prespecified_two_copy_boundary():
-    """The depth criteria hold; one 23S graph count is only a lower bound.
+    """The depth criteria hold; no 23S graph count is returned as supported.
 
     At Hpfe0004 both ends yield two contexts, but the traversal meets a cycle,
-    so the count is reported as a lower bound and the exact-call criterion is
-    met in four of five loci. No reported integer or bound contradicts truth.
+    so the count is reported as a lower bound. At the other four loci the graph
+    holds two contexts and the depth-ratio interval excludes two, so the count
+    is returned for review with a lower bound of two and no upper bound.
+    No reported integer or bound contradicts truth.
     """
     root = Path(__file__).resolve().parents[1]
     with (root / "validation/low-copy-23S/results.tsv").open(newline="") as handle:
@@ -298,6 +300,11 @@ def test_committed_low_copy_panel_meets_prespecified_two_copy_boundary():
     assert all(row["graph_context_count"] == "2" for row in exact)
     assert all(row["copy_number_method"] == "GRAPH_COUNT_OVER_DISCORDANT_DEPTH"
                for row in exact)
+    assert all(row["copy_number_status"] == "REVIEW" for row in exact)
+    assert all((row["copy_number_lower_bound"], row["copy_number_upper_bound"]) == ("2", "")
+               for row in exact)
+    assert all(int(row["copy_number_lower_bound"]) <= int(row["truth_copies"])
+               for row in exact)
     (bound,) = [row for row in rrna if row["copy_number_call"] == ""]
     assert bound["strain"] == "Hpfe0004"
     assert bound["graph_context_status"] == "TRAVERSAL_LIMIT_REACHED"
@@ -309,7 +316,7 @@ def test_committed_low_copy_panel_meets_prespecified_two_copy_boundary():
     assert evaluation["criterion_two_copy_sensitivity_ge_0_80"] is True
     assert evaluation["criterion_zero_control_false_positives"] is True
     assert evaluation["criterion_legacy_depth_fields_unchanged"] is True
-    assert evaluation["exact_two_copy_consensus_calls"] == 4
+    assert evaluation["exact_two_copy_consensus_calls"] == 0
     assert evaluation["criterion_all_two_copy_consensus_calls_correct"] is False
     assert evaluation["criterion_all_single_copy_control_consensus_calls_correct"] is True
     assert evaluation["all_primary_criteria_passed"] is False

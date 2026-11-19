@@ -1,0 +1,585 @@
+strain	table	row	column	main_run	second_run	same
+FDAARGOS_262	external_units.tsv	16S ARIBA	sequences_returned	1	1	yes
+FDAARGOS_262	external_units.tsv	16S ARIBA	returned_bp	1513	1513	yes
+FDAARGOS_262	external_units.tsv	16S ARIBA	returned_sha256	dcbb9544161d349bc04af4d6f91491f0b749352ef76c74996d9e79019f6da9bc	dcbb9544161d349bc04af4d6f91491f0b749352ef76c74996d9e79019f6da9bc	yes
+FDAARGOS_262	external_units.tsv	16S ARIBA	comparison	identical	identical	yes
+FDAARGOS_262	external_units.tsv	16S ARIBA	decision	accepted	accepted	yes
+FDAARGOS_262	external_units.tsv	16S ARIBA	decision_secondary			yes
+FDAARGOS_262	external_units.tsv	16S ARIBA	disposition			yes
+FDAARGOS_262	external_units.tsv	16S ARIBA	tier			yes
+FDAARGOS_262	external_units.tsv	16S ARIBA	qc_flags			yes
+FDAARGOS_262	external_units.tsv	16S ARIBA	ariba_flag	531	531	yes
+FDAARGOS_262	external_units.tsv	16S ARIBA	kma_template_coverage			yes
+FDAARGOS_262	external_units.tsv	16S ARIBA	lowercase_bases	0	0	yes
+FDAARGOS_262	external_units.tsv	16S ARIBA	uncalled_bases	0	0	yes
+FDAARGOS_262	external_units.tsv	16S KMA	sequences_returned	1	1	yes
+FDAARGOS_262	external_units.tsv	16S KMA	returned_bp	1513	1513	yes
+FDAARGOS_262	external_units.tsv	16S KMA	returned_sha256	dcbb9544161d349bc04af4d6f91491f0b749352ef76c74996d9e79019f6da9bc	dcbb9544161d349bc04af4d6f91491f0b749352ef76c74996d9e79019f6da9bc	yes
+FDAARGOS_262	external_units.tsv	16S KMA	comparison	identical	identical	yes
+FDAARGOS_262	external_units.tsv	16S KMA	decision	accepted	accepted	yes
+FDAARGOS_262	external_units.tsv	16S KMA	decision_secondary	accepted	accepted	yes
+FDAARGOS_262	external_units.tsv	16S KMA	disposition			yes
+FDAARGOS_262	external_units.tsv	16S KMA	tier			yes
+FDAARGOS_262	external_units.tsv	16S KMA	qc_flags			yes
+FDAARGOS_262	external_units.tsv	16S KMA	ariba_flag			yes
+FDAARGOS_262	external_units.tsv	16S KMA	kma_template_coverage	100.00	100.00	yes
+FDAARGOS_262	external_units.tsv	16S KMA	lowercase_bases	0	0	yes
+FDAARGOS_262	external_units.tsv	16S KMA	uncalled_bases	0	0	yes
+FDAARGOS_262	external_units.tsv	16S Locus-Recon	sequences_returned	1	1	yes
+FDAARGOS_262	external_units.tsv	16S Locus-Recon	returned_bp	1513	1513	yes
+FDAARGOS_262	external_units.tsv	16S Locus-Recon	returned_sha256	dcbb9544161d349bc04af4d6f91491f0b749352ef76c74996d9e79019f6da9bc	dcbb9544161d349bc04af4d6f91491f0b749352ef76c74996d9e79019f6da9bc	yes
+FDAARGOS_262	external_units.tsv	16S Locus-Recon	comparison	identical	identical	yes
+FDAARGOS_262	external_units.tsv	16S Locus-Recon	decision	accepted	accepted	yes
+FDAARGOS_262	external_units.tsv	16S Locus-Recon	decision_secondary			yes
+FDAARGOS_262	external_units.tsv	16S Locus-Recon	disposition	PASS	PASS	yes
+FDAARGOS_262	external_units.tsv	16S Locus-Recon	tier	HIGH	HIGH	yes
+FDAARGOS_262	external_units.tsv	16S Locus-Recon	qc_flags			yes
+FDAARGOS_262	external_units.tsv	16S Locus-Recon	ariba_flag			yes
+FDAARGOS_262	external_units.tsv	16S Locus-Recon	kma_template_coverage			yes
+FDAARGOS_262	external_units.tsv	16S Locus-Recon	lowercase_bases	0	0	yes
+FDAARGOS_262	external_units.tsv	16S Locus-Recon	uncalled_bases	0	0	yes
+FDAARGOS_262	external_units.tsv	23S ARIBA	sequences_returned	1	1	yes
+FDAARGOS_262	external_units.tsv	23S ARIBA	returned_bp	2890	2890	yes
+FDAARGOS_262	external_units.tsv	23S ARIBA	returned_sha256	5968be49d48a1d731bcd82b623c2dbe0b7dd3ab80e1193b70ddb7d4f35be9745	5968be49d48a1d731bcd82b623c2dbe0b7dd3ab80e1193b70ddb7d4f35be9745	yes
+FDAARGOS_262	external_units.tsv	23S ARIBA	comparison	identical	identical	yes
+FDAARGOS_262	external_units.tsv	23S ARIBA	decision	not accepted	not accepted	yes
+FDAARGOS_262	external_units.tsv	23S ARIBA	decision_secondary			yes
+FDAARGOS_262	external_units.tsv	23S ARIBA	disposition			yes
+FDAARGOS_262	external_units.tsv	23S ARIBA	tier			yes
+FDAARGOS_262	external_units.tsv	23S ARIBA	qc_flags			yes
+FDAARGOS_262	external_units.tsv	23S ARIBA	ariba_flag	659	659	yes
+FDAARGOS_262	external_units.tsv	23S ARIBA	kma_template_coverage			yes
+FDAARGOS_262	external_units.tsv	23S ARIBA	lowercase_bases	0	0	yes
+FDAARGOS_262	external_units.tsv	23S ARIBA	uncalled_bases	0	0	yes
+FDAARGOS_262	external_units.tsv	23S KMA	sequences_returned	1	1	yes
+FDAARGOS_262	external_units.tsv	23S KMA	returned_bp	2890	2890	yes
+FDAARGOS_262	external_units.tsv	23S KMA	returned_sha256	aa19758b8bb86e476d833b2dc628f05a6149101f78e1813da8f09a9080bd88ab	aa19758b8bb86e476d833b2dc628f05a6149101f78e1813da8f09a9080bd88ab	yes
+FDAARGOS_262	external_units.tsv	23S KMA	comparison	identical	identical	yes
+FDAARGOS_262	external_units.tsv	23S KMA	decision	accepted	accepted	yes
+FDAARGOS_262	external_units.tsv	23S KMA	decision_secondary	accepted	accepted	yes
+FDAARGOS_262	external_units.tsv	23S KMA	disposition			yes
+FDAARGOS_262	external_units.tsv	23S KMA	tier			yes
+FDAARGOS_262	external_units.tsv	23S KMA	qc_flags			yes
+FDAARGOS_262	external_units.tsv	23S KMA	ariba_flag			yes
+FDAARGOS_262	external_units.tsv	23S KMA	kma_template_coverage	100.00	100.00	yes
+FDAARGOS_262	external_units.tsv	23S KMA	lowercase_bases	0	0	yes
+FDAARGOS_262	external_units.tsv	23S KMA	uncalled_bases	0	0	yes
+FDAARGOS_262	external_units.tsv	23S Locus-Recon	sequences_returned	1	1	yes
+FDAARGOS_262	external_units.tsv	23S Locus-Recon	returned_bp	2890	2890	yes
+FDAARGOS_262	external_units.tsv	23S Locus-Recon	returned_sha256	aa19758b8bb86e476d833b2dc628f05a6149101f78e1813da8f09a9080bd88ab	aa19758b8bb86e476d833b2dc628f05a6149101f78e1813da8f09a9080bd88ab	yes
+FDAARGOS_262	external_units.tsv	23S Locus-Recon	comparison	identical	identical	yes
+FDAARGOS_262	external_units.tsv	23S Locus-Recon	decision	accepted	accepted	yes
+FDAARGOS_262	external_units.tsv	23S Locus-Recon	decision_secondary			yes
+FDAARGOS_262	external_units.tsv	23S Locus-Recon	disposition	PASS	PASS	yes
+FDAARGOS_262	external_units.tsv	23S Locus-Recon	tier	HIGH	HIGH	yes
+FDAARGOS_262	external_units.tsv	23S Locus-Recon	qc_flags	MIXED_SITE_BELOW_MIXTURE_CALL (1 bidirectional site, median alt fraction=0.365; not a mixture call)	MIXED_SITE_BELOW_MIXTURE_CALL (1 bidirectional site, median alt fraction=0.365; not a mixture call)	yes
+FDAARGOS_262	external_units.tsv	23S Locus-Recon	ariba_flag			yes
+FDAARGOS_262	external_units.tsv	23S Locus-Recon	kma_template_coverage			yes
+FDAARGOS_262	external_units.tsv	23S Locus-Recon	lowercase_bases	0	0	yes
+FDAARGOS_262	external_units.tsv	23S Locus-Recon	uncalled_bases	0	0	yes
+FDAARGOS_262	external_units.tsv	atpD ARIBA	sequences_returned	1	1	yes
+FDAARGOS_262	external_units.tsv	atpD ARIBA	returned_bp	1398	1398	yes
+FDAARGOS_262	external_units.tsv	atpD ARIBA	returned_sha256	98654852b8aa7f37d22537ea101e14b0b3f09118ef66cfb83812b0b7366f6c9d	98654852b8aa7f37d22537ea101e14b0b3f09118ef66cfb83812b0b7366f6c9d	yes
+FDAARGOS_262	external_units.tsv	atpD ARIBA	comparison	identical	identical	yes
+FDAARGOS_262	external_units.tsv	atpD ARIBA	decision	accepted	accepted	yes
+FDAARGOS_262	external_units.tsv	atpD ARIBA	decision_secondary			yes
+FDAARGOS_262	external_units.tsv	atpD ARIBA	disposition			yes
+FDAARGOS_262	external_units.tsv	atpD ARIBA	tier			yes
+FDAARGOS_262	external_units.tsv	atpD ARIBA	qc_flags			yes
+FDAARGOS_262	external_units.tsv	atpD ARIBA	ariba_flag	27	27	yes
+FDAARGOS_262	external_units.tsv	atpD ARIBA	kma_template_coverage			yes
+FDAARGOS_262	external_units.tsv	atpD ARIBA	lowercase_bases	0	0	yes
+FDAARGOS_262	external_units.tsv	atpD ARIBA	uncalled_bases	0	0	yes
+FDAARGOS_262	external_units.tsv	atpD KMA	sequences_returned	1	1	yes
+FDAARGOS_262	external_units.tsv	atpD KMA	returned_bp	1398	1398	yes
+FDAARGOS_262	external_units.tsv	atpD KMA	returned_sha256	98654852b8aa7f37d22537ea101e14b0b3f09118ef66cfb83812b0b7366f6c9d	98654852b8aa7f37d22537ea101e14b0b3f09118ef66cfb83812b0b7366f6c9d	yes
+FDAARGOS_262	external_units.tsv	atpD KMA	comparison	identical	identical	yes
+FDAARGOS_262	external_units.tsv	atpD KMA	decision	accepted	accepted	yes
+FDAARGOS_262	external_units.tsv	atpD KMA	decision_secondary	accepted	accepted	yes
+FDAARGOS_262	external_units.tsv	atpD KMA	disposition			yes
+FDAARGOS_262	external_units.tsv	atpD KMA	tier			yes
+FDAARGOS_262	external_units.tsv	atpD KMA	qc_flags			yes
+FDAARGOS_262	external_units.tsv	atpD KMA	ariba_flag			yes
+FDAARGOS_262	external_units.tsv	atpD KMA	kma_template_coverage	100.00	100.00	yes
+FDAARGOS_262	external_units.tsv	atpD KMA	lowercase_bases	0	0	yes
+FDAARGOS_262	external_units.tsv	atpD KMA	uncalled_bases	0	0	yes
+FDAARGOS_262	external_units.tsv	atpD Locus-Recon	sequences_returned	1	1	yes
+FDAARGOS_262	external_units.tsv	atpD Locus-Recon	returned_bp	1398	1398	yes
+FDAARGOS_262	external_units.tsv	atpD Locus-Recon	returned_sha256	98654852b8aa7f37d22537ea101e14b0b3f09118ef66cfb83812b0b7366f6c9d	98654852b8aa7f37d22537ea101e14b0b3f09118ef66cfb83812b0b7366f6c9d	yes
+FDAARGOS_262	external_units.tsv	atpD Locus-Recon	comparison	identical	identical	yes
+FDAARGOS_262	external_units.tsv	atpD Locus-Recon	decision	accepted	accepted	yes
+FDAARGOS_262	external_units.tsv	atpD Locus-Recon	decision_secondary			yes
+FDAARGOS_262	external_units.tsv	atpD Locus-Recon	disposition	PASS	PASS	yes
+FDAARGOS_262	external_units.tsv	atpD Locus-Recon	tier	HIGH	HIGH	yes
+FDAARGOS_262	external_units.tsv	atpD Locus-Recon	qc_flags			yes
+FDAARGOS_262	external_units.tsv	atpD Locus-Recon	ariba_flag			yes
+FDAARGOS_262	external_units.tsv	atpD Locus-Recon	kma_template_coverage			yes
+FDAARGOS_262	external_units.tsv	atpD Locus-Recon	lowercase_bases	0	0	yes
+FDAARGOS_262	external_units.tsv	atpD Locus-Recon	uncalled_bases	0	0	yes
+FDAARGOS_262	external_units.tsv	dnaK ARIBA	sequences_returned	1	1	yes
+FDAARGOS_262	external_units.tsv	dnaK ARIBA	returned_bp	1872	1872	yes
+FDAARGOS_262	external_units.tsv	dnaK ARIBA	returned_sha256	82ea4d89d4689d992b32c4a0ec0a0b34a185ca0590d310174a492f396876cc14	82ea4d89d4689d992b32c4a0ec0a0b34a185ca0590d310174a492f396876cc14	yes
+FDAARGOS_262	external_units.tsv	dnaK ARIBA	comparison	identical	identical	yes
+FDAARGOS_262	external_units.tsv	dnaK ARIBA	decision	accepted	accepted	yes
+FDAARGOS_262	external_units.tsv	dnaK ARIBA	decision_secondary			yes
+FDAARGOS_262	external_units.tsv	dnaK ARIBA	disposition			yes
+FDAARGOS_262	external_units.tsv	dnaK ARIBA	tier			yes
+FDAARGOS_262	external_units.tsv	dnaK ARIBA	qc_flags			yes
+FDAARGOS_262	external_units.tsv	dnaK ARIBA	ariba_flag	539	539	yes
+FDAARGOS_262	external_units.tsv	dnaK ARIBA	kma_template_coverage			yes
+FDAARGOS_262	external_units.tsv	dnaK ARIBA	lowercase_bases	0	0	yes
+FDAARGOS_262	external_units.tsv	dnaK ARIBA	uncalled_bases	0	0	yes
+FDAARGOS_262	external_units.tsv	dnaK KMA	sequences_returned	1	1	yes
+FDAARGOS_262	external_units.tsv	dnaK KMA	returned_bp	1825	1825	yes
+FDAARGOS_262	external_units.tsv	dnaK KMA	returned_sha256	64b8b6f14e5846b142acc3e8925a1e5ac77d80c35e2c3f16b852c29923e845a2	64b8b6f14e5846b142acc3e8925a1e5ac77d80c35e2c3f16b852c29923e845a2	yes
+FDAARGOS_262	external_units.tsv	dnaK KMA	comparison	identical over the overlap, different boundaries	identical over the overlap, different boundaries	yes
+FDAARGOS_262	external_units.tsv	dnaK KMA	decision	not accepted	not accepted	yes
+FDAARGOS_262	external_units.tsv	dnaK KMA	decision_secondary	not accepted	not accepted	yes
+FDAARGOS_262	external_units.tsv	dnaK KMA	disposition			yes
+FDAARGOS_262	external_units.tsv	dnaK KMA	tier			yes
+FDAARGOS_262	external_units.tsv	dnaK KMA	qc_flags			yes
+FDAARGOS_262	external_units.tsv	dnaK KMA	ariba_flag			yes
+FDAARGOS_262	external_units.tsv	dnaK KMA	kma_template_coverage	97.49	97.49	yes
+FDAARGOS_262	external_units.tsv	dnaK KMA	lowercase_bases	7	7	yes
+FDAARGOS_262	external_units.tsv	dnaK KMA	uncalled_bases	0	0	yes
+FDAARGOS_262	external_units.tsv	dnaK Locus-Recon	sequences_returned	1	1	yes
+FDAARGOS_262	external_units.tsv	dnaK Locus-Recon	returned_bp	1872	1872	yes
+FDAARGOS_262	external_units.tsv	dnaK Locus-Recon	returned_sha256	82ea4d89d4689d992b32c4a0ec0a0b34a185ca0590d310174a492f396876cc14	82ea4d89d4689d992b32c4a0ec0a0b34a185ca0590d310174a492f396876cc14	yes
+FDAARGOS_262	external_units.tsv	dnaK Locus-Recon	comparison	identical	identical	yes
+FDAARGOS_262	external_units.tsv	dnaK Locus-Recon	decision	accepted	accepted	yes
+FDAARGOS_262	external_units.tsv	dnaK Locus-Recon	decision_secondary			yes
+FDAARGOS_262	external_units.tsv	dnaK Locus-Recon	disposition	PASS	PASS	yes
+FDAARGOS_262	external_units.tsv	dnaK Locus-Recon	tier	HIGH	HIGH	yes
+FDAARGOS_262	external_units.tsv	dnaK Locus-Recon	qc_flags			yes
+FDAARGOS_262	external_units.tsv	dnaK Locus-Recon	ariba_flag			yes
+FDAARGOS_262	external_units.tsv	dnaK Locus-Recon	kma_template_coverage			yes
+FDAARGOS_262	external_units.tsv	dnaK Locus-Recon	lowercase_bases	0	0	yes
+FDAARGOS_262	external_units.tsv	dnaK Locus-Recon	uncalled_bases	0	0	yes
+FDAARGOS_262	external_units.tsv	gyrB ARIBA	sequences_returned	1	1	yes
+FDAARGOS_262	external_units.tsv	gyrB ARIBA	returned_bp	2310	2310	yes
+FDAARGOS_262	external_units.tsv	gyrB ARIBA	returned_sha256	5d3727454edc0dc71b7e6c810cdb41c99cb695706bd59eb362de97f647c70152	5d3727454edc0dc71b7e6c810cdb41c99cb695706bd59eb362de97f647c70152	yes
+FDAARGOS_262	external_units.tsv	gyrB ARIBA	comparison	identical	identical	yes
+FDAARGOS_262	external_units.tsv	gyrB ARIBA	decision	accepted	accepted	yes
+FDAARGOS_262	external_units.tsv	gyrB ARIBA	decision_secondary			yes
+FDAARGOS_262	external_units.tsv	gyrB ARIBA	disposition			yes
+FDAARGOS_262	external_units.tsv	gyrB ARIBA	tier			yes
+FDAARGOS_262	external_units.tsv	gyrB ARIBA	qc_flags			yes
+FDAARGOS_262	external_units.tsv	gyrB ARIBA	ariba_flag	539	539	yes
+FDAARGOS_262	external_units.tsv	gyrB ARIBA	kma_template_coverage			yes
+FDAARGOS_262	external_units.tsv	gyrB ARIBA	lowercase_bases	0	0	yes
+FDAARGOS_262	external_units.tsv	gyrB ARIBA	uncalled_bases	0	0	yes
+FDAARGOS_262	external_units.tsv	gyrB KMA	sequences_returned	1	1	yes
+FDAARGOS_262	external_units.tsv	gyrB KMA	returned_bp	2310	2310	yes
+FDAARGOS_262	external_units.tsv	gyrB KMA	returned_sha256	5d3727454edc0dc71b7e6c810cdb41c99cb695706bd59eb362de97f647c70152	5d3727454edc0dc71b7e6c810cdb41c99cb695706bd59eb362de97f647c70152	yes
+FDAARGOS_262	external_units.tsv	gyrB KMA	comparison	identical	identical	yes
+FDAARGOS_262	external_units.tsv	gyrB KMA	decision	accepted	accepted	yes
+FDAARGOS_262	external_units.tsv	gyrB KMA	decision_secondary	accepted	accepted	yes
+FDAARGOS_262	external_units.tsv	gyrB KMA	disposition			yes
+FDAARGOS_262	external_units.tsv	gyrB KMA	tier			yes
+FDAARGOS_262	external_units.tsv	gyrB KMA	qc_flags			yes
+FDAARGOS_262	external_units.tsv	gyrB KMA	ariba_flag			yes
+FDAARGOS_262	external_units.tsv	gyrB KMA	kma_template_coverage	100.00	100.00	yes
+FDAARGOS_262	external_units.tsv	gyrB KMA	lowercase_bases	0	0	yes
+FDAARGOS_262	external_units.tsv	gyrB KMA	uncalled_bases	0	0	yes
+FDAARGOS_262	external_units.tsv	gyrB Locus-Recon	sequences_returned	1	1	yes
+FDAARGOS_262	external_units.tsv	gyrB Locus-Recon	returned_bp	2310	2310	yes
+FDAARGOS_262	external_units.tsv	gyrB Locus-Recon	returned_sha256	5d3727454edc0dc71b7e6c810cdb41c99cb695706bd59eb362de97f647c70152	5d3727454edc0dc71b7e6c810cdb41c99cb695706bd59eb362de97f647c70152	yes
+FDAARGOS_262	external_units.tsv	gyrB Locus-Recon	comparison	identical	identical	yes
+FDAARGOS_262	external_units.tsv	gyrB Locus-Recon	decision	accepted	accepted	yes
+FDAARGOS_262	external_units.tsv	gyrB Locus-Recon	decision_secondary			yes
+FDAARGOS_262	external_units.tsv	gyrB Locus-Recon	disposition	PASS	PASS	yes
+FDAARGOS_262	external_units.tsv	gyrB Locus-Recon	tier	HIGH	HIGH	yes
+FDAARGOS_262	external_units.tsv	gyrB Locus-Recon	qc_flags			yes
+FDAARGOS_262	external_units.tsv	gyrB Locus-Recon	ariba_flag			yes
+FDAARGOS_262	external_units.tsv	gyrB Locus-Recon	kma_template_coverage			yes
+FDAARGOS_262	external_units.tsv	gyrB Locus-Recon	lowercase_bases	0	0	yes
+FDAARGOS_262	external_units.tsv	gyrB Locus-Recon	uncalled_bases	0	0	yes
+FDAARGOS_262	external_units.tsv	recA ARIBA	sequences_returned	1	1	yes
+FDAARGOS_262	external_units.tsv	recA ARIBA	returned_bp	1032	1032	yes
+FDAARGOS_262	external_units.tsv	recA ARIBA	returned_sha256	0ee87aa8899db6110bc74a6152745e3139c9eabe73dff7a944daf79db764d444	0ee87aa8899db6110bc74a6152745e3139c9eabe73dff7a944daf79db764d444	yes
+FDAARGOS_262	external_units.tsv	recA ARIBA	comparison	identical	identical	yes
+FDAARGOS_262	external_units.tsv	recA ARIBA	decision	accepted	accepted	yes
+FDAARGOS_262	external_units.tsv	recA ARIBA	decision_secondary			yes
+FDAARGOS_262	external_units.tsv	recA ARIBA	disposition			yes
+FDAARGOS_262	external_units.tsv	recA ARIBA	tier			yes
+FDAARGOS_262	external_units.tsv	recA ARIBA	qc_flags			yes
+FDAARGOS_262	external_units.tsv	recA ARIBA	ariba_flag	27	27	yes
+FDAARGOS_262	external_units.tsv	recA ARIBA	kma_template_coverage			yes
+FDAARGOS_262	external_units.tsv	recA ARIBA	lowercase_bases	0	0	yes
+FDAARGOS_262	external_units.tsv	recA ARIBA	uncalled_bases	0	0	yes
+FDAARGOS_262	external_units.tsv	recA KMA	sequences_returned	1	1	yes
+FDAARGOS_262	external_units.tsv	recA KMA	returned_bp	1032	1032	yes
+FDAARGOS_262	external_units.tsv	recA KMA	returned_sha256	0ee87aa8899db6110bc74a6152745e3139c9eabe73dff7a944daf79db764d444	0ee87aa8899db6110bc74a6152745e3139c9eabe73dff7a944daf79db764d444	yes
+FDAARGOS_262	external_units.tsv	recA KMA	comparison	identical	identical	yes
+FDAARGOS_262	external_units.tsv	recA KMA	decision	accepted	accepted	yes
+FDAARGOS_262	external_units.tsv	recA KMA	decision_secondary	accepted	accepted	yes
+FDAARGOS_262	external_units.tsv	recA KMA	disposition			yes
+FDAARGOS_262	external_units.tsv	recA KMA	tier			yes
+FDAARGOS_262	external_units.tsv	recA KMA	qc_flags			yes
+FDAARGOS_262	external_units.tsv	recA KMA	ariba_flag			yes
+FDAARGOS_262	external_units.tsv	recA KMA	kma_template_coverage	100.00	100.00	yes
+FDAARGOS_262	external_units.tsv	recA KMA	lowercase_bases	0	0	yes
+FDAARGOS_262	external_units.tsv	recA KMA	uncalled_bases	0	0	yes
+FDAARGOS_262	external_units.tsv	recA Locus-Recon	sequences_returned	1	1	yes
+FDAARGOS_262	external_units.tsv	recA Locus-Recon	returned_bp	1032	1032	yes
+FDAARGOS_262	external_units.tsv	recA Locus-Recon	returned_sha256	0ee87aa8899db6110bc74a6152745e3139c9eabe73dff7a944daf79db764d444	0ee87aa8899db6110bc74a6152745e3139c9eabe73dff7a944daf79db764d444	yes
+FDAARGOS_262	external_units.tsv	recA Locus-Recon	comparison	identical	identical	yes
+FDAARGOS_262	external_units.tsv	recA Locus-Recon	decision	accepted	accepted	yes
+FDAARGOS_262	external_units.tsv	recA Locus-Recon	decision_secondary			yes
+FDAARGOS_262	external_units.tsv	recA Locus-Recon	disposition	PASS	PASS	yes
+FDAARGOS_262	external_units.tsv	recA Locus-Recon	tier	HIGH	HIGH	yes
+FDAARGOS_262	external_units.tsv	recA Locus-Recon	qc_flags			yes
+FDAARGOS_262	external_units.tsv	recA Locus-Recon	ariba_flag			yes
+FDAARGOS_262	external_units.tsv	recA Locus-Recon	kma_template_coverage			yes
+FDAARGOS_262	external_units.tsv	recA Locus-Recon	lowercase_bases	0	0	yes
+FDAARGOS_262	external_units.tsv	recA Locus-Recon	uncalled_bases	0	0	yes
+FDAARGOS_262	external_units.tsv	rpoB ARIBA	sequences_returned	1	1	yes
+FDAARGOS_262	external_units.tsv	rpoB ARIBA	returned_bp	4137	4137	yes
+FDAARGOS_262	external_units.tsv	rpoB ARIBA	returned_sha256	0f88bf9b745fe4916cb28e5d594afa350d1e40839674e78bc9fc7403fd069732	0f88bf9b745fe4916cb28e5d594afa350d1e40839674e78bc9fc7403fd069732	yes
+FDAARGOS_262	external_units.tsv	rpoB ARIBA	comparison	identical	identical	yes
+FDAARGOS_262	external_units.tsv	rpoB ARIBA	decision	accepted	accepted	yes
+FDAARGOS_262	external_units.tsv	rpoB ARIBA	decision_secondary			yes
+FDAARGOS_262	external_units.tsv	rpoB ARIBA	disposition			yes
+FDAARGOS_262	external_units.tsv	rpoB ARIBA	tier			yes
+FDAARGOS_262	external_units.tsv	rpoB ARIBA	qc_flags			yes
+FDAARGOS_262	external_units.tsv	rpoB ARIBA	ariba_flag	539	539	yes
+FDAARGOS_262	external_units.tsv	rpoB ARIBA	kma_template_coverage			yes
+FDAARGOS_262	external_units.tsv	rpoB ARIBA	lowercase_bases	0	0	yes
+FDAARGOS_262	external_units.tsv	rpoB ARIBA	uncalled_bases	0	0	yes
+FDAARGOS_262	external_units.tsv	rpoB KMA	sequences_returned	1	1	yes
+FDAARGOS_262	external_units.tsv	rpoB KMA	returned_bp	4137	4137	yes
+FDAARGOS_262	external_units.tsv	rpoB KMA	returned_sha256	0f88bf9b745fe4916cb28e5d594afa350d1e40839674e78bc9fc7403fd069732	0f88bf9b745fe4916cb28e5d594afa350d1e40839674e78bc9fc7403fd069732	yes
+FDAARGOS_262	external_units.tsv	rpoB KMA	comparison	identical	identical	yes
+FDAARGOS_262	external_units.tsv	rpoB KMA	decision	accepted	accepted	yes
+FDAARGOS_262	external_units.tsv	rpoB KMA	decision_secondary	accepted	accepted	yes
+FDAARGOS_262	external_units.tsv	rpoB KMA	disposition			yes
+FDAARGOS_262	external_units.tsv	rpoB KMA	tier			yes
+FDAARGOS_262	external_units.tsv	rpoB KMA	qc_flags			yes
+FDAARGOS_262	external_units.tsv	rpoB KMA	ariba_flag			yes
+FDAARGOS_262	external_units.tsv	rpoB KMA	kma_template_coverage	100.00	100.00	yes
+FDAARGOS_262	external_units.tsv	rpoB KMA	lowercase_bases	0	0	yes
+FDAARGOS_262	external_units.tsv	rpoB KMA	uncalled_bases	0	0	yes
+FDAARGOS_262	external_units.tsv	rpoB Locus-Recon	sequences_returned	1	1	yes
+FDAARGOS_262	external_units.tsv	rpoB Locus-Recon	returned_bp	4137	4137	yes
+FDAARGOS_262	external_units.tsv	rpoB Locus-Recon	returned_sha256	0f88bf9b745fe4916cb28e5d594afa350d1e40839674e78bc9fc7403fd069732	0f88bf9b745fe4916cb28e5d594afa350d1e40839674e78bc9fc7403fd069732	yes
+FDAARGOS_262	external_units.tsv	rpoB Locus-Recon	comparison	identical	identical	yes
+FDAARGOS_262	external_units.tsv	rpoB Locus-Recon	decision	accepted	accepted	yes
+FDAARGOS_262	external_units.tsv	rpoB Locus-Recon	decision_secondary			yes
+FDAARGOS_262	external_units.tsv	rpoB Locus-Recon	disposition	PASS	PASS	yes
+FDAARGOS_262	external_units.tsv	rpoB Locus-Recon	tier	HIGH	HIGH	yes
+FDAARGOS_262	external_units.tsv	rpoB Locus-Recon	qc_flags			yes
+FDAARGOS_262	external_units.tsv	rpoB Locus-Recon	ariba_flag			yes
+FDAARGOS_262	external_units.tsv	rpoB Locus-Recon	kma_template_coverage			yes
+FDAARGOS_262	external_units.tsv	rpoB Locus-Recon	lowercase_bases	0	0	yes
+FDAARGOS_262	external_units.tsv	rpoB Locus-Recon	uncalled_bases	0	0	yes
+FDAARGOS_262	external_units.tsv	tuf ARIBA	sequences_returned	1	1	yes
+FDAARGOS_262	external_units.tsv	tuf ARIBA	returned_bp	1200	1200	yes
+FDAARGOS_262	external_units.tsv	tuf ARIBA	returned_sha256	d1bd8094a2a1c5a48fdbb12840c709eda984b19991f8649a5d09c503b37a894a	d1bd8094a2a1c5a48fdbb12840c709eda984b19991f8649a5d09c503b37a894a	yes
+FDAARGOS_262	external_units.tsv	tuf ARIBA	comparison	identical	identical	yes
+FDAARGOS_262	external_units.tsv	tuf ARIBA	decision	accepted	accepted	yes
+FDAARGOS_262	external_units.tsv	tuf ARIBA	decision_secondary			yes
+FDAARGOS_262	external_units.tsv	tuf ARIBA	disposition			yes
+FDAARGOS_262	external_units.tsv	tuf ARIBA	tier			yes
+FDAARGOS_262	external_units.tsv	tuf ARIBA	qc_flags			yes
+FDAARGOS_262	external_units.tsv	tuf ARIBA	ariba_flag	27	27	yes
+FDAARGOS_262	external_units.tsv	tuf ARIBA	kma_template_coverage			yes
+FDAARGOS_262	external_units.tsv	tuf ARIBA	lowercase_bases	0	0	yes
+FDAARGOS_262	external_units.tsv	tuf ARIBA	uncalled_bases	0	0	yes
+FDAARGOS_262	external_units.tsv	tuf KMA	sequences_returned	1	1	yes
+FDAARGOS_262	external_units.tsv	tuf KMA	returned_bp	1200	1200	yes
+FDAARGOS_262	external_units.tsv	tuf KMA	returned_sha256	d1bd8094a2a1c5a48fdbb12840c709eda984b19991f8649a5d09c503b37a894a	d1bd8094a2a1c5a48fdbb12840c709eda984b19991f8649a5d09c503b37a894a	yes
+FDAARGOS_262	external_units.tsv	tuf KMA	comparison	identical	identical	yes
+FDAARGOS_262	external_units.tsv	tuf KMA	decision	accepted	accepted	yes
+FDAARGOS_262	external_units.tsv	tuf KMA	decision_secondary	accepted	accepted	yes
+FDAARGOS_262	external_units.tsv	tuf KMA	disposition			yes
+FDAARGOS_262	external_units.tsv	tuf KMA	tier			yes
+FDAARGOS_262	external_units.tsv	tuf KMA	qc_flags			yes
+FDAARGOS_262	external_units.tsv	tuf KMA	ariba_flag			yes
+FDAARGOS_262	external_units.tsv	tuf KMA	kma_template_coverage	100.00	100.00	yes
+FDAARGOS_262	external_units.tsv	tuf KMA	lowercase_bases	0	0	yes
+FDAARGOS_262	external_units.tsv	tuf KMA	uncalled_bases	0	0	yes
+FDAARGOS_262	external_units.tsv	tuf Locus-Recon	sequences_returned	1	1	yes
+FDAARGOS_262	external_units.tsv	tuf Locus-Recon	returned_bp	1200	1200	yes
+FDAARGOS_262	external_units.tsv	tuf Locus-Recon	returned_sha256	d1bd8094a2a1c5a48fdbb12840c709eda984b19991f8649a5d09c503b37a894a	d1bd8094a2a1c5a48fdbb12840c709eda984b19991f8649a5d09c503b37a894a	yes
+FDAARGOS_262	external_units.tsv	tuf Locus-Recon	comparison	identical	identical	yes
+FDAARGOS_262	external_units.tsv	tuf Locus-Recon	decision	accepted	accepted	yes
+FDAARGOS_262	external_units.tsv	tuf Locus-Recon	decision_secondary			yes
+FDAARGOS_262	external_units.tsv	tuf Locus-Recon	disposition	PASS	PASS	yes
+FDAARGOS_262	external_units.tsv	tuf Locus-Recon	tier	HIGH	HIGH	yes
+FDAARGOS_262	external_units.tsv	tuf Locus-Recon	qc_flags			yes
+FDAARGOS_262	external_units.tsv	tuf Locus-Recon	ariba_flag			yes
+FDAARGOS_262	external_units.tsv	tuf Locus-Recon	kma_template_coverage			yes
+FDAARGOS_262	external_units.tsv	tuf Locus-Recon	lowercase_bases	0	0	yes
+FDAARGOS_262	external_units.tsv	tuf Locus-Recon	uncalled_bases	0	0	yes
+FDAARGOS_262	external_copy_number.tsv	16S	locus_regions	NODE_17_length_5666_cov_122.092140:476-1988	NODE_17_length_5666_cov_122.092140:476-1988	yes
+FDAARGOS_262	external_copy_number.tsv	16S	gene_spans	1-1513	1-1513	yes
+FDAARGOS_262	external_copy_number.tsv	16S	ratio	2.663	2.663	yes
+FDAARGOS_262	external_copy_number.tsv	16S	ratio_ci_low	2.5	2.5	yes
+FDAARGOS_262	external_copy_number.tsv	16S	ratio_ci_high	2.753	2.753	yes
+FDAARGOS_262	external_copy_number.tsv	16S	depth_call	MULTICOPY_DEPTH	MULTICOPY_DEPTH	yes
+FDAARGOS_262	external_copy_number.tsv	16S	dosage_estimate	2.663	2.663	yes
+FDAARGOS_262	external_copy_number.tsv	16S	dosage_status	ESTIMATED	ESTIMATED	yes
+FDAARGOS_262	external_copy_number.tsv	16S	graph_context_count			yes
+FDAARGOS_262	external_copy_number.tsv	16S	graph_context_lower_bound	2	2	yes
+FDAARGOS_262	external_copy_number.tsv	16S	graph_context_status	ASYMMETRIC_CONTEXTS	ASYMMETRIC_CONTEXTS	yes
+FDAARGOS_262	external_copy_number.tsv	16S	copy_number_call			yes
+FDAARGOS_262	external_copy_number.tsv	16S	copy_number_kind	LOWER_BOUND	LOWER_BOUND	yes
+FDAARGOS_262	external_copy_number.tsv	16S	copy_number_status	LOWER_BOUND	LOWER_BOUND	yes
+FDAARGOS_262	external_copy_number.tsv	23S	locus_regions	NODE_17_length_5666_cov_122.092140:2796-5666	NODE_17_length_5666_cov_122.092140:2796-5666	yes
+FDAARGOS_262	external_copy_number.tsv	23S	gene_spans	1-2871	1-2871	yes
+FDAARGOS_262	external_copy_number.tsv	23S	ratio	2.694	2.694	yes
+FDAARGOS_262	external_copy_number.tsv	23S	ratio_ci_low	2.561	2.561	yes
+FDAARGOS_262	external_copy_number.tsv	23S	ratio_ci_high	2.837	2.837	yes
+FDAARGOS_262	external_copy_number.tsv	23S	depth_call	MULTICOPY_DEPTH	MULTICOPY_DEPTH	yes
+FDAARGOS_262	external_copy_number.tsv	23S	dosage_estimate	2.694	2.694	yes
+FDAARGOS_262	external_copy_number.tsv	23S	dosage_status	ESTIMATED_PARTIAL_COVERAGE	ESTIMATED_PARTIAL_COVERAGE	yes
+FDAARGOS_262	external_copy_number.tsv	23S	graph_context_count			yes
+FDAARGOS_262	external_copy_number.tsv	23S	graph_context_lower_bound	2	2	yes
+FDAARGOS_262	external_copy_number.tsv	23S	graph_context_status	ASYMMETRIC_CONTEXTS	ASYMMETRIC_CONTEXTS	yes
+FDAARGOS_262	external_copy_number.tsv	23S	copy_number_call			yes
+FDAARGOS_262	external_copy_number.tsv	23S	copy_number_kind	LOWER_BOUND	LOWER_BOUND	yes
+FDAARGOS_262	external_copy_number.tsv	23S	copy_number_status	LOWER_BOUND	LOWER_BOUND	yes
+FDAARGOS_262	external_copy_number.tsv	atpD	locus_regions	NODE_7_length_105017_cov_48.458118:32707-34104	NODE_7_length_105017_cov_48.458118:32707-34104	yes
+FDAARGOS_262	external_copy_number.tsv	atpD	gene_spans	1-1398	1-1398	yes
+FDAARGOS_262	external_copy_number.tsv	atpD	ratio	1.102	1.102	yes
+FDAARGOS_262	external_copy_number.tsv	atpD	ratio_ci_low	1.051	1.051	yes
+FDAARGOS_262	external_copy_number.tsv	atpD	ratio_ci_high	1.204	1.204	yes
+FDAARGOS_262	external_copy_number.tsv	atpD	depth_call	SINGLE_COPY_COMPATIBLE	SINGLE_COPY_COMPATIBLE	yes
+FDAARGOS_262	external_copy_number.tsv	atpD	dosage_estimate	1.102	1.102	yes
+FDAARGOS_262	external_copy_number.tsv	atpD	dosage_status	ESTIMATED	ESTIMATED	yes
+FDAARGOS_262	external_copy_number.tsv	atpD	graph_context_count	1	1	yes
+FDAARGOS_262	external_copy_number.tsv	atpD	graph_context_lower_bound	1	1	yes
+FDAARGOS_262	external_copy_number.tsv	atpD	graph_context_status	MATCHED_CONTEXT_COUNT	MATCHED_CONTEXT_COUNT	yes
+FDAARGOS_262	external_copy_number.tsv	atpD	copy_number_call	1	1	yes
+FDAARGOS_262	external_copy_number.tsv	atpD	copy_number_kind	INTEGER_CONTEXT_COUNT	INTEGER_CONTEXT_COUNT	yes
+FDAARGOS_262	external_copy_number.tsv	atpD	copy_number_status	SUPPORTED	SUPPORTED	yes
+FDAARGOS_262	external_copy_number.tsv	dnaK	locus_regions	NODE_4_length_174967_cov_38.558778:3143-5014	NODE_4_length_174967_cov_38.558778:3143-5014	yes
+FDAARGOS_262	external_copy_number.tsv	dnaK	gene_spans	1-1872	1-1872	yes
+FDAARGOS_262	external_copy_number.tsv	dnaK	ratio	0.867	0.867	yes
+FDAARGOS_262	external_copy_number.tsv	dnaK	ratio_ci_low	0.828	0.828	yes
+FDAARGOS_262	external_copy_number.tsv	dnaK	ratio_ci_high	0.949	0.949	yes
+FDAARGOS_262	external_copy_number.tsv	dnaK	depth_call	SINGLE_COPY_COMPATIBLE	SINGLE_COPY_COMPATIBLE	yes
+FDAARGOS_262	external_copy_number.tsv	dnaK	dosage_estimate	0.867	0.867	yes
+FDAARGOS_262	external_copy_number.tsv	dnaK	dosage_status	ESTIMATED	ESTIMATED	yes
+FDAARGOS_262	external_copy_number.tsv	dnaK	graph_context_count	1	1	yes
+FDAARGOS_262	external_copy_number.tsv	dnaK	graph_context_lower_bound	1	1	yes
+FDAARGOS_262	external_copy_number.tsv	dnaK	graph_context_status	MATCHED_CONTEXT_COUNT	MATCHED_CONTEXT_COUNT	yes
+FDAARGOS_262	external_copy_number.tsv	dnaK	copy_number_call	1	1	yes
+FDAARGOS_262	external_copy_number.tsv	dnaK	copy_number_kind	INTEGER_CONTEXT_COUNT	INTEGER_CONTEXT_COUNT	yes
+FDAARGOS_262	external_copy_number.tsv	dnaK	copy_number_status	SUPPORTED	SUPPORTED	yes
+FDAARGOS_262	external_copy_number.tsv	gyrB	locus_regions	NODE_3_length_192420_cov_48.793653:156294-158603	NODE_3_length_192420_cov_48.793653:156294-158603	yes
+FDAARGOS_262	external_copy_number.tsv	gyrB	gene_spans	1-2310	1-2310	yes
+FDAARGOS_262	external_copy_number.tsv	gyrB	ratio	1.153	1.153	yes
+FDAARGOS_262	external_copy_number.tsv	gyrB	ratio_ci_low	1.112	1.112	yes
+FDAARGOS_262	external_copy_number.tsv	gyrB	ratio_ci_high	1.194	1.194	yes
+FDAARGOS_262	external_copy_number.tsv	gyrB	depth_call	SINGLE_COPY_COMPATIBLE	SINGLE_COPY_COMPATIBLE	yes
+FDAARGOS_262	external_copy_number.tsv	gyrB	dosage_estimate	1.153	1.153	yes
+FDAARGOS_262	external_copy_number.tsv	gyrB	dosage_status	ESTIMATED	ESTIMATED	yes
+FDAARGOS_262	external_copy_number.tsv	gyrB	graph_context_count	1	1	yes
+FDAARGOS_262	external_copy_number.tsv	gyrB	graph_context_lower_bound	1	1	yes
+FDAARGOS_262	external_copy_number.tsv	gyrB	graph_context_status	MATCHED_CONTEXT_COUNT	MATCHED_CONTEXT_COUNT	yes
+FDAARGOS_262	external_copy_number.tsv	gyrB	copy_number_call	1	1	yes
+FDAARGOS_262	external_copy_number.tsv	gyrB	copy_number_kind	INTEGER_CONTEXT_COUNT	INTEGER_CONTEXT_COUNT	yes
+FDAARGOS_262	external_copy_number.tsv	gyrB	copy_number_status	SUPPORTED	SUPPORTED	yes
+FDAARGOS_262	external_copy_number.tsv	recA	locus_regions	NODE_3_length_192420_cov_48.793653:106453-107484	NODE_3_length_192420_cov_48.793653:106453-107484	yes
+FDAARGOS_262	external_copy_number.tsv	recA	gene_spans	1-1032	1-1032	yes
+FDAARGOS_262	external_copy_number.tsv	recA	ratio	1.102	1.102	yes
+FDAARGOS_262	external_copy_number.tsv	recA	ratio_ci_low	1.041	1.041	yes
+FDAARGOS_262	external_copy_number.tsv	recA	ratio_ci_high	1.311	1.311	yes
+FDAARGOS_262	external_copy_number.tsv	recA	depth_call	SINGLE_COPY_COMPATIBLE	SINGLE_COPY_COMPATIBLE	yes
+FDAARGOS_262	external_copy_number.tsv	recA	dosage_estimate	1.102	1.102	yes
+FDAARGOS_262	external_copy_number.tsv	recA	dosage_status	ESTIMATED	ESTIMATED	yes
+FDAARGOS_262	external_copy_number.tsv	recA	graph_context_count	1	1	yes
+FDAARGOS_262	external_copy_number.tsv	recA	graph_context_lower_bound	1	1	yes
+FDAARGOS_262	external_copy_number.tsv	recA	graph_context_status	MATCHED_CONTEXT_COUNT	MATCHED_CONTEXT_COUNT	yes
+FDAARGOS_262	external_copy_number.tsv	recA	copy_number_call	1	1	yes
+FDAARGOS_262	external_copy_number.tsv	recA	copy_number_kind	INTEGER_CONTEXT_COUNT	INTEGER_CONTEXT_COUNT	yes
+FDAARGOS_262	external_copy_number.tsv	recA	copy_number_status	SUPPORTED	SUPPORTED	yes
+FDAARGOS_262	external_copy_number.tsv	rpoB	locus_regions	NODE_2_length_280559_cov_41.174322:39267-43403	NODE_2_length_280559_cov_41.174322:39267-43403	yes
+FDAARGOS_262	external_copy_number.tsv	rpoB	gene_spans	1-4137	1-4137	yes
+FDAARGOS_262	external_copy_number.tsv	rpoB	ratio	0.969	0.969	yes
+FDAARGOS_262	external_copy_number.tsv	rpoB	ratio_ci_low	0.918	0.918	yes
+FDAARGOS_262	external_copy_number.tsv	rpoB	ratio_ci_high	1.01	1.01	yes
+FDAARGOS_262	external_copy_number.tsv	rpoB	depth_call	SINGLE_COPY_COMPATIBLE	SINGLE_COPY_COMPATIBLE	yes
+FDAARGOS_262	external_copy_number.tsv	rpoB	dosage_estimate	0.969	0.969	yes
+FDAARGOS_262	external_copy_number.tsv	rpoB	dosage_status	ESTIMATED	ESTIMATED	yes
+FDAARGOS_262	external_copy_number.tsv	rpoB	graph_context_count	1	1	yes
+FDAARGOS_262	external_copy_number.tsv	rpoB	graph_context_lower_bound	1	1	yes
+FDAARGOS_262	external_copy_number.tsv	rpoB	graph_context_status	MATCHED_CONTEXT_COUNT	MATCHED_CONTEXT_COUNT	yes
+FDAARGOS_262	external_copy_number.tsv	rpoB	copy_number_call	1	1	yes
+FDAARGOS_262	external_copy_number.tsv	rpoB	copy_number_kind	INTEGER_CONTEXT_COUNT	INTEGER_CONTEXT_COUNT	yes
+FDAARGOS_262	external_copy_number.tsv	rpoB	copy_number_status	SUPPORTED	SUPPORTED	yes
+FDAARGOS_262	external_copy_number.tsv	tuf	locus_regions	NODE_2_length_280559_cov_41.174322:34682-35881	NODE_2_length_280559_cov_41.174322:34682-35881	yes
+FDAARGOS_262	external_copy_number.tsv	tuf	gene_spans	1-1200	1-1200	yes
+FDAARGOS_262	external_copy_number.tsv	tuf	ratio	0.99	0.99	yes
+FDAARGOS_262	external_copy_number.tsv	tuf	ratio_ci_low	0.907	0.907	yes
+FDAARGOS_262	external_copy_number.tsv	tuf	ratio_ci_high	1.052	1.052	yes
+FDAARGOS_262	external_copy_number.tsv	tuf	depth_call	SINGLE_COPY_COMPATIBLE	SINGLE_COPY_COMPATIBLE	yes
+FDAARGOS_262	external_copy_number.tsv	tuf	dosage_estimate	0.99	0.99	yes
+FDAARGOS_262	external_copy_number.tsv	tuf	dosage_status	ESTIMATED	ESTIMATED	yes
+FDAARGOS_262	external_copy_number.tsv	tuf	graph_context_count	1	1	yes
+FDAARGOS_262	external_copy_number.tsv	tuf	graph_context_lower_bound	1	1	yes
+FDAARGOS_262	external_copy_number.tsv	tuf	graph_context_status	MATCHED_CONTEXT_COUNT	MATCHED_CONTEXT_COUNT	yes
+FDAARGOS_262	external_copy_number.tsv	tuf	copy_number_call	1	1	yes
+FDAARGOS_262	external_copy_number.tsv	tuf	copy_number_kind	INTEGER_CONTEXT_COUNT	INTEGER_CONTEXT_COUNT	yes
+FDAARGOS_262	external_copy_number.tsv	tuf	copy_number_status	SUPPORTED	SUPPORTED	yes
+FDAARGOS_262	block_size_sensitivity.tsv	16S 100	ratio	2.663	2.663	yes
+FDAARGOS_262	block_size_sensitivity.tsv	16S 100	ratio_ci_low	2.505	2.505	yes
+FDAARGOS_262	block_size_sensitivity.tsv	16S 100	ratio_ci_high	2.786	2.786	yes
+FDAARGOS_262	block_size_sensitivity.tsv	16S 100	dosage_ci_low	2.505	2.505	yes
+FDAARGOS_262	block_size_sensitivity.tsv	16S 100	dosage_ci_high	2.804	2.804	yes
+FDAARGOS_262	block_size_sensitivity.tsv	16S 1000	ratio	2.663	2.663	yes
+FDAARGOS_262	block_size_sensitivity.tsv	16S 1000	ratio_ci_low	2.602	2.602	yes
+FDAARGOS_262	block_size_sensitivity.tsv	16S 1000	ratio_ci_high	2.742	2.742	yes
+FDAARGOS_262	block_size_sensitivity.tsv	16S 1000	dosage_ci_low	2.602	2.602	yes
+FDAARGOS_262	block_size_sensitivity.tsv	16S 1000	dosage_ci_high	2.742	2.742	yes
+FDAARGOS_262	block_size_sensitivity.tsv	16S 250	ratio	2.663	2.663	yes
+FDAARGOS_262	block_size_sensitivity.tsv	16S 250	ratio_ci_low	2.51	2.51	yes
+FDAARGOS_262	block_size_sensitivity.tsv	16S 250	ratio_ci_high	2.918	2.918	yes
+FDAARGOS_262	block_size_sensitivity.tsv	16S 250	dosage_ci_low	2.505	2.505	yes
+FDAARGOS_262	block_size_sensitivity.tsv	16S 250	dosage_ci_high	2.918	2.918	yes
+FDAARGOS_262	block_size_sensitivity.tsv	16S 500	ratio	2.663	2.663	yes
+FDAARGOS_262	block_size_sensitivity.tsv	16S 500	ratio_ci_low	2.5	2.5	yes
+FDAARGOS_262	block_size_sensitivity.tsv	16S 500	ratio_ci_high	2.753	2.753	yes
+FDAARGOS_262	block_size_sensitivity.tsv	16S 500	dosage_ci_low	2.5	2.5	yes
+FDAARGOS_262	block_size_sensitivity.tsv	16S 500	dosage_ci_high	2.753	2.753	yes
+FDAARGOS_262	block_size_sensitivity.tsv	23S 100	ratio	2.694	2.694	yes
+FDAARGOS_262	block_size_sensitivity.tsv	23S 100	ratio_ci_low	2.602	2.602	yes
+FDAARGOS_262	block_size_sensitivity.tsv	23S 100	ratio_ci_high	2.804	2.804	yes
+FDAARGOS_262	block_size_sensitivity.tsv	23S 100	dosage_ci_low	2.602	2.602	yes
+FDAARGOS_262	block_size_sensitivity.tsv	23S 100	dosage_ci_high	2.796	2.796	yes
+FDAARGOS_262	block_size_sensitivity.tsv	23S 1000	ratio	2.694	2.694	yes
+FDAARGOS_262	block_size_sensitivity.tsv	23S 1000	ratio_ci_low	2.626	2.626	yes
+FDAARGOS_262	block_size_sensitivity.tsv	23S 1000	ratio_ci_high	2.847	2.847	yes
+FDAARGOS_262	block_size_sensitivity.tsv	23S 1000	dosage_ci_low	2.626	2.626	yes
+FDAARGOS_262	block_size_sensitivity.tsv	23S 1000	dosage_ci_high	2.847	2.847	yes
+FDAARGOS_262	block_size_sensitivity.tsv	23S 250	ratio	2.694	2.694	yes
+FDAARGOS_262	block_size_sensitivity.tsv	23S 250	ratio_ci_low	2.592	2.592	yes
+FDAARGOS_262	block_size_sensitivity.tsv	23S 250	ratio_ci_high	2.827	2.827	yes
+FDAARGOS_262	block_size_sensitivity.tsv	23S 250	dosage_ci_low	2.592	2.592	yes
+FDAARGOS_262	block_size_sensitivity.tsv	23S 250	dosage_ci_high	2.825	2.825	yes
+FDAARGOS_262	block_size_sensitivity.tsv	23S 500	ratio	2.694	2.694	yes
+FDAARGOS_262	block_size_sensitivity.tsv	23S 500	ratio_ci_low	2.561	2.561	yes
+FDAARGOS_262	block_size_sensitivity.tsv	23S 500	ratio_ci_high	2.837	2.837	yes
+FDAARGOS_262	block_size_sensitivity.tsv	23S 500	dosage_ci_low	2.561	2.561	yes
+FDAARGOS_262	block_size_sensitivity.tsv	23S 500	dosage_ci_high	2.837	2.837	yes
+FDAARGOS_262	block_size_sensitivity.tsv	atpD 100	ratio	1.102	1.102	yes
+FDAARGOS_262	block_size_sensitivity.tsv	atpD 100	ratio_ci_low	1.061	1.061	yes
+FDAARGOS_262	block_size_sensitivity.tsv	atpD 100	ratio_ci_high	1.143	1.143	yes
+FDAARGOS_262	block_size_sensitivity.tsv	atpD 100	dosage_ci_low	1.061	1.061	yes
+FDAARGOS_262	block_size_sensitivity.tsv	atpD 100	dosage_ci_high	1.143	1.143	yes
+FDAARGOS_262	block_size_sensitivity.tsv	atpD 1000	ratio	1.102	1.102	yes
+FDAARGOS_262	block_size_sensitivity.tsv	atpD 1000	ratio_ci_low	1.071	1.071	yes
+FDAARGOS_262	block_size_sensitivity.tsv	atpD 1000	ratio_ci_high	1.113	1.113	yes
+FDAARGOS_262	block_size_sensitivity.tsv	atpD 1000	dosage_ci_low	1.071	1.071	yes
+FDAARGOS_262	block_size_sensitivity.tsv	atpD 1000	dosage_ci_high	1.113	1.113	yes
+FDAARGOS_262	block_size_sensitivity.tsv	atpD 250	ratio	1.102	1.102	yes
+FDAARGOS_262	block_size_sensitivity.tsv	atpD 250	ratio_ci_low	1.051	1.051	yes
+FDAARGOS_262	block_size_sensitivity.tsv	atpD 250	ratio_ci_high	1.153	1.153	yes
+FDAARGOS_262	block_size_sensitivity.tsv	atpD 250	dosage_ci_low	1.05	1.05	yes
+FDAARGOS_262	block_size_sensitivity.tsv	atpD 250	dosage_ci_high	1.153	1.153	yes
+FDAARGOS_262	block_size_sensitivity.tsv	atpD 500	ratio	1.102	1.102	yes
+FDAARGOS_262	block_size_sensitivity.tsv	atpD 500	ratio_ci_low	1.051	1.051	yes
+FDAARGOS_262	block_size_sensitivity.tsv	atpD 500	ratio_ci_high	1.204	1.204	yes
+FDAARGOS_262	block_size_sensitivity.tsv	atpD 500	dosage_ci_low	1.051	1.051	yes
+FDAARGOS_262	block_size_sensitivity.tsv	atpD 500	dosage_ci_high	1.204	1.204	yes
+FDAARGOS_262	block_size_sensitivity.tsv	dnaK 100	ratio	0.867	0.867	yes
+FDAARGOS_262	block_size_sensitivity.tsv	dnaK 100	ratio_ci_low	0.827	0.827	yes
+FDAARGOS_262	block_size_sensitivity.tsv	dnaK 100	ratio_ci_high	0.938	0.938	yes
+FDAARGOS_262	block_size_sensitivity.tsv	dnaK 100	dosage_ci_low	0.827	0.827	yes
+FDAARGOS_262	block_size_sensitivity.tsv	dnaK 100	dosage_ci_high	0.929	0.929	yes
+FDAARGOS_262	block_size_sensitivity.tsv	dnaK 1000	ratio	0.867	0.867	yes
+FDAARGOS_262	block_size_sensitivity.tsv	dnaK 1000	ratio_ci_low	0.837	0.837	yes
+FDAARGOS_262	block_size_sensitivity.tsv	dnaK 1000	ratio_ci_high	0.928	0.928	yes
+FDAARGOS_262	block_size_sensitivity.tsv	dnaK 1000	dosage_ci_low	0.837	0.837	yes
+FDAARGOS_262	block_size_sensitivity.tsv	dnaK 1000	dosage_ci_high	0.928	0.928	yes
+FDAARGOS_262	block_size_sensitivity.tsv	dnaK 250	ratio	0.867	0.867	yes
+FDAARGOS_262	block_size_sensitivity.tsv	dnaK 250	ratio_ci_low	0.827	0.827	yes
+FDAARGOS_262	block_size_sensitivity.tsv	dnaK 250	ratio_ci_high	0.949	0.949	yes
+FDAARGOS_262	block_size_sensitivity.tsv	dnaK 250	dosage_ci_low	0.827	0.827	yes
+FDAARGOS_262	block_size_sensitivity.tsv	dnaK 250	dosage_ci_high	0.948	0.948	yes
+FDAARGOS_262	block_size_sensitivity.tsv	dnaK 500	ratio	0.867	0.867	yes
+FDAARGOS_262	block_size_sensitivity.tsv	dnaK 500	ratio_ci_low	0.828	0.828	yes
+FDAARGOS_262	block_size_sensitivity.tsv	dnaK 500	ratio_ci_high	0.949	0.949	yes
+FDAARGOS_262	block_size_sensitivity.tsv	dnaK 500	dosage_ci_low	0.828	0.828	yes
+FDAARGOS_262	block_size_sensitivity.tsv	dnaK 500	dosage_ci_high	0.959	0.959	yes
+FDAARGOS_262	block_size_sensitivity.tsv	gyrB 100	ratio	1.153	1.153	yes
+FDAARGOS_262	block_size_sensitivity.tsv	gyrB 100	ratio_ci_low	1.102	1.102	yes
+FDAARGOS_262	block_size_sensitivity.tsv	gyrB 100	ratio_ci_high	1.206	1.206	yes
+FDAARGOS_262	block_size_sensitivity.tsv	gyrB 100	dosage_ci_low	1.111	1.111	yes
+FDAARGOS_262	block_size_sensitivity.tsv	gyrB 100	dosage_ci_high	1.206	1.206	yes
+FDAARGOS_262	block_size_sensitivity.tsv	gyrB 1000	ratio	1.153	1.153	yes
+FDAARGOS_262	block_size_sensitivity.tsv	gyrB 1000	ratio_ci_low	1.141	1.141	yes
+FDAARGOS_262	block_size_sensitivity.tsv	gyrB 1000	ratio_ci_high	1.165	1.165	yes
+FDAARGOS_262	block_size_sensitivity.tsv	gyrB 1000	dosage_ci_low	1.141	1.141	yes
+FDAARGOS_262	block_size_sensitivity.tsv	gyrB 1000	dosage_ci_high	1.165	1.165	yes
+FDAARGOS_262	block_size_sensitivity.tsv	gyrB 250	ratio	1.153	1.153	yes
+FDAARGOS_262	block_size_sensitivity.tsv	gyrB 250	ratio_ci_low	1.112	1.112	yes
+FDAARGOS_262	block_size_sensitivity.tsv	gyrB 250	ratio_ci_high	1.188	1.188	yes
+FDAARGOS_262	block_size_sensitivity.tsv	gyrB 250	dosage_ci_low	1.112	1.112	yes
+FDAARGOS_262	block_size_sensitivity.tsv	gyrB 250	dosage_ci_high	1.194	1.194	yes
+FDAARGOS_262	block_size_sensitivity.tsv	gyrB 500	ratio	1.153	1.153	yes
+FDAARGOS_262	block_size_sensitivity.tsv	gyrB 500	ratio_ci_low	1.112	1.112	yes
+FDAARGOS_262	block_size_sensitivity.tsv	gyrB 500	ratio_ci_high	1.194	1.194	yes
+FDAARGOS_262	block_size_sensitivity.tsv	gyrB 500	dosage_ci_low	1.112	1.112	yes
+FDAARGOS_262	block_size_sensitivity.tsv	gyrB 500	dosage_ci_high	1.194	1.194	yes
+FDAARGOS_262	block_size_sensitivity.tsv	recA 100	ratio	1.102	1.102	yes
+FDAARGOS_262	block_size_sensitivity.tsv	recA 100	ratio_ci_low	1.041	1.041	yes
+FDAARGOS_262	block_size_sensitivity.tsv	recA 100	ratio_ci_high	1.172	1.172	yes
+FDAARGOS_262	block_size_sensitivity.tsv	recA 100	dosage_ci_low	1.051	1.051	yes
+FDAARGOS_262	block_size_sensitivity.tsv	recA 100	dosage_ci_high	1.165	1.165	yes
+FDAARGOS_262	block_size_sensitivity.tsv	recA 1000	ratio	1.102	1.102	yes
+FDAARGOS_262	block_size_sensitivity.tsv	recA 1000	ratio_ci_low	1.102	1.102	yes
+FDAARGOS_262	block_size_sensitivity.tsv	recA 1000	ratio_ci_high	1.325	1.325	yes
+FDAARGOS_262	block_size_sensitivity.tsv	recA 1000	dosage_ci_low	1.102	1.102	yes
+FDAARGOS_262	block_size_sensitivity.tsv	recA 1000	dosage_ci_high	1.325	1.325	yes
+FDAARGOS_262	block_size_sensitivity.tsv	recA 250	ratio	1.102	1.102	yes
+FDAARGOS_262	block_size_sensitivity.tsv	recA 250	ratio_ci_low	1.021	1.021	yes
+FDAARGOS_262	block_size_sensitivity.tsv	recA 250	ratio_ci_high	1.177	1.177	yes
+FDAARGOS_262	block_size_sensitivity.tsv	recA 250	dosage_ci_low	1.021	1.021	yes
+FDAARGOS_262	block_size_sensitivity.tsv	recA 250	dosage_ci_high	1.186	1.186	yes
+FDAARGOS_262	block_size_sensitivity.tsv	recA 500	ratio	1.102	1.102	yes
+FDAARGOS_262	block_size_sensitivity.tsv	recA 500	ratio_ci_low	1.041	1.041	yes
+FDAARGOS_262	block_size_sensitivity.tsv	recA 500	ratio_ci_high	1.311	1.311	yes
+FDAARGOS_262	block_size_sensitivity.tsv	recA 500	dosage_ci_low	1.041	1.041	yes
+FDAARGOS_262	block_size_sensitivity.tsv	recA 500	dosage_ci_high	1.311	1.311	yes
+FDAARGOS_262	block_size_sensitivity.tsv	rpoB 100	ratio	0.969	0.969	yes
+FDAARGOS_262	block_size_sensitivity.tsv	rpoB 100	ratio_ci_low	0.929	0.929	yes
+FDAARGOS_262	block_size_sensitivity.tsv	rpoB 100	ratio_ci_high	1	1	yes
+FDAARGOS_262	block_size_sensitivity.tsv	rpoB 100	dosage_ci_low	0.939	0.939	yes
+FDAARGOS_262	block_size_sensitivity.tsv	rpoB 100	dosage_ci_high	1	1	yes
+FDAARGOS_262	block_size_sensitivity.tsv	rpoB 1000	ratio	0.969	0.969	yes
+FDAARGOS_262	block_size_sensitivity.tsv	rpoB 1000	ratio_ci_low	0.908	0.908	yes
+FDAARGOS_262	block_size_sensitivity.tsv	rpoB 1000	ratio_ci_high	1.021	1.021	yes
+FDAARGOS_262	block_size_sensitivity.tsv	rpoB 1000	dosage_ci_low	0.908	0.908	yes
+FDAARGOS_262	block_size_sensitivity.tsv	rpoB 1000	dosage_ci_high	1.02	1.02	yes
+FDAARGOS_262	block_size_sensitivity.tsv	rpoB 250	ratio	0.969	0.969	yes
+FDAARGOS_262	block_size_sensitivity.tsv	rpoB 250	ratio_ci_low	0.929	0.929	yes
+FDAARGOS_262	block_size_sensitivity.tsv	rpoB 250	ratio_ci_high	1.01	1.01	yes
+FDAARGOS_262	block_size_sensitivity.tsv	rpoB 250	dosage_ci_low	0.929	0.929	yes
+FDAARGOS_262	block_size_sensitivity.tsv	rpoB 250	dosage_ci_high	1.01	1.01	yes
+FDAARGOS_262	block_size_sensitivity.tsv	rpoB 500	ratio	0.969	0.969	yes
+FDAARGOS_262	block_size_sensitivity.tsv	rpoB 500	ratio_ci_low	0.918	0.918	yes
+FDAARGOS_262	block_size_sensitivity.tsv	rpoB 500	ratio_ci_high	1.01	1.01	yes
+FDAARGOS_262	block_size_sensitivity.tsv	rpoB 500	dosage_ci_low	0.919	0.919	yes
+FDAARGOS_262	block_size_sensitivity.tsv	rpoB 500	dosage_ci_high	1.01	1.01	yes
+FDAARGOS_262	block_size_sensitivity.tsv	tuf 100	ratio	0.99	0.99	yes
+FDAARGOS_262	block_size_sensitivity.tsv	tuf 100	ratio_ci_low	0.949	0.949	yes
+FDAARGOS_262	block_size_sensitivity.tsv	tuf 100	ratio_ci_high	1.041	1.041	yes
+FDAARGOS_262	block_size_sensitivity.tsv	tuf 100	dosage_ci_low	0.949	0.949	yes
+FDAARGOS_262	block_size_sensitivity.tsv	tuf 100	dosage_ci_high	1.041	1.041	yes
+FDAARGOS_262	block_size_sensitivity.tsv	tuf 1000	ratio	0.99	0.99	yes
+FDAARGOS_262	block_size_sensitivity.tsv	tuf 1000	ratio_ci_low	0.898	0.898	yes
+FDAARGOS_262	block_size_sensitivity.tsv	tuf 1000	ratio_ci_high	1.01	1.01	yes
+FDAARGOS_262	block_size_sensitivity.tsv	tuf 1000	dosage_ci_low	0.898	0.898	yes
+FDAARGOS_262	block_size_sensitivity.tsv	tuf 1000	dosage_ci_high	1.01	1.01	yes
+FDAARGOS_262	block_size_sensitivity.tsv	tuf 250	ratio	0.99	0.99	yes
+FDAARGOS_262	block_size_sensitivity.tsv	tuf 250	ratio_ci_low	0.948	0.948	yes
+FDAARGOS_262	block_size_sensitivity.tsv	tuf 250	ratio_ci_high	1.041	1.041	yes
+FDAARGOS_262	block_size_sensitivity.tsv	tuf 250	dosage_ci_low	0.949	0.949	yes
+FDAARGOS_262	block_size_sensitivity.tsv	tuf 250	dosage_ci_high	1.041	1.041	yes
+FDAARGOS_262	block_size_sensitivity.tsv	tuf 500	ratio	0.99	0.99	yes
+FDAARGOS_262	block_size_sensitivity.tsv	tuf 500	ratio_ci_low	0.907	0.907	yes
+FDAARGOS_262	block_size_sensitivity.tsv	tuf 500	ratio_ci_high	1.052	1.052	yes
+FDAARGOS_262	block_size_sensitivity.tsv	tuf 500	dosage_ci_low	0.907	0.907	yes
+FDAARGOS_262	block_size_sensitivity.tsv	tuf 500	dosage_ci_high	1.052	1.052	yes

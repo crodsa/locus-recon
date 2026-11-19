@@ -8,7 +8,7 @@ the regeneration of the validation analyses with release 1.0.1, of 18 November 2
 
 The script is [`../run_comparator_benchmark.py`](../run_comparator_benchmark.py). It runs ARIBA and KMA. With the
 option `--locus-recon-evidence` it scores the candidate sequences that the regeneration kept
-(`../regenerated-1.0.1/evidence/`) with the function that scores the sequences of the other two tools.
+(`evidence/` of the regeneration package, `validation_evidence/release_1.0.1/regenerated-1.0.1/` of Supplementary Data 1 of the article) with the function that scores the sequences of the other two tools.
 Locus-Recon itself is not run by this script. Without that option the rows of Locus-Recon are read from
 tables of this repository, as in release 1.0.0.
 
@@ -115,7 +115,7 @@ The comparison has limits. It covers one species with real truth, one bait strai
 stringMLST were not run. In release 1.0.0 the Locus-Recon
 candidates of the *H. pylori* and simulated cases had not been kept, and their relation to the truth was
 derived from deposited comparison fields. They are now scored from the sequences, which are in
-`comparator_returned_sequences.fasta`. `../regenerated-1.0.1/old_vs_new.tsv` lists every field of the earlier
+`comparator_returned_sequences.fasta`. `old_vs_new.tsv` of the regeneration package lists every field of the earlier
 and of the new rows.
 
 ## Files
@@ -150,7 +150,7 @@ python validation/run_comparator_benchmark.py --workdir work --outdir work/out -
 
 # the same, with the Locus-Recon rows scored from the candidates of the regeneration
 python validation/run_comparator_benchmark.py --workdir work --outdir work/out --score-only \
-    --locus-recon-evidence validation/regenerated-1.0.1/evidence
+    --locus-recon-evidence /path/to/regenerated-1.0.1/evidence
 ```
 
 Without `--outdir`, the full run writes into this folder.

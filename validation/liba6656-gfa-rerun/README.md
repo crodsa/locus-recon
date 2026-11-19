@@ -54,15 +54,19 @@ The two selected terminal paths are provided for navigation only. Candidate acce
 
 ## Verification with the release code
 
-On 18 November 2026 the two commands above were rerun with Locus-Recon 1.0.1
-(source digest `2cc816cca467a7988c1f2a28cba11ed1cbb30b263e331f75ca48efa19ebefce0`)
+On 19 November 2026 the two commands above were rerun with Locus-Recon 1.0.2
+(source digest `a24d41d80d2a3e04729eda04efa6938d82ac2d99e4ea875377353f014aae9b35`)
 from inputs whose checksums equal those in `INPUT_CHECKSUMS.tsv`, once with four
 threads and once with six, with a 12 GB SPAdes memory cap, under Python
 3.11.13 and the tool versions listed above. `verify_release_rerun.py` compares
 the reruns with this deposit and writes `RELEASE_VERIFICATION.json`. The same
 verification was made with release 1.0.0 on 28 September 2026, with four and
-eight threads; its record is in the history of the repository (tag `v1.0.0`),
-and `../regenerated-1.0.1/old_vs_new.tsv` lists both records value by value.
+eight threads, and with release 1.0.1 on 18 November 2026, with four and six
+threads; their records are in the history of the repository (tags `v1.0.0` and
+`v1.0.1`). The tables `old_vs_new.tsv` and `old_vs_new_1.0.1_vs_1.0.2.tsv` of the
+regeneration packages (`validation_evidence/release_1.0.1/regenerated-1.0.1/` of Supplementary Data 1 of the article and
+`validation_evidence/release_1.0.2/regenerated-1.0.2/` of Supplementary Data 1 of the article) list the
+records value by value.
 
 - Both reruns recruited the same 6,195 read names and wrote byte-identical
   graphs and reported sequences.
@@ -85,14 +89,14 @@ and `../regenerated-1.0.1/old_vs_new.tsv` lists both records value by value.
   contig, the situation the two deposited candidates resolve; the workflow
   withholds the consensus rather than reporting it as an allele.
 - The reported sequence and the QC report have the same bytes as those that
-  release 1.0.0 wrote. The report row differs from that of 1.0.0 in its
+  releases 1.0.0 and 1.0.1 wrote. The report row differs from theirs in its
   version, run date and run time only.
 
 Three kinds of file are in this directory. The graph, the terminal paths, the
 two selected paths, the candidate alignments and `GFA_RERUN_PROVENANCE.json`
 are those of 24 August 2026, made with the tools of release 1.0.0; they are the
 reference of the verification and were not replaced. `RELEASE_VERIFICATION.json`
-and the three `standard_workflow_*` files are the output of release 1.0.1. The
+and the three `standard_workflow_*` files are the output of release 1.0.2. The
 baits, the script and this text are inputs or documentation.
 
 ## Files
