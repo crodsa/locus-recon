@@ -1,7 +1,7 @@
 # Command-line reference
 
 This page documents installation, all public command-line options, resource
-planning, cleanup, provenance, and exit behavior for Locus-Recon 1.0.1. For a
+planning, cleanup, provenance, and exit behavior for Locus-Recon 1.0.2. For a
 first run, begin with the [README quick start](user-guide.md#quick-start).
 
 ## Installation and dependencies
@@ -479,7 +479,8 @@ single graph context plus `MULTICOPY_DEPTH` returns the continuous dosage as
 `DEPTH_TANDEM_COMPATIBLE`; this preserves tandem arrays such as *aphA1* rather
 than incorrectly replacing their dosage with one. An integer count outside the
 depth interval is returned under `GRAPH_COUNT_OVER_DISCORDANT_DEPTH` with
-`DEPTH_GRAPH_NUMERIC_DISCORDANCE`. When `ambiguity_index` is below 0.70 and
+`DEPTH_GRAPH_NUMERIC_DISCORDANCE`; when it is two or more its status is
+`REVIEW` and it is a lower bound. When `ambiguity_index` is below 0.70 and
 depth still rejects one copy, the dosage is only a floor: the result is a
 `LOWER_BOUND` flagged `DEPTH_LOWER_BOUND`, carrying the larger of the depth and
 graph floors. Supplying invalid graph inputs is an error; valid but unresolved

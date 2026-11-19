@@ -205,7 +205,7 @@ samtools --version
 spades.py --version
 ```
 
-The first command should report `locus-recon 1.0.1`; the remaining commands
+The first command should report `locus-recon 1.0.2`; the remaining commands
 confirm that all external programs are available inside the active environment.
 The package supports Python 3.9 or newer, although the supplied environment pins
 Python 3.11.13. See the
@@ -722,7 +722,7 @@ Interpret `copy_number_call` together with `copy_number_kind`:
 | Kind/method | Meaning |
 |---|---|
 | `INTEGER_CONTEXT_COUNT` / `GRAPH_DEPTH_CONSENSUS` | Both graph ends support the same integer context count, depth agrees at the single- versus multicopy classification level, and the count lies inside the depth interval. |
-| `INTEGER_CONTEXT_COUNT` / `GRAPH_COUNT_OVER_DISCORDANT_DEPTH` | As above, but the count falls outside the depth interval (`DEPTH_GRAPH_NUMERIC_DISCORDANCE`). The graph count is returned as the better-resolved observation, and the method name records that the two lines of evidence disagree on the number. |
+| `INTEGER_CONTEXT_COUNT` / `GRAPH_COUNT_OVER_DISCORDANT_DEPTH` | As above, but the count falls outside the depth interval (`DEPTH_GRAPH_NUMERIC_DISCORDANCE`). The method name records that the two lines of evidence disagree on the number. A count of two or more is then returned with the status `REVIEW` and as a lower bound: the graph counts distinct flanks, and copies that share their flanks (rRNA operons) add depth without adding a context. A count of one with `SINGLE_COPY_COMPATIBLE` stays `SUPPORTED`. |
 | `MEAN_DEPTH_DOSAGE` / `DEPTH_TANDEM_COMPATIBLE` | The graph retains one flanking context but depth supports a collapsed tandem amplification; the continuous dosage remains authoritative. This is the expected geometry for the amplified *aphA1* example. |
 | `MEAN_DEPTH_DOSAGE` / `DEPTH_ONLY` | No exact graph count was usable; the command retains the depth estimate and flags unresolved graph evidence when a graph was supplied. |
 | `LOWER_BOUND` / `GRAPH_LOWER_BOUND` | Depth rejects one copy and the graph resolves only a lower bound on the contexts (one-sided, asymmetric, or from a traversal pruned by a cycle or a limit). |
@@ -750,6 +750,24 @@ geometry_expected_dosage  1.843
 These are the depth values of the *tcdB* locus of LIBA-6656, without a graph.
 The overlapping spans alone give 1.84, so the value cannot be read as two
 copies.
+
+An integer graph count of two or more is `SUPPORTED` only when the depth
+interval contains it. Otherwise it is returned for review, as a lower bound:
+
+```text
+copy_number_call         2
+copy_number_kind         INTEGER_CONTEXT_COUNT
+copy_number_method       GRAPH_COUNT_OVER_DISCORDANT_DEPTH
+copy_number_status       REVIEW
+copy_number_lower_bound  2
+copy_number_upper_bound
+consensus_flags          DEPTH_GRAPH_NUMERIC_DISCORDANCE
+ratio                    7.446  (7.312 to 7.708)
+```
+
+These are the values of the 23S rRNA gene of *Escherichia coli* FDAARGOS_144,
+which has seven copies in the complete genome; the graph holds two contexts.
+Release 1.0.1 labelled this result `SUPPORTED`.
 
 `DEPTH_GRAPH_NUMERIC_DISCORDANCE` means that an integer graph count falls
 outside the unchanged depth interval. It preserves both observations and is

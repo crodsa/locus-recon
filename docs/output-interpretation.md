@@ -1,7 +1,7 @@
 # Output and interpretation reference
 
 This page documents the files, report fields, confidence system, and review
-logic implemented by Locus-Recon 1.0.1. Start with the
+logic implemented by Locus-Recon 1.0.2. Start with the
 [README result guide](../README.md#read-the-results) if you want a shorter
 introduction.
 
@@ -97,7 +97,8 @@ expected combination when a tandem array has one flanking context but elevated
 depth. `DEPTH_GRAPH_NUMERIC_DISCORDANCE` retains disagreement between an exact
 graph count and the depth interval without overwriting either value; the count
 is then returned under the method `GRAPH_COUNT_OVER_DISCORDANT_DEPTH` rather
-than `GRAPH_DEPTH_CONSENSUS`. When `ambiguity_index` is below 0.70 and depth
+than `GRAPH_DEPTH_CONSENSUS`, and a count of two or more has the status
+`REVIEW` and is a lower bound (`copy_number_upper_bound` is empty). When `ambiguity_index` is below 0.70 and depth
 still rejects one copy, the depth dosage is only a floor, and the record is a
 `LOWER_BOUND` flagged `DEPTH_LOWER_BOUND` that carries the larger of the depth
 and graph floors in `copy_number_lower_bound`.

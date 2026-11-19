@@ -676,6 +676,16 @@ def reconcile_copy_number(
             else "GRAPH_DEPTH_CONSENSUS"
         )
         if count >= 2 and depth_usable and depth.depth_call == "MULTICOPY_DEPTH":
+            if discordant:
+                # Depth confirms that the locus is multi-copy but not the
+                # integer.  The graph counts distinct flanking contexts, and
+                # copies that share their flanks (rRNA operons) add depth
+                # without adding a context, so the count is returned for
+                # review, as a lower bound and without an upper bound.
+                return CopyNumberConsensusResult(
+                    count, "INTEGER_CONTEXT_COUNT", method, "REVIEW",
+                    count, None, flags,
+                )
             return CopyNumberConsensusResult(
                 count, "INTEGER_CONTEXT_COUNT", method, "SUPPORTED",
                 count, count, flags,

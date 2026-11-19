@@ -1,5 +1,41 @@
 # Changelog
 
+## 1.0.2 — 2026-11-19
+
+One label of the copy-number consensus was corrected after the external
+evaluation of release 1.0.1. No threshold changed, no number changed, and the
+reconstruction workflow is the code of 1.0.1.
+
+- **Integer graph count that the depth interval excludes.** When the graph
+  gives a context count of two or more, depth calls the locus multi-copy and
+  the bootstrap interval of the depth ratio does not contain the count
+  (`DEPTH_GRAPH_NUMERIC_DISCORDANCE`, method
+  `GRAPH_COUNT_OVER_DISCORDANT_DEPTH`), `copy_number_status` is now `REVIEW`.
+  The count is returned in `copy_number_call` and in
+  `copy_number_lower_bound`, and `copy_number_upper_bound` is empty. In 1.0.1
+  the status was `SUPPORTED` and both bounds equalled the count. The external
+  evaluation found this label wrong for five rRNA genes with six or seven
+  copies, for which the graph gave two contexts and the depth ratio was 4.80
+  to 7.45: the graph counts distinct flanks, and copies that share their
+  flanks add depth without adding a context. The four 23S rRNA counts of
+  *Helicobacter pylori* (two copies, ratios 2.55 to 2.97) receive the same
+  status, although they equal the truth.
+- A count of one with `SINGLE_COPY_COMPATIBLE` keeps the status `SUPPORTED`
+  when the interval excludes one, because the interval covers sampling along
+  the locus only (it contained the truth in 29 of 81 one-copy units of the
+  external evaluation).
+- The change was made after the results of the evaluation were known and was
+  not tested on other data. `validation/consensus-relabel-1.0.2/` applies it
+  to the stored results of the external evaluation and of the targeted tests
+  and gives both labels for every unit.
+- Three tests cover these cases (224 tests in total).
+
+The package code of 1.0.2 is identified by the SHA-256 digest
+`a24d41d80d2a3e04729eda04efa6938d82ac2d99e4ea875377353f014aae9b35` of `locus_recon/*.py`. It differs from 1.0.1 in
+`locus_recon/copy_number.py` (the rule above) and `locus_recon/__init__.py`
+(the version). The validation records under `validation/` state the version
+that produced each of them.
+
 ## 1.0.1 — 2026-11-18
 
 Two labels were corrected after a critical review of the manuscript. No

@@ -1,6 +1,6 @@
 """Locus-Recon: reconstruction of fragmented bacterial loci and depth-based locus copy number."""
 
-VERSION = "1.0.1"
+VERSION = "1.0.2"
 __version__ = VERSION
 PROGRAM = "LocusRecon"
 

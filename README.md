@@ -20,7 +20,7 @@ Identity to the catalogue is reported but does not lower the confidence tier, so
 accepted and marked for curation. Three companion commands estimate copy number from read depth, count flanking
 contexts in the assembly graph, and list the alternative paths through a local graph.
 
-Release 1.0.1. Python 3.9 or later; Linux or macOS; MIT licence.
+Release 1.0.2. Python 3.9 or later; Linux or macOS; MIT licence.
 
 ## Contents
 
@@ -70,7 +70,7 @@ The environment pins Python 3.11.13, BLAST+ 2.16.0, BWA-MEM2 2.2.1, samtools 1.2
 If you do not have Conda, install [Miniforge](https://github.com/conda-forge/miniforge) first.
 Activate the environment in every new terminal with `conda activate locus-recon`.
 
-To install exactly the released version, use the tag: `git clone --branch v1.0.1 https://github.com/crodsa/locus-recon.git`.
+To install exactly the released version, use the tag: `git clone --branch v1.0.2 https://github.com/crodsa/locus-recon.git`.
 
 The [release page](https://github.com/crodsa/locus-recon/releases) also carries a wheel and a source
 distribution of each release. The wheel holds the Python package only. The external tools still come from the Conda
@@ -79,7 +79,7 @@ environment, and the test data of the next section come with the repository or t
 ## Check the installation
 
 ```bash
-locus-recon --version          # locus-recon 1.0.1
+locus-recon --version          # locus-recon 1.0.2
 
 # checks inputs, tools and the bait database; maps and assembles nothing
 locus-recon \
@@ -200,47 +200,70 @@ How to read the output:
 
 - `MULTICOPY_DEPTH` means that the lower limit of the interval is above 1.5. `SINGLE_COPY_COMPATIBLE` is
   compatibility, not proof of one copy.
-- Depth measures large amplifications well. For a small count, such as a two-copy rRNA gene, depth overestimated
-  the number in our tests and the graph count was the better guide.
+- Depth measured a large amplification well (*aphA1*, 10 and 78 copies). For small counts it is imprecise: the
+  ratio of one-copy genes ranged from 0.79 to 1.59 in 16 species and rose with the G+C content of the genome.
+- The bootstrap interval describes sampling along the locus. It is not an interval for the copy number: it
+  contained the true number in 38 of 113 units of the external evaluation.
+- The graph context count is the number of distinct flanks of the locus. It equals the copy number when every
+  copy has its own flanks. When copies share their flanks, as rRNA operons often do, it is a lower bound. A count
+  of two or more is `SUPPORTED` only when the depth interval contains it; otherwise its status is `REVIEW`.
 - A locus broken across contigs needs `--gene-span` and `--gene-length`. If the spans overlap on the gene, the
   dosage is labelled `REVIEW_OVERLAPPING_SPANS`. Compare it with `geometry_expected_dosage`: overlap alone can
   produce a value near two.
 - When `ambiguity_index` is below 0.70 the estimate is a lower bound.
 - `locus-recon-copy-number` returns `copy_number_status` `SUPPORTED` for a dosage only when `dosage_status` is
   `ESTIMATED`. A dosage from overlapping spans or from part of the query is returned as `REVIEW`.
+- `SUPPORTED` means that the lines of evidence named by `copy_number_method` agree. It is not a validated count.
 - A path listed by `locus-recon-graph-paths` is a proposal, not an allele call.
 
 Details and worked examples are in the [user guide](docs/user-guide.md#when-every-copy-is-identical-the-depth-ratio).
 
 ## What has been tested
 
-All inputs, outputs and scripts are under [`validation/`](validation/README.md). The numbers below were obtained
-with release 1.0.0 and reproduced with release 1.0.1; [docs/validation-results.md](docs/validation-results.md) gives the detail,
-with the external evaluation on 16 species and the targeted tests that were added for release 1.0.1.
+All inputs, outputs and scripts are under [`validation/`](validation/README.md). [docs/validation-results.md](docs/validation-results.md) gives the detail, including the results that are
+unfavourable. The external evaluation followed a protocol written before the runs
+([`validation/external-evaluation/PROTOCOL.md`](validation/external-evaluation/PROTOCOL.md)) and was run with
+release 1.0.1; release 1.0.2 differs from it in one label of the copy-number consensus (see the
+[changelog](CHANGELOG.md)).
 
 | Test | Data | Result |
 |---|---|---|
-| Accepted sequences | 62 cases with known truth: 13 simulated, 14 constructed, 35 from real reads of five closed *Helicobacter pylori* genomes | 25 accepted, all 25 identical to the truth. The cases are not independent |
+| External evaluation | 16 public isolates of 16 species (FDA-ARGOS), eight loci each, reads at 100×, scored against the complete genome | Of 113 units with a truth copy, 98 sequences were identical to it (KMA 99, ARIBA 94). Locus-Recon accepted 95, and 89 were exact. The six accepted and not exact belong to one isolate whose public reads do not match its public genome (97.35% identity); ARIBA and KMA returned the same six sequences. Where the copies of a gene differ (26 units), Locus-Recon accepted 9 sequences, all exact, and held 17, of which 8 were exact |
+| Accepted sequences during development | 62 cases with known truth: 35 from real reads of five closed *Helicobacter pylori* genomes, 13 simulated, 14 constructed without reads | 25 accepted (19, 3 and 3), all identical to the truth. The cases are not independent |
+| Mixtures with few sites | 200 simulated mixtures of two alleles that differ at 1 to 10 sites | A mixture that differs at one site was accepted in 50 of 50 samples, 41 of them with the flag `MIXED_SITE_BELOW_MIXTURE_CALL`. With two sites or more, every mixture with a minor fraction of 20% or more was held |
+| Indels and pseudogenes | Simulated alleles with a 12-bp insertion, a 1-bp deletion or a premature stop codon | Recovered exactly and never accepted: the workflow does not accept an allele whose length or reading frame departs from the bait |
 | New alleles | Real reads, one bait from another strain | Accepted sequences were 2.5 to 4.3% divergent from the bait. *cagA*, about 11% divergent and variable in length, was not accepted in any of five isolates |
 | Completeness | 14 constructed assemblies | Missing bases measured exactly, from 0 to 822 bp |
 | Mixtures and paralogue | Simulated reads | Mixtures with 10 to 50% of a second allele and a paralogue control were held |
 | Depth, synthetic | 27 datasets with one to three copies | Median absolute error 0.04 copies |
 | Depth, real amplification | *aphA1* in seven *Acinetobacter baumannii* runs | 10.5 and 77.7 copies, against 10 ± 2 and 75 ± 14 by published quantitative PCR |
-| Low copy number | 23S rRNA gene (two copies) in five *H. pylori* isolates | Depth ratios of 2.55 to 3.22; the graph gave two copies in four isolates and a lower bound of two in the fifth |
+| Low copy number | 23S rRNA gene (two copies) in five *H. pylori* isolates | Depth ratios of 2.55 to 3.22; the graph gave two contexts in four isolates and a lower bound of two in the fifth |
+| Copy number, external evaluation | The 113 units above (81 with one copy, 32 with two to 13) | No one-copy unit was called multi-copy. 21 of 32 multi-copy units were called. The graph count equalled the truth in 69 units, was a correct lower bound in 32 and was below the truth in 6. With release 1.0.1, 6 of 89 `SUPPORTED` results were wrong; release 1.0.2 labels five of them `REVIEW` |
 | Collapsed divergent copies | *tcdB* of *Clostridioides difficile* LIBA-6656 | The workflow held a well-covered 1,955-bp fragment with 23 mixed sites. A dosage of 2.29 was shown to arise from overlapping alignments |
 | Comparison with ARIBA 2.14.7 and KMA 1.7.1 | The same reads and reference sequences: 25 *H. pylori* loci, 13 simulated samples, LIBA-6656 | Exact sequences in 19 (Locus-Recon), 19 (ARIBA) and 20 (KMA) of the 25 *H. pylori* loci. KMA returned sequences that differ from the truth for *cagA* and for the paralogue control. It raised no flag. These sequences had lower-case bases at or next to their errors, but lower case cannot show bases that are missing, and correct sequences carried it too. ARIBA fragmented *cagA* and returned the true allele of the paralogue control. Locus-Recon accepted none of its wrong candidates and stated why |
 
 ## Limits
 
-- Accuracy on real reads was tested in one species, with baits from one strain.
+- Accuracy on real reads was tested on conserved genes of 17 species at 100× or at the depth of the run. Loci
+  that are difficult for short reads were tested in *H. pylori* (*cagA*) and *C. difficile* (*tcdB*) only.
+- The truth of every real-read test is a complete genome that was built in part from short reads of the same
+  isolate. An accepted sequence agrees with the reads; if the reads are not those of the expected isolate, the
+  sequence is still accepted.
+- A mixture of two alleles that differ at a single site is accepted, with a flag when the minor allele is
+  frequent enough to be seen. Read `MIXED_SITE_BELOW_MIXTURE_CALL` before using an accepted sequence.
+- A correct allele with an indel, a frameshift or a premature stop codon is not accepted. It is returned for
+  review or held, with the reason.
+- Integer copy numbers above one are not reliable when copies share their flanks or lie on several draft
+  intervals. Use the depth call as an alert and the graph count as a lower bound.
 - The thresholds of the confidence tier are fixed constants. They were chosen during development and were not
   estimated from data. Validate them on a panel of your own organism and library type.
 - A locus whose length varies among strains needs baits that represent that variation, or its candidates will not
   be accepted.
 - The 1.5 threshold of the depth call was set by the author and was not fitted.
 - Locus-Recon did not return better sequences than ARIBA or KMA when a close reference existed, and it is slower
-  and needs a draft assembly. KMA is the quick route to the sequence. Locus-Recon adds the evidence that says
-  when the sequence can be trusted and how many copies there are. SRST2 and stringMLST were not compared.
+  and needs a draft assembly. KMA is the quick route to the sequence. Locus-Recon adds an explicit decision and
+  the evidence behind it; in the external evaluation that decision differed from simple rules for KMA and ARIBA
+  only where the copies of a gene differ. SRST2 and stringMLST were not compared.
 - When the copies of a locus are divergent and the catalogue holds a close allele of each, KMA can separate them
   and the standard Locus-Recon workflow cannot: for *tcdB* of LIBA-6656 it returned one held fragment.
 - Short reads cannot close a replicon, assign distant variants to a copy or replace long reads when a result
@@ -270,7 +293,9 @@ name and version, this repository, and the name and release of the allele databa
 Software: [MIT licence](LICENSE). Synthetic data, validation records and figures: [CC BY 4.0](LICENSE-DATA.md).
 Public sequencing runs keep the terms of their sources.
 
-Release 1.0.1 is the tag `v1.0.1`. Its package code is identified by the SHA-256 digest
-`2cc816cca467a7988c1f2a28cba11ed1cbb30b263e331f75ca48efa19ebefce0` of `locus_recon/*.py`. Release 1.0.0
-(tag `v1.0.0`) has the digest `3863abc32fb5446a72919c790cb2558217871410f441db1ecf17dde3de55cdcf`. The
-[changelog](CHANGELOG.md) lists what each release contains and how 1.0.1 differs.
+Release 1.0.2 is the tag `v1.0.2`. Its package code is identified by the SHA-256 digest
+`a24d41d80d2a3e04729eda04efa6938d82ac2d99e4ea875377353f014aae9b35` of `locus_recon/*.py`. Release 1.0.1
+(tag `v1.0.1`, the version of the external evaluation) has the digest
+`2cc816cca467a7988c1f2a28cba11ed1cbb30b263e331f75ca48efa19ebefce0`, and release 1.0.0 (tag `v1.0.0`)
+`3863abc32fb5446a72919c790cb2558217871410f441db1ecf17dde3de55cdcf`. The [changelog](CHANGELOG.md) lists what
+each release contains and how the releases differ.

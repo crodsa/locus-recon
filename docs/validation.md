@@ -182,7 +182,7 @@ and the SPAdes graphs of their Illumina-only drafts. Depth classified all five
 23S loci as `MULTICOPY_DEPTH` and no `gyrB` control, meeting the prespecified
 primary criteria. Four 23S loci returned two matched contexts and
 `copy_number_call=2`, under `GRAPH_COUNT_OVER_DISCORDANT_DEPTH` because the
-depth interval lay above two; at Hpfe0004 both ends also yielded two contexts,
+depth interval lay above two (status `REVIEW` since release 1.0.2); at Hpfe0004 both ends also yielded two contexts,
 but the traversal met a cycle, and the count was reported as a lower bound of
 two. All five single-copy `gyrB` controls returned one. The raw 23S depth
 ratios were 2.546–3.221, and the workflow verified that the 21 depth columns

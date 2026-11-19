@@ -502,9 +502,74 @@ def test_two_graph_contexts_override_shifted_multicopy_depth_quantitation():
     # two lines of evidence are not in consensus on the number. The graph count
     # still wins, under a method name that does not claim agreement.
     assert result.copy_number_method == "GRAPH_COUNT_OVER_DISCORDANT_DEPTH"
-    assert result.copy_number_status == "SUPPORTED"
+    # Since 1.0.2 an integer of two or more that the depth interval excludes
+    # is returned for review, as a lower bound and without an upper bound.
+    assert result.copy_number_status == "REVIEW"
+    assert result.copy_number_lower_bound == 2
+    assert result.copy_number_upper_bound is None
     assert "DEPTH_GRAPH_NUMERIC_DISCORDANCE" in result.consensus_flags
     assert depth.dosage_estimate == 3.221
+
+
+def test_graph_count_inside_the_depth_interval_is_supported():
+    depth = _depth(
+        "MULTICOPY_DEPTH", dosage=2.1, ratio=2.1, ci_low=1.9, ci_high=2.3,
+    )
+    graph = _graph_result(
+        "MATCHED_CONTEXT_COUNT", left=2, right=2, count=2, lower_bound=2,
+    )
+
+    result = reconcile_copy_number(depth, graph)
+
+    assert result.copy_number_call == 2
+    assert result.copy_number_method == "GRAPH_DEPTH_CONSENSUS"
+    assert result.copy_number_status == "SUPPORTED"
+    assert (result.copy_number_lower_bound, result.copy_number_upper_bound) == (2, 2)
+    assert result.consensus_flags == []
+
+
+def test_rrna_like_count_far_below_the_depth_ratio_is_not_supported():
+    """Two contexts for a gene with seven copies (external evaluation, 1.0.1).
+
+    Copies that share their flanks add depth without adding a context.  The
+    count of two is then a lower bound, and release 1.0.1 labelled it
+    ``SUPPORTED``.
+    """
+    depth = _depth(
+        "MULTICOPY_DEPTH", dosage=7.446, ratio=7.446, ci_low=7.312, ci_high=7.708,
+    )
+    graph = _graph_result(
+        "MATCHED_CONTEXT_COUNT", left=2, right=2, count=2, lower_bound=2,
+    )
+
+    result = reconcile_copy_number(depth, graph)
+
+    assert result.copy_number_call == 2
+    assert result.copy_number_status == "REVIEW"
+    assert result.copy_number_lower_bound == 2
+    assert result.copy_number_upper_bound is None
+    assert "DEPTH_GRAPH_NUMERIC_DISCORDANCE" in result.consensus_flags
+
+
+def test_single_context_with_single_copy_depth_stays_supported_when_interval_excludes_one():
+    """The class agreement at the call threshold supports a count of one.
+
+    The bootstrap interval covers sampling along the locus only and often
+    excludes one for a single-copy locus, so it does not demote this call.
+    """
+    depth = _depth(
+        "SINGLE_COPY_COMPATIBLE", dosage=1.2, ratio=1.2, ci_low=1.1, ci_high=1.3,
+    )
+    graph = _graph_result(
+        "MATCHED_CONTEXT_COUNT", left=1, right=1, count=1, lower_bound=1,
+    )
+
+    result = reconcile_copy_number(depth, graph)
+
+    assert result.copy_number_call == 1
+    assert result.copy_number_status == "SUPPORTED"
+    assert result.copy_number_method == "GRAPH_COUNT_OVER_DISCORDANT_DEPTH"
+    assert "DEPTH_GRAPH_NUMERIC_DISCORDANCE" in result.consensus_flags
 
 
 def test_one_graph_context_preserves_tandem_depth_dosage_for_aphA1():
@@ -625,7 +690,7 @@ def test_integer_graph_count_does_not_depend_on_the_dosage_status():
     # The value returned is the graph count, so a dosage under review does not
     # lower its status.
     depth = _depth(
-        "MULTICOPY_DEPTH", dosage=3.221, ratio=3.221, ci_low=2.896, ci_high=3.546,
+        "MULTICOPY_DEPTH", dosage=2.3, ratio=2.1, ci_low=1.9, ci_high=2.3,
         dosage_status="REVIEW_OVERLAPPING_SPANS",
     )
     graph = _graph_result(
