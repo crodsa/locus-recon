@@ -69,3 +69,9 @@ target-version = "py39"
 # Errors rather than style: syntax errors, undefined names, unused imports and
 # variables. CI runs this set on every push.
 select = ["E9", "F"]
+
+[tool.ruff.lint.per-file-ignores]
+# Scripts kept byte for byte as they were run for the 1.0.1 records; their
+# checksums are recorded in the PROVENANCE files of those records.
+"validation/run_targeted_tests.py" = ["F401"]
+"validation/regenerate/collect_regenerated.py" = ["F541", "F841"]

@@ -1,0 +1,3 @@
+nominal_locus_bp	locus_bp	depth	runs	sequence_returned	exact	runs_with_STRAND_BIASED_ALT_SUPPORT	runs_with_any_tier_affecting_flag	runs_with_any_flag	runs_with_candidate_mixed_site	accepted	sent_to_review	held	other_flags
+500	501	20	1	1	1	0	1	1	0	0	1	0	MODEST_REMAP_PATCHINESS=1; REMAP_DEPTH_BELOW_HIGH=1
+7000	6999	1000	1	1	1	0	0	0	0	1	0	0	

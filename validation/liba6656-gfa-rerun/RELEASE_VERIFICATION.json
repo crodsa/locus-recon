@@ -57,7 +57,7 @@
           "sha256": "62662d9b6a8fc4f7f7a93a2336e2e3770156d72f6dbeb9f4d1454a11b4b22270"
         }
       },
-      "locus_recon_version": "1.0.0",
+      "locus_recon_version": "1.0.1",
       "parameters": {
         "cleanup": false,
         "memory_per_sample": 12,
@@ -120,14 +120,14 @@
           "sha256": "62662d9b6a8fc4f7f7a93a2336e2e3770156d72f6dbeb9f4d1454a11b4b22270"
         }
       },
-      "locus_recon_version": "1.0.0",
+      "locus_recon_version": "1.0.1",
       "parameters": {
         "cleanup": false,
         "memory_per_sample": 12,
         "min_discovery_identity": 80.0,
         "min_hsp_length": 50,
         "region_padding": 300,
-        "threads": 8
+        "threads": 6
       },
       "qc_flags": [
         "FRAME_LENGTH_SHIFT_TRUNCATED (length % 3 = 2; bait mode = 0; expected because the projected span is clipped by 5149 bp at a contig boundary)",
@@ -167,11 +167,11 @@
   "runs_agree": true,
   "schema_version": "1.0",
   "software": {
-    "git_commit": "7cd0a7310316cb95943acea7dae8b226a9703f8a",
-    "git_tree_clean": true,
+    "git_commit": "884cdf3c84f17dc9007576f26c6b431044dd35e1",
+    "git_tree_clean": false,
     "name": "locus-recon",
-    "source_sha256": "3863abc32fb5446a72919c790cb2558217871410f441db1ecf17dde3de55cdcf",
-    "version": "1.0.0"
+    "source_sha256": "2cc816cca467a7988c1f2a28cba11ed1cbb30b263e331f75ca48efa19ebefce0",
+    "version": "1.0.1"
   },
   "terminal_paths": {
     "length_range_bp": {

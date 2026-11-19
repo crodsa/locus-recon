@@ -266,7 +266,7 @@ def test_committed_aphA1_panel_retains_full_class_and_qpcr_concordance():
     ).hexdigest() == "c6f185f0726b688ea9069c0f049d5ba861ba11da9fb336b1b72401ded3ef5e5d"
     assert hashlib.sha256(
         (root / "validation/aphA1-copy-number/run_summary.json").read_bytes()
-    ).hexdigest() == "63fe7d8a2723ff85468848a37c114916e127c40ace44244ffd70cce4a2da12fc"
+    ).hexdigest() == "86248feb956ac225e7a7c388d2f1f644f32a4847f8c3e73041ce5a6111f0239e"
 
 
 def test_committed_low_copy_panel_meets_prespecified_two_copy_boundary():

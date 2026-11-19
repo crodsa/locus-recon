@@ -1,11 +1,16 @@
 # Comparison with ARIBA and KMA
 
-This folder holds a comparison of Locus-Recon 1.0.0 with two established tools that also return a locus
+This folder holds a comparison of Locus-Recon with two established tools that also return a locus
 sequence from short reads: ARIBA 2.14.7 and KMA 1.7.1. The three tools received the same reads and the same
-reference sequences, and the sequences they returned were scored against the same truth.
+reference sequences, and the sequences they returned were scored against the same truth. The sequences of
+ARIBA and KMA are those of their runs of 11 and 13 November 2026. The sequences of Locus-Recon are those of
+the regeneration of the validation analyses with release 1.0.1, of 18 November 2026.
 
-The script is [`../run_comparator_benchmark.py`](../run_comparator_benchmark.py). It runs ARIBA and KMA. The rows
-of Locus-Recon are read from the tables that are already in this repository; Locus-Recon is not run again.
+The script is [`../run_comparator_benchmark.py`](../run_comparator_benchmark.py). It runs ARIBA and KMA. With the
+option `--locus-recon-evidence` it scores the candidate sequences that the regeneration kept
+(`../regenerated-1.0.1/evidence/`) with the function that scores the sequences of the other two tools.
+Locus-Recon itself is not run by this script. Without that option the rows of Locus-Recon are read from
+tables of this repository, as in release 1.0.0.
 
 ## What was compared
 
@@ -30,7 +35,10 @@ with them shows that two methods reach the same sequence from the same reads. It
   `setuptools` below 81.
 - The tools were run on 11 November 2026 (*H. pylori*, LIBA-6656, and KMA on the simulated samples) and on
   13 November 2026 (ARIBA on the simulated samples), from source distributions of release 1.0.0 with the same
-  package code. The scoring and `PROVENANCE.json` date from 13 November 2026.
+  package code. `PROVENANCE.json` and the first scoring date from 13 November 2026.
+- On 18 November 2026 the outputs of ARIBA and KMA kept in `raw_tool_outputs.tar.gz` were scored again, without
+  running the two tools, together with the Locus-Recon candidates of release 1.0.1
+  (`LOCUS_RECON_ROWS_PROVENANCE.json`). Every field of the ARIBA and KMA rows was reproduced.
 - The simulated benchmark of Locus-Recon ran with two settings that differ from its defaults
   (`--min-remap-depth 3`, `--min-bitscore-margin 80`); all other Locus-Recon results use the defaults.
 
@@ -104,9 +112,11 @@ timed on these reads; it needs a draft assembly and runs a local assembly and tw
   comparators report depth but no copy number.
 
 The comparison has limits. It covers one species with real truth, one bait strain and default settings. SRST2 and
-stringMLST were not run. The Locus-Recon
-candidates of the *H. pylori* and simulated cases are not stored in this repository, so their relation to the
-truth is derived from the deposited comparison fields.
+stringMLST were not run. In release 1.0.0 the Locus-Recon
+candidates of the *H. pylori* and simulated cases had not been kept, and their relation to the truth was
+derived from deposited comparison fields. They are now scored from the sequences, which are in
+`comparator_returned_sequences.fasta`. `../regenerated-1.0.1/old_vs_new.tsv` lists every field of the earlier
+and of the new rows.
 
 ## Files
 
@@ -114,7 +124,8 @@ truth is derived from the deposited comparison fields.
 |---|---|
 | `comparator_benchmark_results.tsv` | One row per case and tool configuration: 39 cases × 4 = 156 rows |
 | `comparator_benchmark_summary.tsv` | Counts of each relation per group of cases and tool configuration |
-| `comparator_returned_sequences.fasta` | Every sequence returned by ARIBA and KMA |
+| `comparator_returned_sequences.fasta` | Every sequence returned by ARIBA and KMA, and every candidate of Locus-Recon |
+| `LOCUS_RECON_ROWS_PROVENANCE.json` | The Locus-Recon reports and candidates that were scored, with their checksums |
 | `comparator_truth_sequences.fasta` | The truth sequences, and the two LIBA-6656 candidates |
 | `*_catalogue.fasta`, `*_catalogue_ariba_metadata.tsv` | The reference sequences as given to the tools |
 | `liba6656_analyst_built_candidates.fasta` | Input: the two analyst-built *tcdB* candidates |
@@ -136,6 +147,10 @@ python validation/run_comparator_benchmark.py --workdir /path/to/work --threads 
 # scoring only, from the tool outputs kept here (needs BLAST+ and network access to NCBI for the annotations)
 mkdir work && tar -xzf validation/comparator-benchmark/raw_tool_outputs.tar.gz -C work
 python validation/run_comparator_benchmark.py --workdir work --outdir work/out --score-only
+
+# the same, with the Locus-Recon rows scored from the candidates of the regeneration
+python validation/run_comparator_benchmark.py --workdir work --outdir work/out --score-only \
+    --locus-recon-evidence validation/regenerated-1.0.1/evidence
 ```
 
 Without `--outdir`, the full run writes into this folder.

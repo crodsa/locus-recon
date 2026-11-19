@@ -1,0 +1,196 @@
+test	cell	metric	value	denominator	source_file
+1	sites=1	detection_limit_all_replicates_held_as_mixture_pct	none		test1_detection_limit.tsv
+1	sites=2	detection_limit_all_replicates_held_as_mixture_pct	none		test1_detection_limit.tsv
+1	sites=5	detection_limit_all_replicates_held_as_mixture_pct	none		test1_detection_limit.tsv
+1	sites=10	detection_limit_all_replicates_held_as_mixture_pct	none		test1_detection_limit.tsv
+4	background=plain;c2_dispersed_div1pct	graph_vs_truth	no_count=1	1	test4_cells.tsv
+4	background=plain;c2_dispersed_div1pct	depth_call	SINGLE_COPY_COMPATIBLE=1	1	test4_cells.tsv
+4	background=plain;c2_dispersed_div1pct	consensus_vs_truth	dosage_within_0.5_of_truth=1	1	test4_cells.tsv
+4	background=plain;c2_dispersed_div1pct	consensus_supported_but_wrong	0	1	test4_cells.tsv
+4	background=plain;c2_dispersed_div1pct	dosage_median_range	1.950 (1.950-1.950)	1	test4_cells.tsv
+4	background=plain;c3_dispersed_identical	graph_vs_truth	equals_true_copies=1	1	test4_cells.tsv
+4	background=plain;c3_dispersed_identical	depth_call	MULTICOPY_DEPTH=1	1	test4_cells.tsv
+4	background=plain;c3_dispersed_identical	consensus_vs_truth	integer_equals_truth=1	1	test4_cells.tsv
+4	background=plain;c3_dispersed_identical	consensus_supported_but_wrong	0	1	test4_cells.tsv
+4	background=plain;c3_dispersed_identical	dosage_median_range	3.150 (3.150-3.150)	1	test4_cells.tsv
+4	background=plain;c3_dispersed_div1pct	graph_vs_truth	no_count=1	1	test4_cells.tsv
+4	background=plain;c3_dispersed_div1pct	depth_call	SINGLE_COPY_COMPATIBLE=1	1	test4_cells.tsv
+4	background=plain;c3_dispersed_div1pct	consensus_vs_truth	dosage_within_0.5_of_truth=1	1	test4_cells.tsv
+4	background=plain;c3_dispersed_div1pct	consensus_supported_but_wrong	0	1	test4_cells.tsv
+4	background=plain;c3_dispersed_div1pct	dosage_median_range	2.792 (2.792-2.792)	1	test4_cells.tsv
+4	background=plain;c4_dispersed_identical	graph_vs_truth	equals_true_copies=1	1	test4_cells.tsv
+4	background=plain;c4_dispersed_identical	depth_call	MULTICOPY_DEPTH=1	1	test4_cells.tsv
+4	background=plain;c4_dispersed_identical	consensus_vs_truth	integer_equals_truth=1	1	test4_cells.tsv
+4	background=plain;c4_dispersed_identical	consensus_supported_but_wrong	0	1	test4_cells.tsv
+4	background=plain;c4_dispersed_identical	dosage_median_range	3.950 (3.950-3.950)	1	test4_cells.tsv
+4	background=plain;c2_tandem_div1pct	graph_vs_truth	no_count=1	1	test4_cells.tsv
+4	background=plain;c2_tandem_div1pct	depth_call	SINGLE_COPY_COMPATIBLE=1	1	test4_cells.tsv
+4	background=plain;c2_tandem_div1pct	consensus_vs_truth	dosage_within_0.5_of_truth=1	1	test4_cells.tsv
+4	background=plain;c2_tandem_div1pct	consensus_supported_but_wrong	0	1	test4_cells.tsv
+4	background=plain;c2_tandem_div1pct	dosage_median_range	2.083 (2.083-2.083)	1	test4_cells.tsv
+4	background=plain;c1_flankrepeat1kb	graph_vs_truth	equals_true_copies=1	1	test4_cells.tsv
+4	background=plain;c1_flankrepeat1kb	depth_call	SINGLE_COPY_COMPATIBLE=1	1	test4_cells.tsv
+4	background=plain;c1_flankrepeat1kb	consensus_vs_truth	integer_equals_truth=1	1	test4_cells.tsv
+4	background=plain;c1_flankrepeat1kb	consensus_supported_but_wrong	0	1	test4_cells.tsv
+4	background=plain;c1_flankrepeat1kb	dosage_median_range	0.967 (0.967-0.967)	1	test4_cells.tsv
+4	background=decoy;c1_control	graph_vs_truth	equals_true_copies=1	1	test4_cells.tsv
+4	background=decoy;c1_control	depth_call	SINGLE_COPY_COMPATIBLE=1	1	test4_cells.tsv
+4	background=decoy;c1_control	consensus_vs_truth	integer_equals_truth=1	1	test4_cells.tsv
+4	background=decoy;c1_control	consensus_supported_but_wrong	0	1	test4_cells.tsv
+4	background=decoy;c1_control	dosage_median_range	1.000 (1.000-1.000)	1	test4_cells.tsv
+4	background=decoy;c2_dispersed_identical	graph_vs_truth	equals_true_copies=1	1	test4_cells.tsv
+4	background=decoy;c2_dispersed_identical	depth_call	MULTICOPY_DEPTH=1	1	test4_cells.tsv
+4	background=decoy;c2_dispersed_identical	consensus_vs_truth	integer_equals_truth=1	1	test4_cells.tsv
+4	background=decoy;c2_dispersed_identical	consensus_supported_but_wrong	0	1	test4_cells.tsv
+4	background=decoy;c2_dispersed_identical	dosage_median_range	1.917 (1.917-1.917)	1	test4_cells.tsv
+4	background=decoy;c2_dispersed_div1pct	graph_vs_truth	no_count=1	1	test4_cells.tsv
+4	background=decoy;c2_dispersed_div1pct	depth_call	SINGLE_COPY_COMPATIBLE=1	1	test4_cells.tsv
+4	background=decoy;c2_dispersed_div1pct	consensus_vs_truth	dosage_within_0.5_of_truth=1	1	test4_cells.tsv
+4	background=decoy;c2_dispersed_div1pct	consensus_supported_but_wrong	0	1	test4_cells.tsv
+4	background=decoy;c2_dispersed_div1pct	dosage_median_range	1.852 (1.852-1.852)	1	test4_cells.tsv
+4	background=decoy;c3_dispersed_identical	graph_vs_truth	equals_true_copies=1	1	test4_cells.tsv
+4	background=decoy;c3_dispersed_identical	depth_call	MULTICOPY_DEPTH=1	1	test4_cells.tsv
+4	background=decoy;c3_dispersed_identical	consensus_vs_truth	integer_equals_truth=1	1	test4_cells.tsv
+4	background=decoy;c3_dispersed_identical	consensus_supported_but_wrong	0	1	test4_cells.tsv
+4	background=decoy;c3_dispersed_identical	dosage_median_range	3.017 (3.017-3.017)	1	test4_cells.tsv
+4	background=decoy;c3_dispersed_div1pct	graph_vs_truth	no_count=1	1	test4_cells.tsv
+4	background=decoy;c3_dispersed_div1pct	depth_call	SINGLE_COPY_COMPATIBLE=1	1	test4_cells.tsv
+4	background=decoy;c3_dispersed_div1pct	consensus_vs_truth	dosage_within_0.5_of_truth=1	1	test4_cells.tsv
+4	background=decoy;c3_dispersed_div1pct	consensus_supported_but_wrong	0	1	test4_cells.tsv
+4	background=decoy;c3_dispersed_div1pct	dosage_median_range	2.832 (2.832-2.832)	1	test4_cells.tsv
+4	background=decoy;c4_dispersed_identical	graph_vs_truth	equals_true_copies=1	1	test4_cells.tsv
+4	background=decoy;c4_dispersed_identical	depth_call	MULTICOPY_DEPTH=1	1	test4_cells.tsv
+4	background=decoy;c4_dispersed_identical	consensus_vs_truth	integer_equals_truth=1	1	test4_cells.tsv
+4	background=decoy;c4_dispersed_identical	consensus_supported_but_wrong	0	1	test4_cells.tsv
+4	background=decoy;c4_dispersed_identical	dosage_median_range	3.833 (3.833-3.833)	1	test4_cells.tsv
+4	background=decoy;c4_dispersed_div1pct	graph_vs_truth	no_count=1	1	test4_cells.tsv
+4	background=decoy;c4_dispersed_div1pct	depth_call	MULTICOPY_DEPTH=1	1	test4_cells.tsv
+4	background=decoy;c4_dispersed_div1pct	consensus_vs_truth	dosage_within_0.5_of_truth=1	1	test4_cells.tsv
+4	background=decoy;c4_dispersed_div1pct	consensus_supported_but_wrong	0	1	test4_cells.tsv
+4	background=decoy;c4_dispersed_div1pct	dosage_median_range	3.791 (3.791-3.791)	1	test4_cells.tsv
+4	background=decoy;c2_sharedflank500_identical	graph_vs_truth	equals_true_copies=1	1	test4_cells.tsv
+4	background=decoy;c2_sharedflank500_identical	depth_call	MULTICOPY_DEPTH=1	1	test4_cells.tsv
+4	background=decoy;c2_sharedflank500_identical	consensus_vs_truth	integer_equals_truth=1	1	test4_cells.tsv
+4	background=decoy;c2_sharedflank500_identical	consensus_supported_but_wrong	0	1	test4_cells.tsv
+4	background=decoy;c2_sharedflank500_identical	dosage_median_range	2.008 (2.008-2.008)	1	test4_cells.tsv
+4	background=decoy;c2_sharedflank500_div1pct	graph_vs_truth	no_count=1	1	test4_cells.tsv
+4	background=decoy;c2_sharedflank500_div1pct	depth_call	SINGLE_COPY_COMPATIBLE=1	1	test4_cells.tsv
+4	background=decoy;c2_sharedflank500_div1pct	consensus_vs_truth	dosage_within_0.5_of_truth=1	1	test4_cells.tsv
+4	background=decoy;c2_sharedflank500_div1pct	consensus_supported_but_wrong	0	1	test4_cells.tsv
+4	background=decoy;c2_sharedflank500_div1pct	dosage_median_range	1.829 (1.829-1.829)	1	test4_cells.tsv
+4	background=decoy;c2_sharedflank2000_identical	graph_vs_truth	equals_true_copies=1	1	test4_cells.tsv
+4	background=decoy;c2_sharedflank2000_identical	depth_call	MULTICOPY_DEPTH=1	1	test4_cells.tsv
+4	background=decoy;c2_sharedflank2000_identical	consensus_vs_truth	integer_equals_truth=1	1	test4_cells.tsv
+4	background=decoy;c2_sharedflank2000_identical	consensus_supported_but_wrong	0	1	test4_cells.tsv
+4	background=decoy;c2_sharedflank2000_identical	dosage_median_range	2.033 (2.033-2.033)	1	test4_cells.tsv
+4	background=decoy;c2_sharedflank2000_div1pct	graph_vs_truth	no_count=1	1	test4_cells.tsv
+4	background=decoy;c2_sharedflank2000_div1pct	depth_call	MULTICOPY_DEPTH=1	1	test4_cells.tsv
+4	background=decoy;c2_sharedflank2000_div1pct	consensus_vs_truth	dosage_within_0.5_of_truth=1	1	test4_cells.tsv
+4	background=decoy;c2_sharedflank2000_div1pct	consensus_supported_but_wrong	0	1	test4_cells.tsv
+4	background=decoy;c2_sharedflank2000_div1pct	dosage_median_range	1.820 (1.820-1.820)	1	test4_cells.tsv
+4	background=decoy;c2_tandem_identical	graph_vs_truth	lower_bound_correct=1	1	test4_cells.tsv
+4	background=decoy;c2_tandem_identical	depth_call	SINGLE_COPY_COMPATIBLE=1	1	test4_cells.tsv
+4	background=decoy;c2_tandem_identical	consensus_vs_truth	not_estimated=1	1	test4_cells.tsv
+4	background=decoy;c2_tandem_identical	consensus_supported_but_wrong	0	1	test4_cells.tsv
+4	background=decoy;c2_tandem_identical	dosage_median_range	0.000 (0.000-0.000)	1	test4_cells.tsv
+4	background=decoy;c2_tandem_div1pct	graph_vs_truth	no_count=1	1	test4_cells.tsv
+4	background=decoy;c2_tandem_div1pct	depth_call	SINGLE_COPY_COMPATIBLE=1	1	test4_cells.tsv
+4	background=decoy;c2_tandem_div1pct	consensus_vs_truth	dosage_within_0.5_of_truth=1	1	test4_cells.tsv
+4	background=decoy;c2_tandem_div1pct	consensus_supported_but_wrong	0	1	test4_cells.tsv
+4	background=decoy;c2_tandem_div1pct	dosage_median_range	1.917 (1.917-1.917)	1	test4_cells.tsv
+4	background=decoy;c1_flankrepeat1kb	graph_vs_truth	equals_true_copies=1	1	test4_cells.tsv
+4	background=decoy;c1_flankrepeat1kb	depth_call	SINGLE_COPY_COMPATIBLE=1	1	test4_cells.tsv
+4	background=decoy;c1_flankrepeat1kb	consensus_vs_truth	integer_equals_truth=1	1	test4_cells.tsv
+4	background=decoy;c1_flankrepeat1kb	consensus_supported_but_wrong	0	1	test4_cells.tsv
+4	background=decoy;c1_flankrepeat1kb	dosage_median_range	0.933 (0.933-0.933)	1	test4_cells.tsv
+4	background=decoy;c1_strainmix_flanksite	graph_vs_truth	lower_bound_correct=1	1	test4_cells.tsv
+4	background=decoy;c1_strainmix_flanksite	depth_call	SINGLE_COPY_COMPATIBLE=1	1	test4_cells.tsv
+4	background=decoy;c1_strainmix_flanksite	consensus_vs_truth	dosage_within_0.5_of_truth=1	1	test4_cells.tsv
+4	background=decoy;c1_strainmix_flanksite	consensus_supported_but_wrong	0	1	test4_cells.tsv
+4	background=decoy;c1_strainmix_flanksite	dosage_median_range	0.967 (0.967-0.967)	1	test4_cells.tsv
+4	background=decoy;c2_strainmix_flanksite_identical	graph_vs_truth	equals_true_copies=1	1	test4_cells.tsv
+4	background=decoy;c2_strainmix_flanksite_identical	depth_call	MULTICOPY_DEPTH=1	1	test4_cells.tsv
+4	background=decoy;c2_strainmix_flanksite_identical	consensus_vs_truth	integer_equals_truth=1	1	test4_cells.tsv
+4	background=decoy;c2_strainmix_flanksite_identical	consensus_supported_but_wrong	0	1	test4_cells.tsv
+4	background=decoy;c2_strainmix_flanksite_identical	dosage_median_range	2.067 (2.067-2.067)	1	test4_cells.tsv
+4	background=decoy;c2_strainmix_flanksite_div1pct	graph_vs_truth	no_count=1	1	test4_cells.tsv
+4	background=decoy;c2_strainmix_flanksite_div1pct	depth_call	MULTICOPY_DEPTH=1	1	test4_cells.tsv
+4	background=decoy;c2_strainmix_flanksite_div1pct	consensus_vs_truth	dosage_within_0.5_of_truth=1	1	test4_cells.tsv
+4	background=decoy;c2_strainmix_flanksite_div1pct	consensus_supported_but_wrong	0	1	test4_cells.tsv
+4	background=decoy;c2_strainmix_flanksite_div1pct	dosage_median_range	1.793 (1.793-1.793)	1	test4_cells.tsv
+5	copies=1;overlap=0%	dosage_median_range	1.067 (1.067-1.067)	1	test5_cells.tsv
+5	copies=1;overlap=0%	geometry_expected_dosage	none=1	1	test5_cells.tsv
+5	copies=1;overlap=0%	dosage_status	ESTIMATED=1	1	test5_cells.tsv
+5	copies=1;overlap=0%	consensus_status_without_graph	SUPPORTED=1	1	test5_cells.tsv
+5	copies=1;overlap=0%	consensus_status_with_graph	SUPPORTED=1	1	test5_cells.tsv
+5	copies=1;overlap=45%	dosage_median_range	0.375 (0.375-0.375)	1	test5_cells.tsv
+5	copies=1;overlap=45%	geometry_expected_dosage	1.45=1	1	test5_cells.tsv
+5	copies=1;overlap=45%	dosage_status	LOWER_BOUND=1	1	test5_cells.tsv
+5	copies=1;overlap=45%	consensus_status_without_graph	INDETERMINATE=1	1	test5_cells.tsv
+5	copies=1;overlap=45%	consensus_status_with_graph	INDETERMINATE=1	1	test5_cells.tsv
+5	copies=1;overlap=83%	dosage_median_range	0.000 (0.000-0.000)	1	test5_cells.tsv
+5	copies=1;overlap=83%	geometry_expected_dosage	1.83=1	1	test5_cells.tsv
+5	copies=1;overlap=83%	dosage_status	LOWER_BOUND=1	1	test5_cells.tsv
+5	copies=1;overlap=83%	consensus_status_without_graph	INDETERMINATE=1	1	test5_cells.tsv
+5	copies=1;overlap=83%	consensus_status_with_graph	INDETERMINATE=1	1	test5_cells.tsv
+5	copies=2;overlap=0%	dosage_median_range	2.033 (2.033-2.033)	1	test5_cells.tsv
+5	copies=2;overlap=0%	geometry_expected_dosage	none=1	1	test5_cells.tsv
+5	copies=2;overlap=0%	dosage_status	ESTIMATED=1	1	test5_cells.tsv
+5	copies=2;overlap=0%	consensus_status_without_graph	SUPPORTED=1	1	test5_cells.tsv
+5	copies=2;overlap=0%	consensus_status_with_graph	SUPPORTED=1	1	test5_cells.tsv
+5	copies=2;overlap=10%	dosage_median_range	2.026 (2.026-2.026)	1	test5_cells.tsv
+5	copies=2;overlap=10%	geometry_expected_dosage	1.1=1	1	test5_cells.tsv
+5	copies=2;overlap=10%	dosage_status	REVIEW_OVERLAPPING_SPANS=1	1	test5_cells.tsv
+5	copies=2;overlap=10%	consensus_status_without_graph	REVIEW=1	1	test5_cells.tsv
+5	copies=2;overlap=10%	consensus_status_with_graph	SUPPORTED=1	1	test5_cells.tsv
+5	copies=2;overlap=45%	dosage_median_range	0.640 (0.640-0.640)	1	test5_cells.tsv
+5	copies=2;overlap=45%	geometry_expected_dosage	1.45=1	1	test5_cells.tsv
+5	copies=2;overlap=45%	dosage_status	LOWER_BOUND=1	1	test5_cells.tsv
+5	copies=2;overlap=45%	consensus_status_without_graph	INDETERMINATE=1	1	test5_cells.tsv
+5	copies=2;overlap=45%	consensus_status_with_graph	INDETERMINATE=1	1	test5_cells.tsv
+5	copies=2;overlap=83%	dosage_median_range	0.000 (0.000-0.000)	1	test5_cells.tsv
+5	copies=2;overlap=83%	geometry_expected_dosage	1.83=1	1	test5_cells.tsv
+5	copies=2;overlap=83%	dosage_status	LOWER_BOUND=1	1	test5_cells.tsv
+5	copies=2;overlap=83%	consensus_status_without_graph	INDETERMINATE=1	1	test5_cells.tsv
+5	copies=2;overlap=83%	consensus_status_with_graph	INDETERMINATE=1	1	test5_cells.tsv
+5	overlap=0%	dosage_ranges_disjoint_one_vs_two_copies	1		test5_separation.tsv
+5	overlap=45%	dosage_ranges_disjoint_one_vs_two_copies	1		test5_separation.tsv
+5	overlap=83%	dosage_ranges_disjoint_one_vs_two_copies	0		test5_separation.tsv
+4:plain-blocks	block=100bp	dosage_ci_contains_true_copies	5	6	block_size_summary.tsv
+4:plain-blocks	block=100bp	dosage_ci_width_median_range	0.151 (0.084-0.724)	6	block_size_summary.tsv
+4:plain-blocks	block=100bp	depth_call_differs_from_500bp	0	6	block_size_summary.tsv
+4:plain-blocks	block=250bp	dosage_ci_contains_true_copies	5	6	block_size_summary.tsv
+4:plain-blocks	block=250bp	dosage_ci_width_median_range	0.169 (0.134-0.821)	6	block_size_summary.tsv
+4:plain-blocks	block=250bp	depth_call_differs_from_500bp	0	6	block_size_summary.tsv
+4:plain-blocks	block=500bp	dosage_ci_contains_true_copies	5	6	block_size_summary.tsv
+4:plain-blocks	block=500bp	dosage_ci_width_median_range	0.193 (0.117-0.758)	6	block_size_summary.tsv
+4:plain-blocks	block=500bp	depth_call_differs_from_500bp	0	6	block_size_summary.tsv
+4:plain-blocks	block=1000bp	dosage_ci_contains_true_copies	5	6	block_size_summary.tsv
+4:plain-blocks	block=1000bp	dosage_ci_width_median_range	0.143 (0.100-0.552)	6	block_size_summary.tsv
+4:plain-blocks	block=1000bp	depth_call_differs_from_500bp	0	6	block_size_summary.tsv
+4:decoy-blocks	block=100bp	dosage_ci_contains_true_copies	8	17	block_size_summary.tsv
+4:decoy-blocks	block=100bp	dosage_ci_width_median_range	0.168 (0.000-0.791)	17	block_size_summary.tsv
+4:decoy-blocks	block=100bp	depth_call_differs_from_500bp	2	17	block_size_summary.tsv
+4:decoy-blocks	block=250bp	dosage_ci_contains_true_copies	9	17	block_size_summary.tsv
+4:decoy-blocks	block=250bp	dosage_ci_width_median_range	0.200 (0.033-0.625)	17	block_size_summary.tsv
+4:decoy-blocks	block=250bp	depth_call_differs_from_500bp	2	17	block_size_summary.tsv
+4:decoy-blocks	block=500bp	dosage_ci_contains_true_copies	10	17	block_size_summary.tsv
+4:decoy-blocks	block=500bp	dosage_ci_width_median_range	0.200 (0.100-0.607)	17	block_size_summary.tsv
+4:decoy-blocks	block=500bp	depth_call_differs_from_500bp	0	17	block_size_summary.tsv
+4:decoy-blocks	block=1000bp	dosage_ci_contains_true_copies	9	17	block_size_summary.tsv
+4:decoy-blocks	block=1000bp	dosage_ci_width_median_range	0.186 (0.000-0.906)	17	block_size_summary.tsv
+4:decoy-blocks	block=1000bp	depth_call_differs_from_500bp	3	17	block_size_summary.tsv
+5:decoy-blocks	block=100bp	dosage_ci_contains_true_copies	5	7	block_size_summary.tsv
+5:decoy-blocks	block=100bp	dosage_ci_width_median_range	0.150 (0.000-2.163)	7	block_size_summary.tsv
+5:decoy-blocks	block=100bp	depth_call_differs_from_500bp	0	7	block_size_summary.tsv
+5:decoy-blocks	block=250bp	dosage_ci_contains_true_copies	5	7	block_size_summary.tsv
+5:decoy-blocks	block=250bp	dosage_ci_width_median_range	0.194 (0.030-2.483)	7	block_size_summary.tsv
+5:decoy-blocks	block=250bp	depth_call_differs_from_500bp	0	7	block_size_summary.tsv
+5:decoy-blocks	block=500bp	dosage_ci_contains_true_copies	5	7	block_size_summary.tsv
+5:decoy-blocks	block=500bp	dosage_ci_width_median_range	0.485 (0.167-2.598)	7	block_size_summary.tsv
+5:decoy-blocks	block=500bp	depth_call_differs_from_500bp	0	7	block_size_summary.tsv
+5:decoy-blocks	block=1000bp	dosage_ci_contains_true_copies	4	7	block_size_summary.tsv
+5:decoy-blocks	block=1000bp	dosage_ci_width_median_range	0.595 (0.136-2.710)	7	block_size_summary.tsv
+5:decoy-blocks	block=1000bp	depth_call_differs_from_500bp	0	7	block_size_summary.tsv
+4	all	runs_with_status_DONE	23	23	targeted_manifest.tsv
+5	all	runs_with_status_DONE	7	7	targeted_manifest.tsv

@@ -1,0 +1,479 @@
+{
+  "created_utc": "2026-11-18T21:27:08.586640+00:00",
+  "git_commit": "884cdf3c84f17dc9007576f26c6b431044dd35e1",
+  "inputs": [
+    {
+      "path": "validation/tier-calibration/bait_gyrB_26695.fasta",
+      "sha256": "142e0f3d46b427bf94f4b23dee0602155b69777f6071daf14803253f05535c11",
+      "size_bytes": 2396
+    },
+    {
+      "path": "validation/tier-calibration/bait_23S_26695.fasta",
+      "sha256": "9d047a4bc76f4850d6191b6fb23979d5d7be104c7e2e4d443825488cea34564f",
+      "size_bytes": 2965
+    },
+    {
+      "path": "validation/tier-calibration/bait_ureB_26695.fasta",
+      "sha256": "9293648af311076547d51c6d028aeee825a86538869251e46813295683c76bb5",
+      "size_bytes": 1774
+    },
+    {
+      "path": "validation/tier-calibration/bait_glmM_26695.fasta",
+      "sha256": "fde132015160c6fcd495bb6f31b3362ab862ee68282a6e0e5bd5d55c4343b349",
+      "size_bytes": 1397
+    },
+    {
+      "path": "validation/tier-calibration/bait_cagA_26695.fasta",
+      "sha256": "dbe3e8125520d3b1f6bb953c070565ded955f5a5ea59008c7de35f46ca699261",
+      "size_bytes": 3652
+    },
+    {
+      "path": "validation/tier-calibration/closed_genome_manifest.tsv",
+      "sha256": "c4b58f88fafdbb283d5d4865675bee52bccc60a4f20bc11dde0e5fa918346f7a",
+      "size_bytes": 390
+    },
+    {
+      "path": "validation/mock_dataset/mock_locus_alleles.fasta",
+      "sha256": "d885913eca4dacfcdc0728dec5a7141a487ee0f60e36c6af2763509ec16bd1a8",
+      "size_bytes": 1581
+    },
+    {
+      "path": "validation/mock_dataset/dataset_manifest.json",
+      "sha256": "232ef1e2268c4fb52c154589a5df66e478718d92091b72fc382445108d3caaf2",
+      "size_bytes": 11039
+    },
+    {
+      "path": "validation/liba6656-gfa-rerun/tcdB_111_ungapped_baits.fasta",
+      "sha256": "62662d9b6a8fc4f7f7a93a2336e2e3770156d72f6dbeb9f4d1454a11b4b22270",
+      "size_bytes": 789118
+    },
+    {
+      "path": "validation/comparator-benchmark/liba6656_analyst_built_candidates.fasta",
+      "sha256": "a961f6843f4a3a3d3af9157995220ab82c1f6012dce68c956eb261740a1d5ef1",
+      "size_bytes": 14704
+    },
+    {
+      "path": "GCF_000008525.1_ASM852v1_cds_from_genomic.fna.gz",
+      "sha256": "de8129e22419ed9747360f29df84505d514da1ea4a168c7f96c109e100f2828f",
+      "size_bytes": 532314
+    },
+    {
+      "path": "GCF_000008525.1_ASM852v1_rna_from_genomic.fna.gz",
+      "sha256": "280b389c2b03011c9d0624718229c9d758dd8100c83d409b9dd9a7f275121231",
+      "size_bytes": 4493
+    },
+    {
+      "path": "GCF_022925855.1_ASM2292585v1_cds_from_genomic.fna.gz",
+      "sha256": "86856fa75dff26531dec9cb367de6e7c58385cd03be2f80b823c7c2529e38909",
+      "size_bytes": 500594
+    },
+    {
+      "path": "GCF_022925855.1_ASM2292585v1_rna_from_genomic.fna.gz",
+      "sha256": "e4f212d28c46f564e8be9c4d4b4ba2a739c7120178cb1100ff444fa11db19035",
+      "size_bytes": 4354
+    },
+    {
+      "path": "GCF_022925875.1_ASM2292587v1_cds_from_genomic.fna.gz",
+      "sha256": "0f5fa98c8aa355f8464d68c6ea30f67d86b22c46f394460cee47af8dd7d250bc",
+      "size_bytes": 499957
+    },
+    {
+      "path": "GCF_022925875.1_ASM2292587v1_rna_from_genomic.fna.gz",
+      "sha256": "9e23bb0fea953eca68eadaedf9f2be07cfe60175175d952ab5ef70b436db2d0a",
+      "size_bytes": 4365
+    },
+    {
+      "path": "GCF_022925905.1_ASM2292590v1_cds_from_genomic.fna.gz",
+      "sha256": "9cebd2bab0703e0177961ce922f2636d18436b192d20c704d8b7085b04de04a7",
+      "size_bytes": 501839
+    },
+    {
+      "path": "GCF_022925905.1_ASM2292590v1_rna_from_genomic.fna.gz",
+      "sha256": "03a6e75d89911e15a89cc29c4669e833a4a3f4ba3b2134c2a7a69b0972df1167",
+      "size_bytes": 4382
+    },
+    {
+      "path": "GCF_022925925.1_ASM2292592v1_cds_from_genomic.fna.gz",
+      "sha256": "9699505376d0a5c8254a9872c8890bece08dc60fa8a51707e90ed05c431012b2",
+      "size_bytes": 517681
+    },
+    {
+      "path": "GCF_022925925.1_ASM2292592v1_rna_from_genomic.fna.gz",
+      "sha256": "476c8ed1b909cbf0d0ddacd25c8851da08367cd73eb0072069a43812238cc8d5",
+      "size_bytes": 4368
+    },
+    {
+      "path": "GCF_022925945.1_ASM2292594v1_cds_from_genomic.fna.gz",
+      "sha256": "c281e023f8b50ec283d8522e5275cc826fc97cb3acf4ca55faff0b00d3f6d324",
+      "size_bytes": 528705
+    },
+    {
+      "path": "GCF_022925945.1_ASM2292594v1_rna_from_genomic.fna.gz",
+      "sha256": "3e990d0327efd8ab2931bac8d68d98079d135b5e2a2d8ed7f12e03e66696534f",
+      "size_bytes": 4358
+    }
+  ],
+  "locus_recon_files_read": [
+    {
+      "path": "hpylori/Hpfe0001/23S/Hpfe0001/Hpfe0001_23S_reconstructed.fasta",
+      "sha256": "227ff81eb6c9764331087ac19c30b557ce87e006b34527b643fd650f9fd4b8db",
+      "size_bytes": 3103
+    },
+    {
+      "path": "hpylori/Hpfe0001/23S/locus_recon_report_23S.tsv",
+      "sha256": "d47e2e15d48df65e186a5c6f3f46145244afe45d21c83f3e4a769a9e0bd3e25e",
+      "size_bytes": 1769
+    },
+    {
+      "path": "hpylori/Hpfe0001/cagA/Hpfe0001/Hpfe0001_cagA_reconstructed.fasta",
+      "sha256": "18c75577b513bd0110ce6b639a58e7dbe90440655b99e9dd26f5aca354a74137",
+      "size_bytes": 3776
+    },
+    {
+      "path": "hpylori/Hpfe0001/cagA/locus_recon_report_cagA.tsv",
+      "sha256": "bf24712e9ee36903b98d4b7ae9fd6005e3183d18a615d15c8ec802a81a4a00dd",
+      "size_bytes": 2125
+    },
+    {
+      "path": "hpylori/Hpfe0001/glmM/Hpfe0001/Hpfe0001_glmM_reconstructed.fasta",
+      "sha256": "f4f1152e755f1bb5dd54bdb55b10081981c537f1eee7f39043cd43b46edac01d",
+      "size_bytes": 1537
+    },
+    {
+      "path": "hpylori/Hpfe0001/glmM/locus_recon_report_glmM.tsv",
+      "sha256": "4b347f6411e7b03770e592a3b06bbc3a788ff0724c12e5bdc35726066f01d9e8",
+      "size_bytes": 1842
+    },
+    {
+      "path": "hpylori/Hpfe0001/gyrB/Hpfe0001/Hpfe0001_gyrB_reconstructed.fasta",
+      "sha256": "1ec2af2154651830d65fc926b26a4493beea4486cff1724a29f467b7fc4bf1fe",
+      "size_bytes": 2535
+    },
+    {
+      "path": "hpylori/Hpfe0001/gyrB/locus_recon_report_gyrB.tsv",
+      "sha256": "616de5b51c59b323cbd6327fb57fc6134be493e77c048e87c09c38656bc75f74",
+      "size_bytes": 1844
+    },
+    {
+      "path": "hpylori/Hpfe0001/ureB/Hpfe0001/Hpfe0001_ureB_reconstructed.fasta",
+      "sha256": "6aff26f9c95356ba113f81988ce76f09b6ce98fa1d05085c2d2f1094d8812c91",
+      "size_bytes": 1914
+    },
+    {
+      "path": "hpylori/Hpfe0001/ureB/locus_recon_report_ureB.tsv",
+      "sha256": "fe5163a53d1a7c9c32ae1b611223d1434f822169003c09e4ce32676154bc4c99",
+      "size_bytes": 1775
+    },
+    {
+      "path": "hpylori/Hpfe0002/23S/Hpfe0002/Hpfe0002_23S_reconstructed.fasta",
+      "sha256": "64d0beffb3b4c31b8ba1aa9269bd515d82aa5a7b49aefa3d1976080f3b1ee838",
+      "size_bytes": 3101
+    },
+    {
+      "path": "hpylori/Hpfe0002/23S/locus_recon_report_23S.tsv",
+      "sha256": "e7d8a5d495d95eb7a2874701ff3e42c5769002ac03388dfbdeadb9d0f6c32156",
+      "size_bytes": 1866
+    },
+    {
+      "path": "hpylori/Hpfe0002/cagA/Hpfe0002/Hpfe0002_cagA_reconstructed.fasta",
+      "sha256": "8d0b7c15c039317d4edf12f6ddb557a5d7cce360646cb8cb5fac7c898477319a",
+      "size_bytes": 3788
+    },
+    {
+      "path": "hpylori/Hpfe0002/cagA/locus_recon_report_cagA.tsv",
+      "sha256": "4c9d57e0c113ba189cbe9eb687739c71b8689985536e107ea1cde567f0d3b717",
+      "size_bytes": 1890
+    },
+    {
+      "path": "hpylori/Hpfe0002/glmM/Hpfe0002/Hpfe0002_glmM_reconstructed.fasta",
+      "sha256": "fa9e7cb3d0f0c59e1056ceb210cbcced421ed3e85aa6e2d6a4b4a8acfc5a48c0",
+      "size_bytes": 1537
+    },
+    {
+      "path": "hpylori/Hpfe0002/glmM/locus_recon_report_glmM.tsv",
+      "sha256": "fbb17b4418d553c4b76ad8d69279f0f5ad32dfab70cf3dea007339a48809813d",
+      "size_bytes": 1844
+    },
+    {
+      "path": "hpylori/Hpfe0002/gyrB/Hpfe0002/Hpfe0002_gyrB_reconstructed.fasta",
+      "sha256": "92c76c69fcd1de272f12a38543dd0cded93848a3757c35ee922cc1fd1e5345ba",
+      "size_bytes": 2535
+    },
+    {
+      "path": "hpylori/Hpfe0002/gyrB/locus_recon_report_gyrB.tsv",
+      "sha256": "cb16b2811f5a728842ce9b533f21e5f6f767af77cae94fd8d61d9bc29fd57a47",
+      "size_bytes": 1844
+    },
+    {
+      "path": "hpylori/Hpfe0002/ureB/Hpfe0002/Hpfe0002_ureB_reconstructed.fasta",
+      "sha256": "4a60b4eda4b7ac44a21234b5b32f36688b131790b5d3858e6200148bcf2c61a3",
+      "size_bytes": 1914
+    },
+    {
+      "path": "hpylori/Hpfe0002/ureB/locus_recon_report_ureB.tsv",
+      "sha256": "b269d7af48a77706d91b44f2b8b3d2cc374513594dbaa4d0446f6af225b321b5",
+      "size_bytes": 1777
+    },
+    {
+      "path": "hpylori/Hpfe0003/23S/Hpfe0003/Hpfe0003_23S_reconstructed.fasta",
+      "sha256": "6552bf0a07539c70865b2f765bf23e9f9734b9fb86465a41da11e20889096ff9",
+      "size_bytes": 3103
+    },
+    {
+      "path": "hpylori/Hpfe0003/23S/locus_recon_report_23S.tsv",
+      "sha256": "5ca3ba084709251d3767ea5d834daddc94c81fa6c381f4de4f1664e2ffff7553",
+      "size_bytes": 1770
+    },
+    {
+      "path": "hpylori/Hpfe0003/cagA/Hpfe0003/Hpfe0003_cagA_reconstructed.fasta",
+      "sha256": "72193331cd7531f7349cdb04f80ae82bdc39b89db93c0d8a55d680d8b3ddb330",
+      "size_bytes": 3770
+    },
+    {
+      "path": "hpylori/Hpfe0003/cagA/locus_recon_report_cagA.tsv",
+      "sha256": "d5a41ad03d2488ab089b09ee6b92a1755430574f64afe38dd5961f0f7359ef47",
+      "size_bytes": 2078
+    },
+    {
+      "path": "hpylori/Hpfe0003/glmM/Hpfe0003/Hpfe0003_glmM_reconstructed.fasta",
+      "sha256": "b70af1c080a62a847d62c24da0d34acf3f6f4da680df05d291536f9659ac6208",
+      "size_bytes": 1537
+    },
+    {
+      "path": "hpylori/Hpfe0003/glmM/locus_recon_report_glmM.tsv",
+      "sha256": "bb082707704bd7e9b8206a9008511598bdda5d4575634a7b8653260ce06f14f4",
+      "size_bytes": 1843
+    },
+    {
+      "path": "hpylori/Hpfe0003/gyrB/Hpfe0003/Hpfe0003_gyrB_reconstructed.fasta",
+      "sha256": "65f79a632b1e294e92bb89e85ba27793fb11334898b4ca75ed9236177fc3635f",
+      "size_bytes": 2535
+    },
+    {
+      "path": "hpylori/Hpfe0003/gyrB/locus_recon_report_gyrB.tsv",
+      "sha256": "d85963be73bac25f68f0e5dc0931a50ec828ca3ad580222033dcb5e4ae40839f",
+      "size_bytes": 1848
+    },
+    {
+      "path": "hpylori/Hpfe0003/ureB/Hpfe0003/Hpfe0003_ureB_reconstructed.fasta",
+      "sha256": "d918208b33204c18c3efd1a93d8d7733532865c149c97614b5e65c515ea4241b",
+      "size_bytes": 1914
+    },
+    {
+      "path": "hpylori/Hpfe0003/ureB/locus_recon_report_ureB.tsv",
+      "sha256": "920620dcbedd3e4da7e9f3bc10661ace73a584c13e66a654c8c9a1573eeb6141",
+      "size_bytes": 1779
+    },
+    {
+      "path": "hpylori/Hpfe0004/23S/Hpfe0004/Hpfe0004_23S_reconstructed.fasta",
+      "sha256": "80b76178b06363fd8d917dfc88539d0bcee73953133841aa91e6a62ebd9ae27a",
+      "size_bytes": 3103
+    },
+    {
+      "path": "hpylori/Hpfe0004/23S/locus_recon_report_23S.tsv",
+      "sha256": "749ccfff2f2e7d0e29139d679d1aa976a6724d0d100fb2586aeb238f923e962e",
+      "size_bytes": 1770
+    },
+    {
+      "path": "hpylori/Hpfe0004/cagA/Hpfe0004/Hpfe0004_cagA_reconstructed.fasta",
+      "sha256": "8c9bc2f3804008877cfbea14b9a58afa698d29f7be99af4f220b6caa9fc2cdc9",
+      "size_bytes": 3758
+    },
+    {
+      "path": "hpylori/Hpfe0004/cagA/locus_recon_report_cagA.tsv",
+      "sha256": "5bb917756e8517cf75064280dfc6ac5d6d7ef0741337a903be51a4985cefdf13",
+      "size_bytes": 2078
+    },
+    {
+      "path": "hpylori/Hpfe0004/glmM/Hpfe0004/Hpfe0004_glmM_reconstructed.fasta",
+      "sha256": "498278648dc4eca059aaaf707f672dc686623608db4798bb6d69adae3fe42086",
+      "size_bytes": 1537
+    },
+    {
+      "path": "hpylori/Hpfe0004/glmM/locus_recon_report_glmM.tsv",
+      "sha256": "3d647c4f87cbcad3d38bcf8d9f205a7d7b166f6ed5ee75980e6a83bb1273bb84",
+      "size_bytes": 1843
+    },
+    {
+      "path": "hpylori/Hpfe0004/gyrB/Hpfe0004/Hpfe0004_gyrB_reconstructed.fasta",
+      "sha256": "9cc2ead7bf4dcceaf8b9f0527c30400ef98a9561c924bd0febd19236dcd5402d",
+      "size_bytes": 2535
+    },
+    {
+      "path": "hpylori/Hpfe0004/gyrB/locus_recon_report_gyrB.tsv",
+      "sha256": "3caa5af040840ecbf74ec614d7f54c2fd3ea0a4324e073173adbf2cfd177fe73",
+      "size_bytes": 1846
+    },
+    {
+      "path": "hpylori/Hpfe0004/ureB/Hpfe0004/Hpfe0004_ureB_reconstructed.fasta",
+      "sha256": "97cd2773dd070f2ca997051d1c4151cdd96a3eac09633f5eeb19edc89d9421d4",
+      "size_bytes": 1914
+    },
+    {
+      "path": "hpylori/Hpfe0004/ureB/locus_recon_report_ureB.tsv",
+      "sha256": "dd6a0235e93b1067ee4c9fc272e2d1b0ba61a267c01a8c7193b1a68c5e989b0b",
+      "size_bytes": 1846
+    },
+    {
+      "path": "hpylori/Hpfe0006/23S/Hpfe0006/Hpfe0006_23S_reconstructed.fasta",
+      "sha256": "f86c69ec96b9ed612d2ebf17c7af8b762bd7b4c3c8a71c26641bf00df8de1965",
+      "size_bytes": 2780
+    },
+    {
+      "path": "hpylori/Hpfe0006/23S/locus_recon_report_23S.tsv",
+      "sha256": "40ce4040a89491babc1b3d6c354832eb1b11b5ba3785adf606b27e25491ca54f",
+      "size_bytes": 2044
+    },
+    {
+      "path": "hpylori/Hpfe0006/cagA/Hpfe0006/Hpfe0006_cagA_reconstructed.fasta",
+      "sha256": "2c8b8355f3a690050ed20795c9a719ac43907dc56579dba0380bb0897bbb0271",
+      "size_bytes": 3767
+    },
+    {
+      "path": "hpylori/Hpfe0006/cagA/locus_recon_report_cagA.tsv",
+      "sha256": "9dfa4f4fc4b5e1589bbf0223ab119db2846616769c2f6868668e6f115f6a8793",
+      "size_bytes": 2077
+    },
+    {
+      "path": "hpylori/Hpfe0006/glmM/Hpfe0006/Hpfe0006_glmM_reconstructed.fasta",
+      "sha256": "b8713fedeb9ac74aabb84d64f54bb89cba1ae5eefb76f36b806b2cd0e5a6c1b7",
+      "size_bytes": 1537
+    },
+    {
+      "path": "hpylori/Hpfe0006/glmM/locus_recon_report_glmM.tsv",
+      "sha256": "73ba107798753189c591e73ce63e29f5f083e9d2e537fed221576e2c6f9fafa3",
+      "size_bytes": 1842
+    },
+    {
+      "path": "hpylori/Hpfe0006/gyrB/Hpfe0006/Hpfe0006_gyrB_reconstructed.fasta",
+      "sha256": "1a968b0af903747afc537d584fb2ef6e568158648235cb5809514e18d028985b",
+      "size_bytes": 2535
+    },
+    {
+      "path": "hpylori/Hpfe0006/gyrB/locus_recon_report_gyrB.tsv",
+      "sha256": "466eeeb8cb1b00a98bef1aefa416ae6a89e42067701d67258d7645cccb97f171",
+      "size_bytes": 1844
+    },
+    {
+      "path": "hpylori/Hpfe0006/ureB/Hpfe0006/Hpfe0006_ureB_reconstructed.fasta",
+      "sha256": "54418a4915d2378597d5170af9ac3b56d763cf42a0baf5cdf96389c78b814c8a",
+      "size_bytes": 1914
+    },
+    {
+      "path": "hpylori/Hpfe0006/ureB/locus_recon_report_ureB.tsv",
+      "sha256": "8d00dec3cd16a97084f5021198192edbb7d6f4516ed6f83fefa7404b85dc969e",
+      "size_bytes": 1773
+    },
+    {
+      "path": "liba6656/run_4_threads/LIBA6656_ST154/LIBA6656_ST154_tcdB_reconstructed.fasta",
+      "sha256": "9e48cceebc23c96429dae0dc5014335446fa9c025ce7e60906a198699eec614d",
+      "size_bytes": 2145
+    },
+    {
+      "path": "liba6656/run_4_threads/locus_recon_report_tcdB.tsv",
+      "sha256": "0fec1dea5e2dbc8c02235ee2393780afe3361b71014f459ce6b4a274f3a89c3a",
+      "size_bytes": 2284
+    },
+    {
+      "path": "mock/baseline_intact_A/baseline_intact_A_mockLocus_reconstructed.fasta",
+      "sha256": "647d2ade07b80da4154787c07cbd76971edf4a61d0d4dffd371f955bff669a0c",
+      "size_bytes": 701
+    },
+    {
+      "path": "mock/depth_03x_A/depth_03x_A_mockLocus_reconstructed.fasta",
+      "sha256": "ddf279a459febdb60a3139a83ceb4f356c7923cd8af396e886ba91fe7dc52eb4",
+      "size_bytes": 689
+    },
+    {
+      "path": "mock/depth_05x_A/depth_05x_A_mockLocus_reconstructed.fasta",
+      "sha256": "24909a1132c2a27eb5ad2eb0d0bf6a2bfcc6360d281793584e831e3eddef1f31",
+      "size_bytes": 689
+    },
+    {
+      "path": "mock/depth_10x_A/depth_10x_A_mockLocus_reconstructed.fasta",
+      "sha256": "dde4a7bcc3116307ae49ad5cf505b4131bfaeb3f63ebbb36955d552d69ca5b38",
+      "size_bytes": 689
+    },
+    {
+      "path": "mock/depth_20x_A/depth_20x_A_mockLocus_reconstructed.fasta",
+      "sha256": "80fdd4c28d4079fd0d37d6527856361f5f26db5b52e355677ce716dcb998dc6d",
+      "size_bytes": 689
+    },
+    {
+      "path": "mock/fragmented_mid_A/fragmented_mid_A_mockLocus_reconstructed.fasta",
+      "sha256": "90b707ed72220e180cc7fe78175c3789f5fb51f5def8360ce180d926a69e3716",
+      "size_bytes": 699
+    },
+    {
+      "path": "mock/fragmented_terminal_A/fragmented_terminal_A_mockLocus_reconstructed.fasta",
+      "sha256": "83e2977da89b6366baace0c755fa722274726b0dbc8673eec67e68ba695fdaee",
+      "size_bytes": 709
+    },
+    {
+      "path": "mock/locus_recon_report_mockLocus.tsv",
+      "sha256": "858c37a23f07b3c9e484e5d75781479620f4136b1672c5638915d7f0928cb498",
+      "size_bytes": 9439
+    },
+    {
+      "path": "mock/mixture_05pct_B/mixture_05pct_B_mockLocus_reconstructed.fasta",
+      "sha256": "a4f67979b1af9d2ae477591c64555ab53656e89c701f84c601837676a65ef9cd",
+      "size_bytes": 697
+    },
+    {
+      "path": "mock/mixture_10pct_B/mixture_10pct_B_mockLocus_reconstructed.fasta",
+      "sha256": "159879d97d69d77f4eba8689e54ed7ed9cfc5088fd99eb9fca2b00c71c152f69",
+      "size_bytes": 697
+    },
+    {
+      "path": "mock/mixture_20pct_B/mixture_20pct_B_mockLocus_reconstructed.fasta",
+      "sha256": "9d11876bddb7adc089ec4ec32b5d172899d67e98ce685905a5c0500ffd94857a",
+      "size_bytes": 697
+    },
+    {
+      "path": "mock/mixture_50pct_B/mixture_50pct_B_mockLocus_reconstructed.fasta",
+      "sha256": "85a70da2ea654bb76b653619afe46eddc67f521139c4f7639842857fc019e642",
+      "size_bytes": 697
+    },
+    {
+      "path": "mock/paralog_control/paralog_control_mockLocus_reconstructed.fasta",
+      "sha256": "abb6c15a1527f5818c0ed23749a01004c460bc33a1a92825f738742105d05b40",
+      "size_bytes": 697
+    }
+  ],
+  "parameters": {
+    "datasets": [
+      "mock",
+      "hpylori",
+      "liba6656"
+    ],
+    "locus_recon_evidence": "evidence",
+    "score_only": true
+  },
+  "schema_version": "1.0",
+  "software": {
+    "git_commit": "884cdf3c84f17dc9007576f26c6b431044dd35e1",
+    "git_tree_clean": false,
+    "name": "locus-recon",
+    "source_sha256": "2cc816cca467a7988c1f2a28cba11ed1cbb30b263e331f75ca48efa19ebefce0",
+    "version": "1.0.1"
+  },
+  "tools": {
+    "blastn": {
+      "command": [
+        "blastn",
+        "-version"
+      ],
+      "exit_code": 0,
+      "version": "blastn: 2.17.0+"
+    },
+    "python": {
+      "command": [
+        "python",
+        "--version"
+      ],
+      "exit_code": 0,
+      "version": "Python 3.12.16"
+    }
+  },
+  "workflow": "comparator_benchmark/locus_recon_rows_scored_from_candidates"
+}

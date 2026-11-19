@@ -1,0 +1,5 @@
+sites	lowest_minor_fraction_pct_with_any_replicate_held_as_mixture	lowest_minor_fraction_pct_from_which_all_replicates_held_as_mixture	held_as_mixture_by_fraction	accepted_by_fraction
+1	none	none	20%=0/1	20%=1/1
+2	none	none		
+5	10	10	10%=1/1	10%=0/1
+10	none	none		

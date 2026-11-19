@@ -1,7 +1,7 @@
 {
   "complete": true,
-  "created_utc": "2026-09-28T20:22:55.746665+00:00",
-  "git_commit": "540399eb824e88e7c5d34fbc510f73f1af70c7a4",
+  "created_utc": "2026-11-18T20:19:12.059272+00:00",
+  "git_commit": "884cdf3c84f17dc9007576f26c6b431044dd35e1",
   "inputs": [
     {
       "path": "validation/manifests/low_copy_23S_prjna816422.tsv",
@@ -55,8 +55,8 @@
     },
     {
       "path": "GCF_022925905.1_ASM2292590v1_genomic.gbff.gz",
-      "sha256": "8f5aabaa2ee3ad8c284024d845b5a2e27d102561be3af1c84f93d82e0c44e6ee",
-      "size_bytes": 1150827
+      "sha256": "d9e239711c8dc48541f87883a2abc8423e18f020ae632d9e5670b828dc426f43",
+      "size_bytes": 1153209
     },
     {
       "path": "SRR18335523_1.fastq.gz",
@@ -120,7 +120,7 @@
     },
     {
       "path": "closed_truth_audit.json",
-      "sha256": "33f588e487ac9a1971188eff3e7e2f3d128e08bdc7afd1e3b1b9e5a168da5f2a",
+      "sha256": "88994173b04149fc1a6e3acba08a740c614ecec98335d968f813b256bee1379a",
       "size_bytes": 2716
     }
   ],
@@ -146,11 +146,11 @@
   "primary_criteria_passed": false,
   "schema_version": "1.0",
   "software": {
-    "git_commit": "540399eb824e88e7c5d34fbc510f73f1af70c7a4",
-    "git_tree_clean": true,
+    "git_commit": "884cdf3c84f17dc9007576f26c6b431044dd35e1",
+    "git_tree_clean": false,
     "name": "locus-recon",
-    "source_sha256": "3863abc32fb5446a72919c790cb2558217871410f441db1ecf17dde3de55cdcf",
-    "version": "1.0.0"
+    "source_sha256": "2cc816cca467a7988c1f2a28cba11ed1cbb30b263e331f75ca48efa19ebefce0",
+    "version": "1.0.1"
   },
   "tools": {
     "aligner": {

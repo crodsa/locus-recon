@@ -1,0 +1,2 @@
+one_copy_arm	two_copy_arm	overlap_pct	one_copy_runs	two_copy_runs	one_copy_dosage_min	one_copy_dosage_max	two_copy_dosage_min	two_copy_dosage_max	dosage_ranges_disjoint	gap_between_ranges	one_copy_ci_high_max	two_copy_ci_low_min	intervals_disjoint	ratio_two_over_one_medians
+c1_identical_cut	c2_identical_cut	10	1	1	1.008	1.008	2.026	2.026	1	1.018	1.044	1.668	1	2.01

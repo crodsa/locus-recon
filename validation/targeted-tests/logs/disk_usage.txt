@@ -1,0 +1,5 @@
+# du -sh, 2026-11-18T19:04:40Z
+6.8G	/data/PROJECTS/locus_recon_revision/targeted/work
+155M	/data/PROJECTS/locus_recon_revision/targeted/pilot_work
+212M	/data/PROJECTS/locus_recon_revision/targeted/pilot2_work
+35M	/data/PROJECTS/locus_recon_revision/targeted/pilot3_work

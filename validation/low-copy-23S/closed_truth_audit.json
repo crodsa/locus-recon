@@ -49,7 +49,7 @@
     "chromosome_topology": "circular",
     "full_length_23S_copies": 2,
     "full_length_gyrB_copies": 1,
-    "gbff_sha256": "8f5aabaa2ee3ad8c284024d845b5a2e27d102561be3af1c84f93d82e0c44e6ee",
+    "gbff_sha256": "d9e239711c8dc48541f87883a2abc8423e18f020ae632d9e5670b828dc426f43",
     "gyrB_lengths": [
       2322
     ],

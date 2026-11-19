@@ -134,7 +134,7 @@ LIBA6656_tcdB_terminal_path_133	8531	33	1
 LIBA6656_tcdB_terminal_path_134	8531	28	1
 LIBA6656_tcdB_terminal_path_135	8531	28	2
 LIBA6656_tcdB_terminal_path_136	8531	24	0
-LIBA6656_tcdB_terminal_path_137	8531	30	0
+LIBA6656_tcdB_terminal_path_137	8531	31	1
 LIBA6656_tcdB_terminal_path_138	8531	21	0
 LIBA6656_tcdB_terminal_path_139	8531	26	0
 LIBA6656_tcdB_terminal_path_140	8531	25	0
@@ -155,7 +155,7 @@ LIBA6656_tcdB_terminal_path_154	8531	27	0
 LIBA6656_tcdB_terminal_path_155	8531	29	1
 LIBA6656_tcdB_terminal_path_156	8531	23	1
 LIBA6656_tcdB_terminal_path_157	8531	39	1
-LIBA6656_tcdB_terminal_path_158	8531	26	1
+LIBA6656_tcdB_terminal_path_158	8531	27	2
 LIBA6656_tcdB_terminal_path_159	8531	23	3
 LIBA6656_tcdB_terminal_path_160	8531	29	0
 LIBA6656_tcdB_terminal_path_161	8531	30	2
@@ -421,7 +421,7 @@ LIBA6656_tcdB_terminal_path_420	8456	21	0
 LIBA6656_tcdB_terminal_path_421	8456	23	1
 LIBA6656_tcdB_terminal_path_422	8456	21	0
 LIBA6656_tcdB_terminal_path_423	8456	27	0
-LIBA6656_tcdB_terminal_path_424	8456	24	1
+LIBA6656_tcdB_terminal_path_424	8456	23	0
 LIBA6656_tcdB_terminal_path_425	8456	23	0
 LIBA6656_tcdB_terminal_path_426	8456	27	0
 LIBA6656_tcdB_terminal_path_427	8456	31	1
@@ -441,7 +441,7 @@ LIBA6656_tcdB_terminal_path_440	8456	22	0
 LIBA6656_tcdB_terminal_path_441	8456	34	1
 LIBA6656_tcdB_terminal_path_442	8456	24	0
 LIBA6656_tcdB_terminal_path_443	8456	28	0
-LIBA6656_tcdB_terminal_path_444	8456	22	1
+LIBA6656_tcdB_terminal_path_444	8456	21	0
 LIBA6656_tcdB_terminal_path_445	8456	27	1
 LIBA6656_tcdB_terminal_path_446	8456	23	1
 LIBA6656_tcdB_terminal_path_447	8456	27	0

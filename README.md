@@ -215,7 +215,8 @@ Details and worked examples are in the [user guide](docs/user-guide.md#when-ever
 ## What has been tested
 
 All inputs, outputs and scripts are under [`validation/`](validation/README.md). The numbers below were obtained
-with release 1.0.0, which accepts and holds the same sequences as 1.0.1; [docs/validation-results.md](docs/validation-results.md) gives the detail.
+with release 1.0.0 and reproduced with release 1.0.1; [docs/validation-results.md](docs/validation-results.md) gives the detail,
+with the external evaluation on 16 species and the targeted tests that were added for release 1.0.1.
 
 | Test | Data | Result |
 |---|---|---|

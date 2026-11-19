@@ -1,0 +1,165 @@
+--- /data/PROJECTS/locus_recon_revision/targeted/validation_run_targeted_tests.first_version_371175a4.py	2026-11-18 12:56:03.113521530 -0600
++++ /data/PROJECTS/locus_recon_revision/targeted/validation/run_targeted_tests.py	2026-11-18 13:00:01.489199216 -0600
+@@ -787,8 +787,27 @@
+     cut_work = work / "uncut_discovery"
+     cut_work.mkdir(exist_ok=True)
+     _regions, _spans, hits = discover(draft, bait, bait_length, cut_work, log)
+-    full = [h for h in hits if h["query_start"] == 1 and h["query_end"] == bait_length
+-            and h["subject_end"] - h["subject_start"] + 1 == bait_length]
++    # A substitution close to an end of copy 2 shortens the local alignment by a
++    # few bases.  The copies differ by substitutions only, so such a hit is
++    # extended to the whole query, base for base.
++    tolerance = 30
++    full = []
++    for hit in hits:
++        missing_start = hit["query_start"] - 1
++        missing_end = bait_length - hit["query_end"]
++        if missing_start > tolerance or missing_end > tolerance:
++            continue
++        if hit["subject_end"] - hit["subject_start"] != hit["query_end"] - hit["query_start"]:
++            continue
++        extended = dict(hit)
++        if hit["strand"] == "+":
++            extended["subject_start"] -= missing_start
++            extended["subject_end"] += missing_end
++        else:
++            extended["subject_start"] -= missing_end
++            extended["subject_end"] += missing_start
++        extended["query_start"], extended["query_end"] = 1, bait_length
++        full.append(extended)
+     exact = [h for h in full if h["identity"] == 100.0]
+     info = {"uncut_discovery_hits": len(hits), "uncut_full_length_hits": len(full)}
+     if len(hits) != 2 or len(full) != 2 or len(exact) != 1:
+@@ -1722,6 +1741,132 @@
+     _write_tsv(out_dir / "block_size_summary.tsv", block_summary,
+                list(block_summary[0]) if block_summary else [])
+ 
++    # ---- marginal totals, counted from the per-run tables ------------------ #
++    def tally(test, label, rows, source, extra=()):
++        n = len(rows)
++        if not n:
++            return
++        accepted = [r for r in rows if r.get("lr_result_disposition") == "PASS"]
++        held = [r for r in rows if r.get("lr_result_disposition") == "HOLD"]
++        values = [
++            ("sequence_returned", sum(int(r.get("sequence_returned") or 0) for r in rows)),
++            ("exact", sum(int(r.get("exact") or 0) for r in rows)),
++            ("accepted", len(accepted)),
++            ("accepted_not_exact", sum(1 for r in accepted if not int(r.get("exact") or 0))),
++            ("sent_to_review",
++             sum(1 for r in rows if r.get("lr_result_disposition") == "REVIEW")),
++            ("held", len(held)),
++            ("held_and_exact", sum(1 for r in held if int(r.get("exact") or 0))),
++            ("runs_with_STRAND_BIASED_ALT_SUPPORT",
++             sum(1 for r in rows if _has(r, "STRAND_BIASED_ALT_SUPPORT"))),
++            ("runs_with_MIXED_SITE_BELOW_MIXTURE_CALL",
++             sum(1 for r in rows if _has(r, "MIXED_SITE_BELOW_MIXTURE_CALL"))),
++        ]
++        for metric, value in values + [(m, f(rows)) for m, f in extra]:
++            add(test, label, metric, value, n, source)
++
++    source = TABLES[1][0]
++    mixture_extra = (
++        ("held_as_mixture", lambda rows: sum(
++            1 for r in rows if r.get("lr_result_disposition") == "HOLD"
++            and r.get("lr_mixture_detected") == "true")),
++        ("accepted_with_MIXED_SITE_BELOW_MIXTURE_CALL", lambda rows: sum(
++            1 for r in rows if r.get("lr_result_disposition") == "PASS"
++            and _has(r, "MIXED_SITE_BELOW_MIXTURE_CALL"))),
++        ("accepted_without_any_mixed_site_flag", lambda rows: sum(
++            1 for r in rows if r.get("lr_result_disposition") == "PASS"
++            and not _has(r, "MIXED_SITE_BELOW_MIXTURE_CALL"))),
++        ("exact_major_allele", lambda rows: sum(
++            1 for r in rows if r.get("matches_allele") in ("major", "allele"))),
++        ("exact_minor_allele", lambda rows: sum(
++            1 for r in rows if r.get("matches_allele") == "minor")),
++    )
++    mixtures = [r for r in by_test[1] if r["scenario"] == "mixture"]
++    for sites in T1_SITES:
++        tally("1-total", f"sites={sites};all fractions",
++              [r for r in mixtures if r.get("sites") == sites], source, mixture_extra)
++    for fraction in T1_FRACTIONS:
++        tally("1-total", f"minor={fraction}%;all site numbers",
++              [r for r in mixtures if r.get("minor_fraction_pct") == fraction], source,
++              mixture_extra)
++    tally("1-total", "all mixtures", mixtures, source, mixture_extra)
++    tally("1-total", "pure controls",
++          [r for r in by_test[1] if r["scenario"] == "pure_control"], source, mixture_extra)
++
++    source = TABLES[2][0]
++    tier_flag = (("runs_with_any_tier_affecting_flag", lambda rows: sum(
++        1 for r in rows if any(n and not n.startswith(DESCRIPTIVE)
++                               for n in (r.get("lr_flag_names") or "").split(";")))),)
++    for depth in T2_DEPTHS:
++        tally("2-total", f"depth={depth}x;all lengths",
++              [r for r in by_test[2] if r["depth"] == depth], source, tier_flag)
++    for length in T2_LENGTHS:
++        tally("2-total", f"length={T2_NOMINAL[length]};all depths",
++              [r for r in by_test[2] if r["locus_bp"] == length], source, tier_flag)
++    tally("2-total", "all", by_test[2], source, tier_flag)
++
++    source = TABLES[3][0]
++    frame_extra = (
++        ("frame_flags_agree_with_truth", lambda rows: sum(
++            1 for r in rows if r.get("frame_flags_agree_with_truth") == 1)),
++        ("frame_alert_matches_true_frame", lambda rows: sum(
++            1 for r in rows if r.get("frame_alert_matches_true_frame") == 1)),
++        ("true_frame_disrupted", lambda rows: sum(
++            1 for r in rows if r.get("truth_frame_intact") == 0)),
++        ("true_frame_disrupted_and_held", lambda rows: sum(
++            1 for r in rows if r.get("truth_frame_intact") == 0
++            and r.get("lr_result_disposition") == "HOLD")),
++    )
++    for scenario in T3_SCENARIOS:
++        tally("3-total", f"{scenario};all depths",
++              [r for r in by_test[3] if r["scenario"] == scenario], source, frame_extra)
++    for depth in T3_DEPTHS:
++        tally("3-total", f"depth={depth}x;all scenarios",
++              [r for r in by_test[3] if r["depth"] == depth], source, frame_extra)
++    tally("3-total", "all", by_test[3], source, frame_extra)
++
++    source = TABLES[4][0]
++    copy_extra = (
++        ("graph_vs_truth", lambda rows: _counts(r.get("graph_vs_truth") for r in rows)),
++        ("graph_context_status",
++         lambda rows: _counts(r.get("graph_context_status") for r in rows)),
++        ("depth_call", lambda rows: _counts(r.get("dr_depth_call") for r in rows)),
++        ("depth_call_agrees_with_truth", lambda rows: sum(
++            1 for r in rows if r.get("depth_call_agrees_with_truth") == 1)),
++        ("dosage_status", lambda rows: _counts(r.get("dr_dosage_status") for r in rows)),
++        ("dosage_within_0.5_of_truth", lambda rows: sum(
++            1 for r in rows if r.get("dosage_abs_error") != ""
++            and r.get("dosage_abs_error") < 0.5)),
++        ("consensus_status",
++         lambda rows: _counts(r.get("cn_copy_number_status") for r in rows)),
++        ("consensus_vs_truth", lambda rows: _counts(r.get("cn_vs_truth") for r in rows)),
++        ("consensus_supported_but_wrong",
++         lambda rows: sum(r.get("cn_supported_but_wrong", 0) for r in rows)),
++        ("consensus_status_without_graph",
++         lambda rows: _counts(r.get("cn_nograph_copy_number_status") for r in rows)),
++        ("consensus_without_graph_supported_but_wrong",
++         lambda rows: sum(r.get("cn_nograph_supported_but_wrong", 0) for r in rows)),
++    )
++    for background in T4_BACKGROUNDS:
++        arm = [r for r in by_test[4] if r.get("background") == background]
++        tally("4-total", f"background={background};one copy",
++              [r for r in arm if r["true_copies"] == 1], source, copy_extra)
++        tally("4-total", f"background={background};two to four identical copies",
++              [r for r in arm if r["true_copies"] > 1 and not r["divergent"]], source,
++              copy_extra)
++        tally("4-total", f"background={background};two to four copies, 1% divergent",
++              [r for r in arm if r["true_copies"] > 1 and r["divergent"]], source, copy_extra)
++        tally("4-total", f"background={background};all", arm, source, copy_extra)
++    tally("4-total", "all", by_test[4], source, copy_extra)
++
++    source = TABLES[5][0]
++    for arm_name in sorted({r.get("arm", "") for r in by_test[5]}):
++        arm = [r for r in by_test[5] if r.get("arm", "") == arm_name]
++        tally("5-total", f"arm={arm_name};all overlaps", arm, source, copy_extra)
++        tally("5-total", f"arm={arm_name};overlap>=45%",
++              [r for r in arm if r["overlap_pct"] >= 45], source, copy_extra)
++    tally("5-total", "all", by_test[5], source, copy_extra)
++
+     status = Counter((r["test"], r.get("run_status")) for r in records)
+     for (test, state), count in sorted(status.items(), key=lambda item: str(item)):
+         add(test, "all", f"runs_with_status_{state}", count,

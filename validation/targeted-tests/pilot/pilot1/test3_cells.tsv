@@ -1,0 +1,4 @@
+scenario	depth	runs	sequence_returned	exact	accepted	accepted_not_exact	sent_to_review	held	tiers	uncertain_bases_interior_median_range	uncertain_bases_whole_median_range	true_frame_intact	frame_flags_expected_from_truth	frame_flags_observed	frame_flags_agree_with_truth	frame_alert_matches_true_frame	not_exact_detail
+sub_ends_5bp	60	1	1	1	1	0	0	0	HIGH=1	0.000 (0.000-0.000)	4.000 (4.000-4.000)	1=1	none=1	none=1	1	1	
+del_1bp	10	1	1	1	0	0	0	1	SUSPECT=1	38.000 (38.000-38.000)	92.000 (92.000-92.000)	0=1	FRAME_LENGTH_SHIFT;INTERNAL_STOPS=1	FRAME_LENGTH_SHIFT;INTERNAL_STOPS=1	1	1	
+premature_stop	20	1	1	1	0	0	0	1	SUSPECT=1	0.000 (0.000-0.000)	18.000 (18.000-18.000)	0=1	INTERNAL_STOPS=1	INTERNAL_STOPS=1	1	1	

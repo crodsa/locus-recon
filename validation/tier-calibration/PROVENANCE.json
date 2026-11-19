@@ -2,17 +2,17 @@
   "schema_version": "1.0",
   "stages": {
     "stage_a_benchmarks": {
-      "created_utc": "2026-09-28T18:35:51.744420+00:00",
-      "git_commit": "bfb4dcf334f704d2df0d30f91598ac90fcdca8b5",
+      "created_utc": "2026-11-18T17:37:58.426763+00:00",
+      "git_commit": "884cdf3c84f17dc9007576f26c6b431044dd35e1",
       "inputs": [
         {
           "path": "validation/reference_results/validation_results.tsv",
-          "sha256": "8d3f881c44eae6194bee8012f0cb8fa193d39e38d5c2f6631b2fc871e9f7caa1",
+          "sha256": "c1d5865aeb718722dac6bf404832e6e9aa82eb4e9913633e54f2f130f66769d5",
           "size_bytes": 3096
         },
         {
           "path": "validation/reference_results/locus_recon_report_mockLocus.tsv",
-          "sha256": "d158a52c04c41bcef74a6820f1e68575a6bde562b5f9638568ed5b712b67fced",
+          "sha256": "0180b79fa8a8c739c9d3419a0ec5339fbb2319f5254935e58842cde4694fd54c",
           "size_bytes": 8645
         },
         {
@@ -41,11 +41,11 @@
       },
       "schema_version": "1.0",
       "software": {
-        "git_commit": "bfb4dcf334f704d2df0d30f91598ac90fcdca8b5",
+        "git_commit": "884cdf3c84f17dc9007576f26c6b431044dd35e1",
         "git_tree_clean": false,
         "name": "locus-recon",
-        "source_sha256": "3863abc32fb5446a72919c790cb2558217871410f441db1ecf17dde3de55cdcf",
-        "version": "1.0.0"
+        "source_sha256": "2cc816cca467a7988c1f2a28cba11ed1cbb30b263e331f75ca48efa19ebefce0",
+        "version": "1.0.1"
       },
       "tools": {
         "python": {
@@ -60,8 +60,8 @@
       "workflow": "tier_calibration/stage_a"
     },
     "stage_b_closed_genomes": {
-      "created_utc": "2026-09-28T19:09:06.148826+00:00",
-      "git_commit": "b15eedae0377bc0a433c6b4a72f6a2903665b31b",
+      "created_utc": "2026-11-18T19:31:36.029253+00:00",
+      "git_commit": "884cdf3c84f17dc9007576f26c6b431044dd35e1",
       "inputs": [
         {
           "path": "validation/tier-calibration/closed_genome_manifest.tsv",
@@ -70,8 +70,8 @@
         },
         {
           "path": "validation/tier-calibration/tier_calibration_closed_genomes.tsv",
-          "sha256": "f2695648db55a5b8830f06a55a32367dc2a4f21b69fb4faa8be290cf809de4d9",
-          "size_bytes": 2655
+          "sha256": "f3f8db01e359770306e34f8bec2aaf8e0c14cc8d2c2773865ade81a0e239cc43",
+          "size_bytes": 2754
         },
         {
           "path": "validation/tier-calibration/bait_23S_26695.fasta",
@@ -79,24 +79,9 @@
           "size_bytes": 2965
         },
         {
-          "path": "validation/tier-calibration/bait_cagA_26695.fasta",
-          "sha256": "dbe3e8125520d3b1f6bb953c070565ded955f5a5ea59008c7de35f46ca699261",
-          "size_bytes": 3652
-        },
-        {
-          "path": "validation/tier-calibration/bait_glmM_26695.fasta",
-          "sha256": "fde132015160c6fcd495bb6f31b3362ab862ee68282a6e0e5bd5d55c4343b349",
-          "size_bytes": 1397
-        },
-        {
           "path": "validation/tier-calibration/bait_gyrB_26695.fasta",
           "sha256": "142e0f3d46b427bf94f4b23dee0602155b69777f6071daf14803253f05535c11",
           "size_bytes": 2396
-        },
-        {
-          "path": "validation/tier-calibration/bait_ureB_26695.fasta",
-          "sha256": "9293648af311076547d51c6d028aeee825a86538869251e46813295683c76bb5",
-          "size_bytes": 1774
         },
         {
           "path": "GCF_000008525.1_ASM852v1_cds_from_genomic.fna.gz",
@@ -229,11 +214,11 @@
       },
       "schema_version": "1.0",
       "software": {
-        "git_commit": "b15eedae0377bc0a433c6b4a72f6a2903665b31b",
-        "git_tree_clean": true,
+        "git_commit": "884cdf3c84f17dc9007576f26c6b431044dd35e1",
+        "git_tree_clean": false,
         "name": "locus-recon",
-        "source_sha256": "3863abc32fb5446a72919c790cb2558217871410f441db1ecf17dde3de55cdcf",
-        "version": "1.0.0"
+        "source_sha256": "2cc816cca467a7988c1f2a28cba11ed1cbb30b263e331f75ca48efa19ebefce0",
+        "version": "1.0.1"
       },
       "tools": {
         "blastn": {
@@ -264,8 +249,8 @@
       "workflow": "tier_calibration/stage_b"
     },
     "stage_c_divergent_loci": {
-      "created_utc": "2026-09-28T19:57:52.931144+00:00",
-      "git_commit": "b15eedae0377bc0a433c6b4a72f6a2903665b31b",
+      "created_utc": "2026-11-18T20:00:26.722429+00:00",
+      "git_commit": "884cdf3c84f17dc9007576f26c6b431044dd35e1",
       "inputs": [
         {
           "path": "validation/tier-calibration/closed_genome_manifest.tsv",
@@ -439,11 +424,11 @@
       },
       "schema_version": "1.0",
       "software": {
-        "git_commit": "b15eedae0377bc0a433c6b4a72f6a2903665b31b",
-        "git_tree_clean": true,
+        "git_commit": "884cdf3c84f17dc9007576f26c6b431044dd35e1",
+        "git_tree_clean": false,
         "name": "locus-recon",
-        "source_sha256": "3863abc32fb5446a72919c790cb2558217871410f441db1ecf17dde3de55cdcf",
-        "version": "1.0.0"
+        "source_sha256": "2cc816cca467a7988c1f2a28cba11ed1cbb30b263e331f75ca48efa19ebefce0",
+        "version": "1.0.1"
       },
       "tools": {
         "blastn": {
@@ -474,8 +459,8 @@
       "workflow": "tier_calibration/stage_c"
     },
     "stage_d_depth_series": {
-      "created_utc": "2026-09-28T20:00:55.021871+00:00",
-      "git_commit": "b15eedae0377bc0a433c6b4a72f6a2903665b31b",
+      "created_utc": "2026-11-18T20:08:28.378202+00:00",
+      "git_commit": "884cdf3c84f17dc9007576f26c6b431044dd35e1",
       "inputs": [
         {
           "path": "validation/tier-calibration/closed_genome_manifest.tsv",
@@ -647,11 +632,11 @@
       },
       "schema_version": "1.0",
       "software": {
-        "git_commit": "b15eedae0377bc0a433c6b4a72f6a2903665b31b",
-        "git_tree_clean": true,
+        "git_commit": "884cdf3c84f17dc9007576f26c6b431044dd35e1",
+        "git_tree_clean": false,
         "name": "locus-recon",
-        "source_sha256": "3863abc32fb5446a72919c790cb2558217871410f441db1ecf17dde3de55cdcf",
-        "version": "1.0.0"
+        "source_sha256": "2cc816cca467a7988c1f2a28cba11ed1cbb30b263e331f75ca48efa19ebefce0",
+        "version": "1.0.1"
       },
       "tools": {
         "blastn": {

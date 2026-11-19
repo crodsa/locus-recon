@@ -1,0 +1,15 @@
+one_copy_arm	two_copy_arm	overlap_pct	one_copy_runs	two_copy_runs	one_copy_dosage_min	one_copy_dosage_max	two_copy_dosage_min	two_copy_dosage_max	dosage_ranges_disjoint	gap_between_ranges	one_copy_ci_high_max	two_copy_ci_low_min	intervals_disjoint	ratio_two_over_one_medians
+c1_identical_cut	c2_divergent_partial	0	5	5	0.967	1.075	1.925	2.058	1	0.85	1.192	1.85	1	1.895
+c1_identical_cut	c2_divergent_partial	10	5	5	1.008	1.072	2.099	2.246	1	1.027	1.192	1.659	1	2.027
+c1_identical_cut	c2_divergent_partial	25	5	5	1.01	1.176	2.198	2.292	1	1.022	1.323	1.198	0	2.029
+c1_identical_cut	c2_divergent_partial	45	5	5	0.338	0.393	1.607	1.921	1	1.214	1.376	1.008	0	4.8
+c1_identical_cut	c2_divergent_partial	65	5	5	0.0	0.0	1.636	1.843	1	1.636	0.937	1.169	1	
+c1_identical_cut	c2_divergent_partial	83	5	5	0.0	0.0	1.693	1.952	1	1.693	0.45	1.54	1	
+c1_identical_cut	c2_divergent_partial	90	5	5	0.0	0.0	1.694	1.868	1	1.694	0.201	1.589	1	
+c1_identical_cut	c2_identical_cut	0	5	5	0.967	1.075	1.85	1.983	1	0.775	1.192	1.779	1	1.871
+c1_identical_cut	c2_identical_cut	10	5	5	1.008	1.072	2.136	2.228	1	1.064	1.192	1.636	1	2.035
+c1_identical_cut	c2_identical_cut	25	5	5	1.01	1.176	2.177	2.344	1	1.001	1.323	0.469	0	2.057
+c1_identical_cut	c2_identical_cut	45	5	5	0.338	0.393	0.689	0.87	1	0.296	1.376	0.0	0	2.029
+c1_identical_cut	c2_identical_cut	65	5	5	0.0	0.0	0.0	0.0	0	0.0	0.937	0.0	0	
+c1_identical_cut	c2_identical_cut	83	5	5	0.0	0.0	0.0	0.0	0	0.0	0.45	0.0	0	
+c1_identical_cut	c2_identical_cut	90	5	5	0.0	0.0	0.0	0.0	0	0.0	0.201	0.0	0	

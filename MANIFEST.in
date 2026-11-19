@@ -3,5 +3,12 @@ recursive-include docs *.md
 recursive-include examples *.md *.tsv
 recursive-include validation *.py *.md *.json *.tsv *.fasta *.fastq.gz *.gfa
 recursive-include validation/comparator-benchmark *.txt *.yml *.tar.gz
+recursive-include validation *.sh *.txt
 prune validation/mock_results
+prune validation/targeted-tests/sequences
+prune validation/targeted-tests/pilot
+prune validation/targeted-tests/logs
+exclude validation/targeted-tests/input_checksums.tsv
+prune validation/external-evaluation/results/logs
+prune validation/external-evaluation/results/concordance_reports
 global-exclude __pycache__ *.py[cod] .DS_Store

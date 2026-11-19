@@ -1,7 +1,7 @@
 {
   "complete": true,
-  "created_utc": "2026-09-28T21:17:59.342046+00:00",
-  "git_commit": "7cd0a7310316cb95943acea7dae8b226a9703f8a",
+  "created_utc": "2026-11-18T20:23:07.074134+00:00",
+  "git_commit": "884cdf3c84f17dc9007576f26c6b431044dd35e1",
   "inputs": [
     {
       "path": "LIBA6656_ST154.assembly.fasta",
@@ -42,11 +42,11 @@
   },
   "schema_version": "1.0",
   "software": {
-    "git_commit": "7cd0a7310316cb95943acea7dae8b226a9703f8a",
-    "git_tree_clean": true,
+    "git_commit": "884cdf3c84f17dc9007576f26c6b431044dd35e1",
+    "git_tree_clean": false,
     "name": "locus-recon",
-    "source_sha256": "3863abc32fb5446a72919c790cb2558217871410f441db1ecf17dde3de55cdcf",
-    "version": "1.0.0"
+    "source_sha256": "2cc816cca467a7988c1f2a28cba11ed1cbb30b263e331f75ca48efa19ebefce0",
+    "version": "1.0.1"
   },
   "tools": {
     "aligner": {

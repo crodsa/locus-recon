@@ -79,7 +79,7 @@ The 5% mixture and low-depth series are reported as empirical detection/sensitiv
 ## Bundled reference result
 
 The compact files in `reference_results/` were generated with Locus-Recon
-1.0.0, BWA-MEM2 2.2.1, samtools 1.22.1, SPAdes 4.2.0, and BLAST+ 2.16.0+ on
+1.0.1, BWA-MEM2 2.2.1, samtools 1.22.1, SPAdes 4.2.0, and BLAST+ 2.16.0+ on
 Linux x86_64. The execution record, including the environment and the outcome
 of each criterion, is in
 [`BENCHMARK_REPRODUCTION.md`](reference_results/BENCHMARK_REPRODUCTION.md).
@@ -105,7 +105,7 @@ generated locally and excluded from the distribution.
 
 The recovered `ERR467623` paired reads made it possible to regenerate a
 contemporary LIBA-6656 local assembly graph with the Locus-Recon 1.0.0
-toolchain. The complete compact deposit is under
+toolchain; the verification record was written again with release 1.0.1. The complete compact deposit is under
 [`liba6656-gfa-rerun/`](liba6656-gfa-rerun/README.md). It contains the GFA,
 the exact ungapped bait FASTA, all 512 exported terminal paths, portable
 parameters and checksums, and the alignment of the two deposited reconstructed
@@ -228,3 +228,32 @@ contribute to chromosome feature truth. Compact completed outputs are archived
 under `validation/low-copy-23S/`. These five cases informed the graph/depth
 design and are therefore a biological demonstration, not an independent
 exact-copy performance estimate.
+
+## Records of release 1.0.1
+
+Every analysis above was run again with release 1.0.1 on 18 and 19 November 2026
+(`regenerate/regenerate_validation.sh`), and the records in this folder are the
+output of that run. `regenerate/` holds the driver and its helpers.
+[`INTEGRATION_RUN.md`](INTEGRATION_RUN.md) records one run of the complete
+workflow with the real external programs. The records of release 1.0.0 are in
+the Git history (tag `v1.0.0`).
+
+## External evaluation and targeted tests
+
+[`external-evaluation/PROTOCOL.md`](external-evaluation/PROTOCOL.md) was written
+before the analyses it describes. It fixes the software (release 1.0.1), 16
+public isolates of 16 species, eight loci, the truth and the decision rules for
+ARIBA and KMA, and six targeted tests with simulated reads.
+
+- `run_external_evaluation.py` and
+  [`external-evaluation/results/`](external-evaluation/results/README.md): the
+  128 units of isolate and locus, scored against the complete genome of each
+  isolate for Locus-Recon, ARIBA and KMA.
+- `run_targeted_tests.py` and [`targeted-tests/`](targeted-tests/README.md):
+  790 simulated samples (mixtures with few sites, strand-bias alerts, ends and
+  indels, graph contexts, overlapping spans, bootstrap block size).
+- `run_block_size_sensitivity.py` and `block-size-sensitivity/`: the bootstrap
+  interval of the *aphA1* and 23S rRNA data with blocks of 100 to 1,000 bp.
+
+Each results folder has a `DEVIATIONS.md` that lists every departure from the
+protocol. Read it with the numbers.

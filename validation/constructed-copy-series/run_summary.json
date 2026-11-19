@@ -1,6 +1,6 @@
 {
   "complete": true,
-  "created_utc": "2026-09-25T23:13:58.018817+00:00",
+  "created_utc": "2026-11-18T20:22:38.557020+00:00",
   "criteria_passed": true,
   "note": "Every input is regenerated deterministically by the workflow; workflow_provenance.json in its --work-dir holds the checksum of each one.",
   "parameters": {
@@ -31,8 +31,8 @@
   "schema_version": "1.0",
   "software": {
     "name": "locus-recon",
-    "source_sha256": "3863abc32fb5446a72919c790cb2558217871410f441db1ecf17dde3de55cdcf",
-    "version": "1.0.0"
+    "source_sha256": "2cc816cca467a7988c1f2a28cba11ed1cbb30b263e331f75ca48efa19ebefce0",
+    "version": "1.0.1"
   },
   "tools": {
     "aligner": "2.2.1",

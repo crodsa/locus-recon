@@ -1,0 +1,4 @@
+scenario	sites	minor_fraction_pct	runs	sequence_returned	held	held_as_mixture	held_with_STRAND_BIASED_ALT_SUPPORT	sent_to_review	accepted	accepted_with_MIXED_SITE_BELOW_MIXTURE_CALL	accepted_without_any_mixed_site_flag	exact_major_allele	exact_minor_allele	not_exact	accepted_not_exact	mixed_site_count_values	dispositions
+mixture	1	20	1	1	0	0	0	0	1	1	0	1	0	0	0	1=1	PASS=1
+mixture	5	10	1	1	1	1	0	0	0	0	0	1	0	0	0	4=1	HOLD=1
+pure_control	0	0	1	1	0	0	0	0	1	0	1	1	0	0	0	0=1	PASS=1

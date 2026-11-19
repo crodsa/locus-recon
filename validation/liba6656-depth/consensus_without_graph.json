@@ -1,0 +1,216 @@
+{
+  "ambiguity_index": 0.949,
+  "assembly_copies": 9,
+  "assembly_region_count": 9,
+  "backbone_mad": 8.0,
+  "backbone_median_depth": 62.0,
+  "bootstrap_backbone_blocks_total": 8439,
+  "bootstrap_backbone_blocks_used": 512,
+  "bootstrap_block_size": 500,
+  "bootstrap_locus_blocks": 29,
+  "bootstrap_resamples": 1000,
+  "bootstrap_seed": 20260817,
+  "call_threshold_source": "DEFAULT_ASSERTED",
+  "call_threshold_used": 1.5,
+  "consensus_flags": [
+    "DOSAGE_REVIEW_OVERLAPPING_SPANS"
+  ],
+  "copies_estimate": 2.287,
+  "copy_number_call": 2.287,
+  "copy_number_kind": "MEAN_DEPTH_DOSAGE",
+  "copy_number_lower_bound": null,
+  "copy_number_method": "DEPTH_ONLY",
+  "copy_number_status": "REVIEW",
+  "copy_number_upper_bound": null,
+  "depth_call": "SINGLE_COPY_COMPATIBLE",
+  "dosage_ci_high": 2.702,
+  "dosage_ci_low": 2.069,
+  "dosage_estimate": 2.287,
+  "dosage_flags": [
+    "INCOMPLETE_QUERY_COVERAGE",
+    "OVERLAPPING_QUERY_SPANS",
+    "ZERO_RATIO_REGIONS"
+  ],
+  "dosage_lower": 2.258,
+  "dosage_status": "REVIEW_OVERLAPPING_SPANS",
+  "dosage_upper": 2.308,
+  "gc_locus": null,
+  "gene_covered_bp": 7016,
+  "gene_length": 7104,
+  "gene_overlap_bp": 5915,
+  "gene_overlap_fraction": 0.83263,
+  "gene_total_aligned_bp": 12931,
+  "gene_union_covered_bp": 7016,
+  "geometry_expected_dosage": 1.843,
+  "graph_bait_coverage_fraction": null,
+  "graph_bait_covered_bp": null,
+  "graph_bait_length": null,
+  "graph_context_count": null,
+  "graph_context_flags": [],
+  "graph_context_lower_bound": null,
+  "graph_context_status": "NOT_EVALUATED",
+  "graph_max_context_bp": null,
+  "graph_max_context_nodes": null,
+  "graph_max_context_paths": null,
+  "graph_min_context_bp": null,
+  "graph_target_segments": [],
+  "left_context_count": null,
+  "left_context_signatures": [],
+  "locus_median_depth": 75.0,
+  "locus_median_depth_unfiltered": 79.0,
+  "locus_regions": [
+    ".11940_5_90.1:1-1863",
+    ".11940_5_90.29:1-1440",
+    ".11940_5_90.56:1-3856",
+    ".11940_5_90.59:1-1657",
+    ".11940_5_90.63:1-826",
+    ".11940_5_90.76:1-353",
+    ".11940_5_90.77:1-302",
+    ".11940_5_90.8:1-1440",
+    ".11940_5_90.8:141568-143961"
+  ],
+  "notes": [
+    "the discovery intervals cover 7016/7104 unique query bases (98.8%); dosage is the mean multiplicity over covered bases, and the bracket [2.258, 2.308] assigns the 88 uncovered bases zero copies and the largest multiplicity observed on the query respectively.",
+    "query-coordinate spans overlap by 5915 bp (83.3% of the gene); under the collapse model a query base resolved into several fragments carries the sum of their ratios, so overlap raises the per-base multiplicity (max 4.016) rather than counting bases twice. The same geometry with every region at single copy would return 1.843, so the dosage is NOT a copy count here; that figure is itself a lower bound on the inflation, because multiply represented sequence also attracts multi-mapped reads that raise the per-region ratios.",
+    "2 of 9 locus regions have zero filtered depth, so the query bases they resolve contribute nothing to the dosage. The estimate is biased downward by that amount.",
+    "the interval [1.111, 1.349] excludes 1 from above, which does not on its own indicate a departure from single copy: it covers within-locus sampling noise only, and single-copy loci commonly produce intervals that exclude 1. The verdict, not the interval, carries the copy-number statement.",
+    "the interval contains no integer; it is narrower than the spacing between adjacent copy numbers and cannot be read as an interval for an integer copy count."
+  ],
+  "provenance": {
+    "graph_discovery": null,
+    "input_paths": {
+      "bam": "/data/PROJECTS/locus_recon_revision/regen/work/liba6656_depth/results/ERR467623_vs_LIBA6656_draft.sorted.bam"
+    },
+    "input_sha256": {
+      "bam": "3ea85e4ce17499748d9b0343706929e401127eed6c2c0de9131cc6820ba6f811"
+    },
+    "parameters": {
+      "depth": {
+        "call_threshold": 1.5,
+        "exclude_regions": [],
+        "gene_length": 7104,
+        "gene_spans": [
+          [
+            5539,
+            7101
+          ],
+          [
+            1,
+            1140
+          ],
+          [
+            1067,
+            4922
+          ],
+          [
+            2528,
+            4184
+          ],
+          [
+            1419,
+            2244
+          ],
+          [
+            2641,
+            2993
+          ],
+          [
+            46,
+            347
+          ],
+          [
+            1,
+            1140
+          ],
+          [
+            5011,
+            7104
+          ]
+        ],
+        "locus_regions": [
+          ".11940_5_90.1:1-1863",
+          ".11940_5_90.29:1-1440",
+          ".11940_5_90.56:1-3856",
+          ".11940_5_90.59:1-1657",
+          ".11940_5_90.63:1-826",
+          ".11940_5_90.76:1-353",
+          ".11940_5_90.77:1-302",
+          ".11940_5_90.8:1-1440",
+          ".11940_5_90.8:141568-143961"
+        ],
+        "max_backbone_bootstrap_blocks": 512,
+        "min_bq": 20,
+        "min_mq": 20,
+        "n_boot": 1000,
+        "reference_fasta": null,
+        "seed": 20260817
+      },
+      "graph": null
+    },
+    "tool_versions": {
+      "blastn": null,
+      "samtools": "samtools 1.22.1"
+    }
+  },
+  "query_coverage_fraction": 0.9876,
+  "query_multiplicity_max": 4.016,
+  "ratio": 1.21,
+  "ratio_ci_high": 1.349,
+  "ratio_ci_low": 1.111,
+  "region_gene_spans": [
+    [
+      5539,
+      7101
+    ],
+    [
+      1,
+      1140
+    ],
+    [
+      1067,
+      4922
+    ],
+    [
+      2528,
+      4184
+    ],
+    [
+      1419,
+      2244
+    ],
+    [
+      2641,
+      2993
+    ],
+    [
+      46,
+      347
+    ],
+    [
+      1,
+      1140
+    ],
+    [
+      5011,
+      7104
+    ]
+  ],
+  "region_ratios": [
+    1.048,
+    1.113,
+    1.565,
+    0.952,
+    1.081,
+    0.0,
+    0.0,
+    1.339,
+    1.484
+  ],
+  "reliable": true,
+  "right_context_count": null,
+  "right_context_signatures": [],
+  "schema_version": "1.0",
+  "single_copy_rejected": false,
+  "software_name": "locus-recon",
+  "software_version": "1.0.1"
+}

@@ -1,0 +1,81 @@
+{
+  "commands": {
+    "block_sizes": "locus_recon.depth_ratio.estimate_locus_copy_number(bam, regions, gene_spans=spans, gene_length=L, block=B, n_boot=1000, seed=20260817) for B in (100, 250, 500, 1000)",
+    "copy_number": "locus-recon-copy-number (same depth options) --gfa DRAFT_SPADES/assembly_graph_after_simplification.gfa --bait BAIT --output-json OUT.json --output-tsv OUT.tsv",
+    "copy_number_without_graph": "locus-recon-copy-number (same depth options) --output-json OUT.json --output-tsv OUT.tsv",
+    "depth_ratio": "locus-recon-depth-ratio --bam SAMPLE/full_map.sorted.bam {--locus REGION --gene-span A-B}... --gene-length L --reference DRAFT --tsv OUT",
+    "discovery_for_copy_number": "makeblastdb -in DRAFT -dbtype nucl; blastn -query BAIT -db DRAFT -outfmt '6 qseqid sseqid pident length qstart qend sstart send bitscore' -max_target_seqs 20 -perc_identity 80",
+    "draft": "spades.py --isolate -1 R1 -2 R2 -o DIR --threads T --memory M",
+    "locus_recon": "locus-recon --samplesheet S --main-output-dir DIR --bait BAIT --locus tlocus --threads T --memory-per-sample M"
+  },
+  "created_utc": "2026-11-18T19:00:01Z",
+  "input_checksums": "input_checksums.tsv (SHA-256 of reads, bait, truth, draft, graph and alignment of every run)",
+  "libraries": {
+    "biopython": "1.87",
+    "numpy": "1.26.4",
+    "zlib": "1.3.1"
+  },
+  "parameters": {
+    "jobs": 8,
+    "memory_gb_per_run": 8,
+    "replicate_cap": null,
+    "replicate_offset": 0,
+    "tests": "1,2,3,4,5",
+    "threads_per_run": 1
+  },
+  "platform": "Linux-6.8.0-149-generic-x86_64-with-glibc2.39",
+  "protocol": "validation/external-evaluation/PROTOCOL.md, section 3",
+  "runner": {
+    "common_sha256": "dc5ca4ce16b314253cd6d46dc341106be21cdf4f27ab141944575e84439a650d",
+    "generator_sha256": "194d3d334fcaa1212ceb5d65713fa1843cb0e83f90ba6261ae2b522135abc6b4",
+    "path": "validation/run_targeted_tests.py",
+    "sha256": "882facc95b6abb29e40c73a28c4f07d1817c777fb77e5e3d2826336386904946"
+  },
+  "runs": {
+    "by_status": {
+      "DONE": 790
+    },
+    "planned": 790
+  },
+  "schema_version": "1.0",
+  "seeds": {
+    "base_seed": 20261118,
+    "bootstrap_resamples": 1000,
+    "bootstrap_seed": 20260817,
+    "per_run_seeds": "targeted_manifest.tsv (seed_genome, seed_reads)",
+    "rule": "seed = int.from_bytes(sha256(f'{BASE_SEED}|{run_id}|{purpose}')[:8], 'big') >> 1; purpose is 'genome' or 'reads'; numpy.random.default_rng(seed)"
+  },
+  "simulation": {
+    "background_bp": 100000,
+    "base_quality": "I (Phred 40)",
+    "fragment_max": 500,
+    "fragment_mean": 350,
+    "fragment_min": 200,
+    "fragment_sd": 30,
+    "fragment_starts": "uniform",
+    "orientation": "random",
+    "read_length": 150,
+    "substitution_error_rate": 0.001
+  },
+  "software": {
+    "expected_package_sha256": "2cc816cca467a7988c1f2a28cba11ed1cbb30b263e331f75ca48efa19ebefce0",
+    "name": "locus-recon",
+    "package_location": "installed package (site-packages or checkout)",
+    "package_sha256": "2cc816cca467a7988c1f2a28cba11ed1cbb30b263e331f75ca48efa19ebefce0",
+    "package_sha256_matches": true,
+    "version": "1.0.1"
+  },
+  "tools": {
+    "blastn": "blastn: 2.16.0+",
+    "bwa-mem2": "2.2.1",
+    "locus-recon": "locus-recon 1.0.1",
+    "locus-recon-copy-number": "locus-recon-copy-number 1.0.1",
+    "locus-recon-depth-ratio": "locus-recon-depth-ratio 1.0.1",
+    "makeblastdb": "makeblastdb: 2.16.0+",
+    "python": "Python 3.11.13",
+    "samtools": "samtools 1.22.1",
+    "spades": "SPAdes genome assembler v4.2.0"
+  },
+  "wall_seconds_this_invocation": 0.2,
+  "workflow": "targeted-tests-simulated-reads"
+}
