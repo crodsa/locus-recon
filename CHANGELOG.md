@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.0.2 — 2026-11-19
+## 1.0.2 — 2026-11-20
 
 One label of the copy-number consensus was corrected after the external
 evaluation of release 1.0.1. No threshold changed, no number changed, and the
